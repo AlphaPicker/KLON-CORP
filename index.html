@@ -503,7 +503,7 @@
 <div class="app-container">
   <header>
     <h1 id="app-company-name">
-      <a href="https://alphapicker.github.io/KLON/" title="Basculer vers KLON (Simulateur d'autonomie)" style="text-decoration: none; color: inherit;">
+      <a href="https://alphapicker.github.io/KLON/" id="app-company-link" title="Basculer vers KLON" style="text-decoration: none; color: inherit; cursor: pointer;">
         KLON <span>CORP.</span>
       </a>
     </h1>
@@ -1412,11 +1412,13 @@
     let raw = (db.companyName || '').trim();
     raw = raw.replace(/corp\.?/gi, '').replace(/corporation/gi, '').trim();
 
+    const linkEl = document.getElementById('app-company-link') || document.getElementById('app-company-name');
+
     if (!raw) {
-      document.getElementById('app-company-name').innerHTML = `KLON <span>CORP.</span>`;
+      linkEl.innerHTML = `KLON <span>CORP.</span>`;
     } else {
       const cleanName = raw.toUpperCase();
-      document.getElementById('app-company-name').innerHTML = `${cleanName} <span>CORP.</span>`;
+      linkEl.innerHTML = `${cleanName} <span>CORP.</span>`;
     }
 
     let effectiveTicker = db.ticker;
