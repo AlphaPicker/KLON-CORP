@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>KLON Corp. — Unité de Production de FCF</title>
+
+  <style>
+    :root[data-theme="dark"] {
+      --bg-color: #0d1117;
+      --card-bg: #161b22;
+      --border-color: #30363d;
+      --text-main: #c9d1d9;
+      --text-bright: #f0f6fc;
+      --accent-blue: #58a6ff;
+      --accent-green: #238636;
+      --accent-green-bright: #7ee787;
+      --accent-orange: #f0883e;
+      --accent-red: #da3633;
+      --accent-purple: #a371f7;
+      --nav-active-bg: #21262d;
+      --btn-paypal-bg: #238636;
+      --btn-paypal-text: #ffffff;
+      --badge-bg: rgba(163, 113, 247, 0.12);
+    }
+
+    :root[data-theme="light"] {
+      --bg-color: #f0f2f5;
+      --card-bg: #ffffff;
+      --border-color: #d0d7de;
+      --text-main: #24292f;
+      --text-bright: #1f2328;
+      --accent-blue: #0969da;
+      --accent-green: #1f883d;
+      --accent-green-bright: #1a7f37;
+      --accent-orange: #bc4c00;
+      --accent-red: #cf222e;
+      --accent-purple: #8250df;
+      --nav-active-bg: #e1e4e8;
+      --btn-paypal-bg: #1f883d;
+      --btn-paypal-text: #ffffff;
+      --badge-bg: rgba(130, 80, 223, 0.12);
+    }
+
+    :root[data-theme="colorblind"] {
+      --bg-color: #000000;
+      --card-bg: #121212;
+      --border-color: #ffffff;
+      --text-main: #ffffff;
+      --text-bright: #ffff00;
+      --accent-blue: #00ffff;
+      --accent-green: #0d6efd;
+      --accent-green-bright: #ffcc00;
+      --accent-orange: #ff8000;
+      --accent-red: #ffcc00;
+      --accent-purple: #ffff00;
+      --nav-active-bg: #2a2a2a;
+      --btn-paypal-bg: #0d6efd;
+      --btn-paypal-text: #ffffff;
+      --badge-bg: rgba(255, 255, 0, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 600px;
+      padding: 16px; /* ✅ C'est elle qui rentre les traits et les cartes comme dans KLON */
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header { text-align: center; padding: 6px 0; }
+    header h1 { font-size: 1.65rem; color: var(--text-bright); font-weight: 900; letter-spacing: -0.5px; }
+    header h1 span { color: var(--accent-purple); }
+    
+    .ticker-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--badge-bg); border: 1px solid var(--accent-purple);
+      padding: 4px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: var(--accent-purple);
+      margin-top: 6px;
+    }
+    
+    .ticker-pill {
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+      user-select: none;
+    }
+    .ticker-pill:hover {
+      background: rgba(163, 113, 247, 0.2);
+      color: var(--text-bright);
+    }
+
+    nav { display: flex; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+    .nav-btn {
+      flex: 1;
+      padding: 12px 6px;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: 0.2s;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .nav-btn.active { background-color: var(--nav-active-bg); color: var(--accent-purple); border-bottom: 3px solid var(--accent-purple); }
+
+    @media (max-width: 500px) {
+      .nav-btn { padding: 10px 3px; font-size: 0.75rem; }
+    }
+
+    .tab-content { display: none; flex-direction: column; gap: 14px; }
+    .tab-content.active { display: flex; }
+
+    .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .card-title { font-size: 0.95rem; color: var(--text-bright); font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+
+    /* HERO BLOC : CHIFFRES & TOGGLE RÉCOMPENSES */
+    .fcf-hero-card {
+      background: linear-gradient(135deg, var(--card-bg) 0%, rgba(163, 113, 247, 0.09) 100%);
+      border: 1px solid var(--accent-purple);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .fcf-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      text-align: center;
+    }
+    .hero-box { display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+    .hero-box .label { font-size: 0.75rem; font-weight: 800; color: var(--accent-green-bright); letter-spacing: 0.5px; }
+    .hero-box .val { font-size: 1.8rem; font-weight: 900; color: var(--text-bright); }
+    .hero-box .sub { font-size: 0.75rem; opacity: 0.85; }
+
+    .hero-box-right {
+      border-left: 1px solid var(--border-color);
+      padding-left: 10px;
+    }
+
+    @media (max-width: 500px) {
+      .fcf-hero-grid { grid-template-columns: 1fr; }
+      .hero-box-right {
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        padding-left: 0;
+        padding-top: 10px;
+      }
+    }
+
+    /* BARRE TOGGLE POUR AFFICHER / MASQUER LES RÉCOMPENSES */
+    .hero-rewards-toggle-row {
+      display: none;
+      justify-content: center;
+      padding-top: 6px;
+      border-top: 1px solid rgba(163, 113, 247, 0.15);
+    }
+    .hero-rewards-toggle-row.has-rewards { display: flex; }
+
+    .rewards-toggle-btn {
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-bright); /* Blanc lumineux par défaut */
+      padding: 5px 14px;
+      border-radius: 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+	
+    .rewards-toggle-btn:hover {
+      border-color: var(--accent-purple); /* Contour violet au survol */
+      color: var(--accent-purple);        /* Texte teinté violet */
+      box-shadow: 0 0 8px rgba(163, 113, 247, 0.3); /* Douce lueur violette */
+    }
+
+    /* PILULES DE RÉCOMPENSES : FINES, DOUCES ET NON AGRESSIVES */
+    .corp-reward-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px; /* Un peu plus d'espace intérieur */
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: var(--bg-color);
+      border: 1px solid var(--accent-purple);
+      color: var(--text-bright);
+      box-shadow: 0 0 6px rgba(163, 113, 247, 0.2);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      user-select: none;
+      line-height: 1.2;
+    }
+
+    .corp-reward-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 10px rgba(163, 113, 247, 0.4);
+    }
+	
+	/* CONTENEUR ET GRILLE AÉRÉE DES RÉCOMPENSES */
+    .hero-rewards-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 10px;
+      margin-top: 4px;
+    }
+
+    .corp-rewards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 10px; /* 8px d'écart vertical, 10px horizontal */
+      justify-content: flex-start; /* Alignement aéré et naturel comme sur KLON */
+      padding: 4px 2px;
+    }
+
+    /* BARRE DE NAVIGATION DATE ÉPURÉE */
+    .period-navigator-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 8px;
+      gap: 8px;
+    }
+
+    .nav-arrow-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-bright);
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .nav-arrow-btn:hover { border-color: var(--accent-purple); color: var(--accent-purple); }
+
+    .period-selectors-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .period-select {
+      width: auto !important;
+      padding: 6px 8px !important;
+      font-size: 0.9rem !important;
+      font-weight: 800 !important;
+    }
+
+    .period-status-pill {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .period-status-pill.saved { background: rgba(126, 231, 135, 0.15); color: var(--accent-green-bright); border: 1px solid var(--accent-green-bright); }
+    .period-status-pill.new { background: rgba(88, 166, 255, 0.15); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+
+    /* WATERFALL BARRE */
+    .waterfall-container { display: flex; flex-direction: column; gap: 6px; }
+    .waterfall-bar { display: flex; height: 16px; border-radius: 6px; overflow: hidden; background: var(--bg-color); border: 1px solid var(--border-color); }
+    .waterfall-seg { height: 100%; transition: width 0.3s ease; }
+    .waterfall-legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; font-size: 0.72rem; }
+    .legend-item { display: flex; align-items: center; gap: 4px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* DIAGNOSTIC SCORECARD */
+    .diag-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    @media (max-width: 500px) { .diag-grid { grid-template-columns: 1fr; } }
+    .diag-item { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; text-align: center; }
+    .diag-title { font-size: 0.7rem; font-weight: bold; opacity: 0.75; text-transform: uppercase; }
+    .diag-val { font-size: 1.1rem; font-weight: 800; margin: 2px 0; color: var(--text-bright); }
+    .diag-sub { font-size: 0.7rem; opacity: 0.8; }
+
+    .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (max-width: 500px) { .input-grid { grid-template-columns: 1fr; } }
+
+    .field-group { display: flex; flex-direction: column; gap: 4px; }
+    .field-label-row { display: flex; justify-content: space-between; align-items: center; }
+    .field-label-row label { font-size: 0.75rem; font-weight: 700; color: var(--text-bright); }
+
+    .tooltip-btn {
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: var(--accent-blue);
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .tooltip-btn:hover { border-color: var(--accent-purple); color: var(--accent-purple); }
+
+    .help-box {
+      display: none;
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 0.75rem;
+      color: var(--text-main);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+    .help-box.active { display: block; }
+
+    input[type="number"], input[type="text"], select {
+      background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-bright); padding: 10px; border-radius: 6px; font-size: 0.95rem; font-weight: 700; width: 100%;
+    }
+
+    button.btn-primary { background-color: var(--accent-green); color: #fff; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.95rem; }
+    
+    button.btn-secondary, label.btn-secondary {
+      background-color: var(--bg-color); color: var(--accent-blue); border: 1px solid var(--border-color);
+      padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; text-align: center;
+    }
+
+    button.btn-danger { background: none; color: var(--accent-red); border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; }
+
+    button.btn-reset {
+      background-color: transparent; color: var(--accent-red); border: 1px solid var(--accent-red);
+      padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: 0.2s;
+    }
+    button.btn-reset:hover { background-color: var(--accent-red); color: black; }
+
+    .horizon-selector { display: flex; gap: 6px; background: var(--bg-color); border: 1px solid var(--border-color); padding: 4px; border-radius: 8px; }
+    .horizon-btn { flex: 1; padding: 8px; background: none; border: none; color: var(--text-main); font-weight: 700; font-size: 0.78rem; border-radius: 6px; cursor: pointer; }
+    .horizon-btn.active { background-color: var(--card-bg); color: var(--accent-purple); border: 1px solid var(--border-color); }
+
+    .compare-bar { display: flex; gap: 10px; align-items: center; justify-content: space-between; background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
+
+    .table-responsive-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .report-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .report-table th { text-align: left; padding: 8px 4px; border-bottom: 2px solid var(--border-color); opacity: 0.7; font-size: 0.75rem; }
+    .report-table td { padding: 9px 4px; border-bottom: 1px solid var(--border-color); }
+    .val-cell { text-align: right; font-weight: 700; white-space: nowrap; }
+    .var-badge { font-size: 0.72rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+
+    .record-row {
+      display: flex; justify-content: space-between; align-items: center; padding: 8px 10px;
+      border-bottom: 1px solid var(--border-color); font-size: 0.83rem; cursor: pointer; border-radius: 6px;
+      transition: background-color 0.15s;
+    }
+    .record-row:hover { background-color: rgba(255,255,255,0.03); }
+
+    .btn-mini-celebrate {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .btn-mini-celebrate:hover { transform: scale(1.15); border-color: var(--accent-purple); }
+
+    /* MODALES */
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 12px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
+      width: 100%; max-width: 500px; padding: 18px; display: flex; flex-direction: column; gap: 12px;
+      position: relative;
+    }
+
+    /* ÉCOSYSTÈME */
+    .link-btn {
+      display: flex; align-items: center; justify-content: center; width: 100%; padding: 14px;
+      background-color: var(--bg-color); color: var(--accent-blue); text-align: center; text-decoration: none;
+      border-radius: 6px; font-size: 1rem; font-weight: bold; border: 1px solid var(--border-color); cursor: pointer; box-sizing: border-box;
+    }
+    .link-btn-paypal { background-color: var(--btn-paypal-bg) !important; color: var(--btn-paypal-text) !important; }
+    .site-footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.75rem; color: var(--text-main); opacity: 0.75; display: flex; flex-direction: column; gap: 8px; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="app-container">
+  <header>
+    <h1 id="app-company-name">KLON <span>CORP.</span></h1>
+    <div class="ticker-tag">
+      <span id="header-ticker" class="ticker-pill" onclick="openTickerModal()" title="Cliquer pour personnaliser le Ticker">TICKER: KCN.PA</span> — 
+      <span id="header-market-cap" style="color:var(--text-bright);">Valorisation : 0 €</span>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-btn active" onclick="switchTab('tab1', event)">📊 Saisie & Flux</button>
+    <button class="nav-btn" onclick="switchTab('tab2', event)">📈 Trésorerie KLON</button>
+    <button class="nav-btn" onclick="switchTab('tab3', event)">🌐 Écosystème</button>
+  </nav>
+
+  <!-- ONGLET 1 : SAISIE & FLUX -->
+  <div class="tab-content active" id="tab1">
+    <div class="card" style="padding: 12px 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+        <div style="flex: 1;">
+          <input type="text" id="company-name-input" class="inline-firstname-input" style="padding: 8px 12px; font-size: 0.95rem; font-weight: bold; color: var(--accent-purple);" placeholder="Ex: KLON Corp." maxlength="25" oninput="saveCompanyName()">
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+          <select id="currency-select" onchange="changeCurrency(this.value)" style="width: auto; padding: 6px 8px; font-size: 0.85rem;">
+            <option value="€">EUR (€)</option>
+            <option value="$">USD ($)</option>
+            <option value="£">GBP (£)</option>
+            <option value="CHF">CHF</option>
+            <option value="CAD">CAD</option>
+          </select>
+
+          <select id="theme-select" onchange="changeTheme(this.value)" style="width: auto; padding: 6px 8px; font-size: 0.85rem;">
+            <option value="dark">🌙 Sombre</option>
+            <option value="light">☀️ Clair</option>
+            <option value="colorblind">👁️ Daltonien</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENREGISTREMENT DU MOIS -->
+    <div class="card">
+      <div class="card-title">
+        <span>📝 Clôture du Mois d'Exploitation</span>
+        <span id="period-status-badge" class="period-status-pill new">⚪ Nouveau mois</span>
+      </div>
+
+      <!-- SÉLECTEUR DE DATE ÉPURÉ SANS ENCOMBREMENT -->
+      <div class="period-navigator-bar">
+        <button class="nav-arrow-btn" onclick="stepMonth(-1)" title="Mois précédent">◀</button>
+        
+        <div class="period-selectors-group">
+          <select id="select-active-month" class="period-select" onchange="onPeriodDropdownChange()"></select>
+          <select id="select-active-year" class="period-select" onchange="onPeriodDropdownChange()"></select>
+        </div>
+
+        <button class="nav-arrow-btn" onclick="stepMonth(1)" title="Mois suivant">▶</button>
+      </div>
+
+      <!-- GRILLE DE SAISIE AVEC AIDE CLAIRE -->
+      <div class="input-grid" style="margin-top:4px;">
+        
+        <!-- 1. CA BRUT -->
+        <div class="field-group">
+          <div class="field-label-row">
+            <label>1. CA Brut / Entrées (<span class="curr-sym">€</span>)</label>
+            <button class="tooltip-btn" onclick="toggleFieldHelp('help-brut')" title="Explications">?</button>
+          </div>
+          <div id="help-brut" class="help-box">
+            <strong>Tous tes revenus bruts perçus ce mois :</strong> salaire brut, primes, facturation freelance / entreprise, loyers perçus, dividendes ou ventes diverses.
+          </div>
+          <input type="number" id="in-brut" value="3600" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
+        </div>
+
+        <!-- 2. TAXES & COTISATIONS -->
+        <div class="field-group">
+          <div class="field-label-row">
+            <label>2. Impôts & Cotisations (<span class="curr-sym">€</span>)</label>
+            <button class="tooltip-btn" onclick="toggleFieldHelp('help-taxes')" title="Explications">?</button>
+          </div>
+          <div id="help-taxes" class="help-box">
+            <strong>Prélèvements obligatoires pour l'État :</strong> prélèvement à la source (impôt sur le revenu), cotisations sociales (salariales et patronales si indépendant), URSSAF.
+          </div>
+          <input type="number" id="in-taxes" value="980" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
+        </div>
+
+        <!-- 3. FRAIS PROFESSIONNELS DIRECTS -->
+        <div class="field-group">
+          <div class="field-label-row">
+            <label>3. Frais Pro d'Activité (<span class="curr-sym">€</span>)</label>
+            <button class="tooltip-btn" onclick="toggleFieldHelp('help-frais')" title="Explications">?</button>
+          </div>
+          <div id="help-frais" class="help-box">
+            <strong>Dépenses indispensables pour exercer ton métier :</strong> carburant ou transports professionnels, repas de travail, abonnements logiciels, matériel de travail.
+          </div>
+          <input type="number" id="in-frais" value="160" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
+        </div>
+
+        <!-- 4. CHARGES VITALES DE MAINTIEN -->
+        <div class="field-group">
+          <div class="field-label-row">
+            <label>4. Charges Vitales Base (<span class="curr-sym">€</span>)</label>
+            <button class="tooltip-btn" onclick="toggleFieldHelp('help-charges')" title="Explications">?</button>
+          </div>
+          <div id="help-charges" class="help-box">
+            <strong>Dépenses incompressibles pour vivre :</strong> loyer ou crédit résidence principale, électricité, eau, courses alimentaires de base, assurances indispensables.<br>
+            <em>Note : Les restaurants, sorties et loisirs ne sont pas inclus ici : ils sont prélevés sur ton Free Cash-Flow disponible !</em>
+          </div>
+          <input type="number" id="in-charges" value="1100" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
+        </div>
+
+      </div>
+
+      <button class="btn-primary" onclick="addMonthlyRecord()">💾 Clôturer & Enregistrer le Mois</button>
+    </div>
+
+    <!-- HISTORIQUE D'EXPLOITATION -->
+    <div class="card">
+      <div class="card-title">
+        <span>📜 Historique d'Exploitation</span>
+        <span id="history-count-badge" style="font-size:0.75rem; opacity:0.6;">0 mois</span>
+      </div>
+      <div id="records-list" style="max-height: 300px; overflow-y: auto; padding-right: 2px;"></div>
+    </div>
+
+    <!-- GESTION DES DONNÉES EN BAS -->
+    <div class="card">
+      <div class="card-title">💾 Gestion des Données</div>
+      <div style="display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap;">
+        <button class="btn-secondary" style="flex: 1; min-width: 90px;" onclick="exportJSON()">💾 Exporter</button>
+        <label class="btn-secondary" style="flex: 1; min-width: 90px;">
+          <span>📂 Importer</span>
+          <input type="file" accept=".json" style="display: none;" onchange="importJSON(event)">
+        </label>
+        <button class="btn-reset" style="flex: 1; min-width: 110px;" onclick="confirmResetDialog()">🗑️ Réinitialiser</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONGLET 2 : TRÉSORERIE KLON -->
+  <div class="tab-content" id="tab2">
+    
+    <!-- HERO DASHBOARD : CHIFFRES CLAIRS + TOGGLE DE RÉCOMPENSES -->
+    <div class="fcf-hero-card">
+      <div class="fcf-hero-grid">
+        <div class="hero-box">
+          <div class="label" id="hero-label-period">FCF DISPONIBLE</div>
+          <div class="val" id="hero-fcf-val" style="color: var(--accent-green-bright);">0 €</div>
+          <div class="sub" id="hero-fcf-sub">Marge Nette : 0 %</div>
+        </div>
+        <div class="hero-box hero-box-right">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span class="label" style="color:var(--accent-purple);">RENTE PASSIVE CRÉÉE</span>
+            <button class="tooltip-btn" onclick="openAnnuityHelpModal()" title="Explication règle des 4%">?</button>
+          </div>
+          <div class="val" id="hero-annuity-val" style="color:var(--accent-purple);">+0 € / mois</div>
+          <div class="sub" id="hero-annuity-sub">soit +0 € / an à vie</div>
+        </div>
+      </div>
+
+      <!-- BOUTON DISCRET POUR AFFICHER / MASQUER LES RÉCOMPENSES -->
+      <div class="hero-rewards-toggle-row" id="hero-rewards-toggle-row">
+        <button id="btn-toggle-rewards" class="rewards-toggle-btn" onclick="toggleRewardsVisibility()">
+          🏆 Voir les Récompenses ▾
+        </button>
+      </div>
+
+      <!-- ZONE DES RÉCOMPENSES DÉPLIABLE -->
+      <div class="hero-rewards-wrapper" id="hero-rewards-wrapper" style="display: none;">
+        <div class="corp-rewards-grid" id="corp-rewards-box"></div>
+      </div>
+    </div>
+
+    <!-- CARTE PONT AVEC KLON (CASH TOTAL CUMULÉ) -->
+    <div class="card" style="border-left: 4px solid var(--accent-purple);">
+      <div class="card-title">
+        <span>⛽ Carburant d'Alimentation KLON</span>
+        <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openHistoryModal()">📜 Courbe de Trésorerie</button>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div>
+          <div style="font-size: 0.75rem; opacity: 0.8;">Trésorerie Cumulée :</div>
+          <div id="total-cumul-cash" style="font-size: 1.4rem; font-weight: 900; color: var(--accent-purple);">0 €</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.75rem; opacity: 0.8;">Rente Passive Créée :</div>
+          <div id="total-cumul-annuity" style="font-size: 1.1rem; font-weight: 800; color: var(--accent-green-bright);">+0 € / mois</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIAGNOSTIC SCORECARD -->
+    <div class="diag-grid">
+      <div class="diag-item">
+        <div class="diag-title">Marge Nette FCF</div>
+        <div class="diag-val" id="diag-fcf-margin">-- %</div>
+        <div class="diag-sub" id="diag-margin-grade">Diagnostic</div>
+      </div>
+      <div class="diag-item">
+        <div class="diag-title">Charges de Base</div>
+        <div class="diag-val" id="diag-burn-rate">0 €</div>
+        <div class="diag-sub">Maintien vital</div>
+      </div>
+      <div class="diag-item">
+        <div class="diag-title">Taux de Rétention</div>
+        <div class="diag-val" id="diag-conversion-rate">-- %</div>
+        <div class="diag-sub">FCF / Revenu Net</div>
+      </div>
+    </div>
+
+    <!-- CASCADE DE TRÉSORERIE VISUELLE -->
+    <div class="card">
+      <div class="card-title">
+        <span>💧 Répartition du Chiffre d'Affaires</span>
+      </div>
+      <div class="waterfall-container">
+        <div class="waterfall-bar" id="waterfall-bar"></div>
+        <div class="waterfall-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-red);"></span> Taxes (<span id="pct-taxes">0%</span>)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-orange);"></span> Frais Pro (<span id="pct-frais">0%</span>)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-blue);"></span> Maintien (<span id="pct-charges">0%</span>)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-green-bright);"></span> FCF Net (<span id="pct-fcf">0%</span>)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SÉLECTEURS DE PÉRIODE & HORIZON -->
+    <div class="card" style="padding: 10px;">
+      <div class="horizon-selector">
+        <button class="horizon-btn active" onclick="setHorizon('monthly', event)">📅 Mensuel</button>
+        <button class="horizon-btn" onclick="setHorizon('quarterly', event)">🏛️ Trimestriel</button>
+        <button class="horizon-btn" onclick="setHorizon('annual', event)">🚀 Annuel</button>
+      </div>
+    </div>
+
+    <div class="compare-bar" id="compare-container">
+      <div class="field-group" style="flex:1;">
+        <label id="label-curr-sel">Période analysée</label>
+        <select id="select-curr-period" onchange="onCurrPeriodChange()"></select>
+      </div>
+      <div style="font-size: 1.1rem; font-weight: 800; opacity: 0.5; padding-top: 14px;">vs</div>
+      <div class="field-group" style="flex:1;">
+        <label id="label-prev-sel">Référence</label>
+        <select id="select-prev-period" onchange="renderStockReport()"></select>
+      </div>
+    </div>
+
+    <!-- TABLEAU DE RÉSULTAT ENRICHI (7 LIGNES FINANCIÈRES) -->
+    <div class="card">
+      <div class="card-title">
+        <span id="report-title">📑 Compte de Résultat Simplifié</span>
+      </div>
+      <div class="table-responsive-wrapper">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>POSTE FINANCIER</th>
+              <th style="text-align: right;" id="th-curr-label">MONTANT</th>
+              <th style="text-align: right;" id="th-variation-label">VAR (%)</th>
+            </tr>
+          </thead>
+          <tbody id="report-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VALORISATION BOURSIÈRE CALCULÉE PAR L'IA -->
+    <div class="card">
+      <div class="card-title">
+        <span>🏛️ Valorisation Boursière de l'Unité</span>
+        <span id="ai-multiple-badge" style="font-size: 0.78rem; color: var(--accent-purple); font-weight: 800; background: var(--badge-bg); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--accent-purple);">Multiple IA : -- x</span>
+      </div>
+      <div style="font-size: 0.85rem; line-height: 1.5;">
+        <div id="gadget-market-cap" style="font-size: 1.2rem; font-weight: 900; color: var(--text-bright);">Valorisation : 0 €</div>
+        <div id="gadget-rank-title" style="color:var(--accent-purple); font-weight:700; margin-top: 2px;">Penny Stock</div>
+        <div id="ai-multiple-reasons" style="font-size: 0.72rem; opacity: 0.75; margin-top: 4px; font-style: italic;">Évaluation algorithmique selon marge, régularité et dynamique.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ONGLET 3 : ÉCOSYSTÈME -->
+  <div class="tab-content" id="tab3">
+    <div class="card" style="border-left: 4px solid var(--accent-blue);">
+      <div style="font-size: 0.85rem; line-height: 1.5; color: var(--text-main);">
+        <strong>🤝 Transparence & Parrainage :</strong> Les liens ci-dessous sont des liens d'affiliation et de parrainage. En ouvrant un compte via ces accès, vous pouvez bénéficier des bonus de bienvenue proposés par les plateformes tout en soutenant le développement gratuit de l'application.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📈 Banques & Courtiers</div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="https://dub.sh/klon-traderepublic" target="_blank" rel="noopener noreferrer" class="link-btn">Trade Republic</a>
+        <a href="https://dub.sh/klon-ibkr" target="_blank" rel="noopener noreferrer" class="link-btn">Interactive Brokers (IBKR)</a>
+        <a href="https://dub.sh/klon-boursobank" target="_blank" rel="noopener noreferrer" class="link-btn">BoursoBank</a>
+        <button class="link-btn" id="fortuneo-btn" onclick="copyFortuneoCode()">Fortuneo (Code Parrain : 12874482)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🪙 Crypto & Rendement Alternatif</div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="https://dub.sh/klon-coinbase" target="_blank" rel="noopener noreferrer" class="link-btn">Coinbase</a>
+        <a href="https://crypto.com/app/wu2sfywjnt" target="_blank" rel="noopener noreferrer" class="link-btn">Crypto.com</a>
+        <a href="https://dub.sh/klon-mintos" target="_blank" rel="noopener noreferrer" class="link-btn">Mintos</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Portefeuille & Performances</div>
+      <a href="https://dub.sh/klon-wikifolio" target="_blank" rel="noopener noreferrer" class="link-btn">Suivre le Wikifolio Alpha Picker</a>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Analyses & Thèses</div>
+      <a href="https://dub.sh/klon-substack" target="_blank" rel="noopener noreferrer" class="link-btn">Suivre le Substack Alpha Picker</a>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Soutenir le Projet</div>
+      <p style="font-size: 0.9rem; line-height: 1.4;">
+        Si cet outil vous aide dans votre gestion de trésorerie et d'autonomie financière, vous pouvez soutenir le projet via les liens ci-dessus ou par un don.
+      </p>
+      <a href="https://www.paypal.me/AlphaPicker" target="_blank" rel="noopener noreferrer" class="link-btn link-btn-paypal">Faire un don via PayPal</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div>
+      <strong>KLON Corp.</strong> — Unité de Production de FCF & Open Source développée par <strong>Alpha Picker</strong> et hébergée sur GitHub Pages.
+    </div>
+    <div>
+      🛡️ <strong>Confidentialité :</strong> Aucun cookie de suivi, aucune collecte de données. Toutes vos saisies restent exclusivement stockées dans votre navigateur.
+    </div>
+    <div>
+      ⚠️ <strong>Avertissement :</strong> Cet outil sert de simulation personnelle et éducative. Il ne constitue en aucun cas un conseil en investissement ou une incitation financière.
+    </div>
+  </footer>
+</div>
+
+<!-- MODALE HISTORIQUE & COURBE DE TRÉSORERIE CUMULÉE -->
+<div id="history-modal" class="modal-overlay">
+  <div class="modal-card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="card-title" style="margin-bottom: 0;">📈 Courbe de Trésorerie Cumulée</div>
+      <span id="chart-hover-label" style="font-size:0.75rem; color:var(--accent-purple); font-weight:800;">Survolez les points</span>
+    </div>
+    <p style="font-size: 0.8rem; opacity: 0.8; margin-top: -6px;">
+      Trajectoire d'accumulation du cash disponible produit pour alimenter KLON.
+    </p>
+
+    <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
+      <svg id="cumul-chart-svg" width="100%" height="150" viewBox="0 0 500 150" style="overflow: visible;"></svg>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; padding: 4px 0;">
+      <span>Moyenne FCF / mois : <strong id="modal-avg-fcf" style="color:var(--accent-green-bright);">0 €</strong></span>
+      <span>Meilleur mois : <strong id="modal-best-fcf" style="color:var(--accent-purple);">0 €</strong></span>
+    </div>
+
+    <button class="btn-secondary" onclick="closeHistoryModal()" style="margin-top: 6px;">Fermer</button>
+  </div>
+</div>
+
+<!-- MODALE DÉDIÉE PERSONNALISATION TICKER -->
+<div id="ticker-modal" class="modal-overlay">
+  <div class="modal-card" style="max-width: 360px; text-align: center;">
+    <div style="font-size: 2.4rem; line-height: 1;">🏛️</div>
+    <div class="card-title" style="justify-content: center; font-size: 1.15rem; margin: 4px 0;">Ticker Boursier</div>
+    <p style="font-size: 0.82rem; color: var(--text-main); opacity: 0.85; line-height: 1.4;">
+      Personnalise le symbole boursier de ton unité de production (ex: <strong>KLON.PA</strong>, <strong>ALPHA.US</strong>).
+    </p>
+
+    <div style="margin: 8px 0;">
+      <input type="text" id="modal-ticker-input" placeholder="Ex: KLON.PA" maxlength="10" style="text-align: center; text-transform: uppercase; font-size: 1.1rem; font-weight: 800; letter-spacing: 1px;" onkeydown="if(event.key==='Enter') saveModalTicker()">
+    </div>
+
+    <div style="display: flex; gap: 8px; justify-content: center; margin-top: 6px;">
+      <button class="btn-primary" style="flex: 1; padding: 10px;" onclick="saveModalTicker()">Valider</button>
+      <button class="btn-secondary" style="padding: 10px;" onclick="resetModalTicker()" title="Rétablir le calcul automatique">Auto</button>
+      <button class="btn-secondary" style="padding: 10px;" onclick="closeTickerModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE EXPLICATION RÈGLE DES 4% -->
+<div id="annuity-help-modal" class="modal-overlay">
+  <div class="modal-card" style="max-width: 420px; text-align: left;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div style="font-size: 1.6rem;">💡</div>
+      <div class="card-title" style="margin-bottom: 0;">Règle des 4 % & Rente Passive</div>
+    </div>
+    <div style="font-size: 0.82rem; line-height: 1.5; color: var(--text-main); opacity: 0.9; margin-top: 6px;">
+      La <strong>règle des 4 %</strong> est un standard mondial d'indépendance financière issu d'études historiques de référence (notamment la <em>Trinity Study</em>).<br><br>
+      Elle repose sur les performances historiques à long terme des grands indices comme le <strong>S&P 500</strong> (~10 % de rendement brut moyen/an, soit ~7 % net d'inflation). Elle postule qu'en retirant 4 % d'un capital investi chaque année, celui-ci ne s'épuise théoriquement jamais.<br><br>
+      Chaque euro de <strong>Free Cash-Flow</strong> disponible extrait par ton unité et injecté dans tes investissements génère ainsi une rente perpétuelle calculée selon :<br>
+      <code style="background: rgba(163,113,247,0.15); padding: 2px 6px; border-radius: 4px; color: var(--accent-purple); font-weight: bold;">(FCF × 4%) ÷ 12 mois</code>.<br><br>
+      <div style="border-top: 1px solid var(--border-color); padding-top: 8px; font-size: 0.72rem; opacity: 0.75; font-style: italic;">
+        ⚠️ <strong>Avertissement :</strong> Cet outil sert exclusivement de simulation personnelle et éducative. Il ne constitue en aucun cas un conseil en investissement.
+      </div>
+    </div>
+    <button class="btn-primary" onclick="closeAnnuityHelpModal()" style="margin-top: 6px; width: 100%;">Compris</button>
+  </div>
+</div>
+
+<!-- MODALE RÉCOMPENSE DÉBLOQUÉE -->
+<div id="corp-reward-modal" class="modal-overlay">
+  <div class="modal-card" style="text-align: center; max-width: 360px;">
+    <button class="btn-mini-celebrate" onclick="replayRewardAnimation()" title="Revoir l'explosion">🎆</button>
+
+    <div id="reward-detail-icon" style="font-size: 3rem; line-height: 1; margin-top: 4px;">🏆</div>
+    <div id="reward-detail-title" class="card-title" style="justify-content: center; font-size: 1.15rem; margin: 4px 0;">Titre de la Récompense</div>
+    <p id="reward-detail-desc" style="font-size: 0.85rem; line-height: 1.5; color: var(--text-main); opacity: 0.9;">Description...</p>
+    <button class="btn-primary" onclick="closeCorpRewardModal()" style="margin-top: 8px; padding: 10px 16px;">Génial !</button>
+  </div>
+</div>
+
+<script>
+  let contextMonth = '2025-01'; // Mémorise le mois analysé pour ne jamais perdre le fil
+  let currentHorizon = 'monthly';
+  let activeYear = 2026;
+  let activeMonthNum = '09';
+  let currentRewardAnimType = 'confetti';
+  let isRewardsVisible = false;
+
+  const monthNamesLong = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+  ];
+
+  function generate3YearsHistory() {
+    const history = [];
+    for (let m = 1; m <= 12; m++) {
+      const mm = m < 10 ? '0' + m : '' + m;
+      history.push({ month: `2023-${mm}`, brut: 3100, taxes: 880, frais: 210, charges: 1150 });
+    }
+    for (let m = 1; m <= 12; m++) {
+      const mm = m < 10 ? '0' + m : '' + m;
+      history.push({ month: `2024-${mm}`, brut: 3350, taxes: 930, frais: 180, charges: 1180 });
+    }
+    for (let m = 1; m <= 12; m++) {
+      const mm = m < 10 ? '0' + m : '' + m;
+      history.push({ month: `2025-${mm}`, brut: 3600, taxes: 980, frais: 160, charges: 1200 });
+    }
+    return history;
+  }
+
+  let localData = JSON.parse(localStorage.getItem('corp_db'));
+  if (!localData || !Array.isArray(localData.records)) {
+    localData = { 
+      companyName: '', 
+      ticker: '',
+      currency: '€',
+      theme: 'dark',
+      everUnlockedRewards: [],
+      records: generate3YearsHistory() 
+    };
+    localStorage.setItem('corp_db', JSON.stringify(localData));
+  }
+  let db = localData;
+  if (!db.currency) db.currency = '€';
+  if (!db.theme) db.theme = 'dark';
+  if (db.ticker === undefined) db.ticker = '';
+
+  // Rétrocompatibilité avec les versions précédentes
+  if (!Array.isArray(db.everUnlockedRewards)) {
+    db.everUnlockedRewards = Array.isArray(db.everUnlockedBadges) ? db.everUnlockedBadges : [];
+  }
+
+  function initPeriodNavigator() {
+    const mSelect = document.getElementById('select-active-month');
+    const ySelect = document.getElementById('select-active-year');
+    
+    mSelect.innerHTML = '';
+    monthNamesLong.forEach((name, idx) => {
+      const mm = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
+      mSelect.innerHTML += `<option value="${mm}">${name}</option>`;
+    });
+
+    const nowY = new Date().getFullYear();
+    ySelect.innerHTML = '';
+    for (let y = nowY - 5; y <= nowY + 2; y++) {
+      ySelect.innerHTML += `<option value="${y}">${y}</option>`;
+    }
+
+    mSelect.value = activeMonthNum;
+    ySelect.value = activeYear;
+    updatePeriodDisplay();
+  }
+
+  function onPeriodDropdownChange() {
+    activeMonthNum = document.getElementById('select-active-month').value;
+    activeYear = parseInt(document.getElementById('select-active-year').value, 10);
+    updatePeriodDisplay();
+  }
+
+  function stepMonth(delta) {
+    let m = parseInt(activeMonthNum, 10) + delta;
+    if (m > 12) {
+      m = 1;
+      activeYear++;
+    } else if (m < 1) {
+      m = 12;
+      activeYear--;
+    }
+    activeMonthNum = m < 10 ? '0' + m : '' + m;
+
+    document.getElementById('select-active-month').value = activeMonthNum;
+    document.getElementById('select-active-year').value = activeYear;
+    updatePeriodDisplay();
+  }
+
+  function updatePeriodDisplay() {
+    const periodStr = `${activeYear}-${activeMonthNum}`;
+    const badge = document.getElementById('period-status-badge');
+    const found = db.records.find(r => r.month === periodStr);
+
+    if (found) {
+      badge.innerText = "🟢 Enregistré";
+      badge.className = "period-status-pill saved";
+      document.getElementById('in-brut').value = found.brut;
+      document.getElementById('in-taxes').value = found.taxes;
+      document.getElementById('in-frais').value = found.frais;
+      document.getElementById('in-charges').value = found.charges;
+    } else {
+      badge.innerText = "⚪ Nouveau mois";
+      badge.className = "period-status-pill new";
+    }
+  }
+
+  function toggleFieldHelp(helpId) {
+    const el = document.getElementById(helpId);
+    if (el) el.classList.toggle('active');
+  }
+
+  function confirmResetDialog() {
+    if (confirm("Es-tu sûr de vouloir tout réinitialiser à zéro ? Toutes les données et l'historique d'exploitation seront effacés.")) {
+      db.records = [];
+      db.companyName = '';
+      db.ticker = '';
+      db.everUnlockedRewards = [];
+      saveData();
+      document.getElementById('company-name-input').value = '';
+      updatePeriodDisplay();
+      renderRecordsList();
+      updateAppHeader();
+      populateCompareSelectors();
+      if (document.getElementById('tab2').classList.contains('active')) renderStockReport();
+    }
+  }
+  
+  function openAnnuityHelpModal() {
+  document.getElementById('annuity-help-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  }
+
+  function closeAnnuityHelpModal() {
+  document.getElementById('annuity-help-modal').classList.remove('active');
+  document.body.style.overflow = '';
+  }
+
+  function saveData() { localStorage.setItem('corp_db', JSON.stringify(db)); }
+  function fmt(v) { return new Intl.NumberFormat('fr-FR').format(Math.round(v || 0)) + ' ' + db.currency; }
+
+  function changeTheme(themeName) {
+    db.theme = themeName;
+    saveData();
+    document.documentElement.setAttribute('data-theme', themeName);
+  }
+
+  function changeCurrency(sym) {
+    db.currency = sym;
+    saveData();
+    document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
+    renderRecordsList();
+    updateAppHeader();
+    if (document.getElementById('tab2').classList.contains('active')) renderStockReport();
+  }
+
+  function switchTab(tabId, e) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    e.currentTarget.classList.add('active');
+    if (tabId === 'tab2') {
+      populateCompareSelectors();
+      renderStockReport();
+    }
+  }
+
+  function setHorizon(mode, e) {
+    currentHorizon = mode;
+    document.querySelectorAll('.horizon-btn').forEach(el => el.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    populateCompareSelectors();
+    renderStockReport();
+  }
+  
+  // Vérifie si un trimestre a bien ses 3 mois complets enregistrés
+  function isQuarterComplete(qKey) {
+    const [year, qStr] = qKey.split('-Q');
+    const q = parseInt(qStr, 10);
+    const m1 = `${year}-${String((q - 1) * 3 + 1).padStart(2, '0')}`;
+    const m2 = `${year}-${String((q - 1) * 3 + 2).padStart(2, '0')}`;
+    const m3 = `${year}-${String(q * 3).padStart(2, '0')}`;
+    return db.records.some(r => r.month === m1) &&
+           db.records.some(r => r.month === m2) &&
+           db.records.some(r => r.month === m3);
+  }
+
+  // Vérifie si une année a bien ses 12 mois complets enregistrés
+  function isYearComplete(yearStr) {
+    for (let m = 1; m <= 12; m++) {
+      const mStr = `${yearStr}-${String(m).padStart(2, '0')}`;
+      if (!db.records.some(r => r.month === mStr)) return false;
+    }
+    return true;
+  }
+
+  function populateCompareSelectors() {
+    const currSel = document.getElementById('select-curr-period');
+    const prevSel = document.getElementById('select-prev-period');
+
+    if (db.records.length === 0) {
+      currSel.innerHTML = '<option value="">--</option>';
+      prevSel.innerHTML = '<option value="">--</option>';
+      return;
+    }
+
+    if (!contextMonth) {
+      contextMonth = `${activeYear}-${activeMonthNum}`;
+    }
+
+    if (currentHorizon === 'monthly') {
+      document.getElementById('label-curr-sel').innerText = "Mois analysé";
+      document.getElementById('label-prev-sel').innerText = "Mois de référence (N-1)";
+
+      const months = db.records.map(r => r.month);
+      const targetMonth = months.includes(contextMonth) ? contextMonth : months[months.length - 1];
+      
+      let [y, m] = targetMonth.split('-').map(Number);
+      m--; if (m < 1) { m = 12; y--; }
+      const prevMonthTarget = `${y}-${String(m).padStart(2, '0')}`;
+      const fallbackPrev = months.includes(prevMonthTarget) ? prevMonthTarget : (months[months.indexOf(targetMonth) - 1] || targetMonth);
+
+      currSel.innerHTML = months.map(mStr => {
+        const [yStr, mNum] = mStr.split('-');
+        const name = monthNamesLong[parseInt(mNum, 10) - 1] || mNum;
+        return `<option value="${mStr}" ${mStr === targetMonth ? 'selected' : ''}>${mStr} (${name})</option>`;
+      }).join('');
+
+      prevSel.innerHTML = months.map(mStr => {
+        const [yStr, mNum] = mStr.split('-');
+        const name = monthNamesLong[parseInt(mNum, 10) - 1] || mNum;
+        return `<option value="${mStr}" ${mStr === fallbackPrev ? 'selected' : ''}>${mStr} (${name})</option>`;
+      }).join('');
+
+    } else if (currentHorizon === 'quarterly') {
+      document.getElementById('label-curr-sel').innerText = "Trimestre analysé";
+      document.getElementById('label-prev-sel').innerText = "Trimestre de référence (N-1)";
+
+      const quartersSet = new Set();
+      db.records.forEach(r => {
+        const y = r.month.slice(0, 4);
+        const m = parseInt(r.month.slice(5, 7), 10);
+        const q = Math.ceil(m / 3);
+        quartersSet.add(`${y}-Q${q}`);
+      });
+      
+      // FILTRE : On ne propose QUE des trimestres 100% complets (3 mois réels) !
+      const completeQuarters = [...quartersSet].filter(isQuarterComplete).sort();
+
+      if (completeQuarters.length === 0) {
+        currSel.innerHTML = '<option value="">Aucun trimestre complet (3 mois requis)</option>';
+        prevSel.innerHTML = '<option value="">--</option>';
+        return;
+      }
+
+      const [ctxY, ctxM] = contextMonth.split('-').map(Number);
+      const ctxQ = Math.ceil(ctxM / 3);
+      const theoreticalQ = `${ctxY}-Q${ctxQ}`;
+
+      // Si le trimestre du mois actuel est complet on le prend, sinon on se replie sur le dernier trimestre complet antérieur !
+      let effectiveCurrQ = null;
+      if (completeQuarters.includes(theoreticalQ)) {
+        effectiveCurrQ = theoreticalQ;
+      } else {
+        const pastQuarters = completeQuarters.filter(q => q < theoreticalQ);
+        effectiveCurrQ = pastQuarters.length > 0 ? pastQuarters[pastQuarters.length - 1] : completeQuarters[completeQuarters.length - 1];
+      }
+
+      const idx = completeQuarters.indexOf(effectiveCurrQ);
+      const effectivePrevQ = idx > 0 ? completeQuarters[idx - 1] : effectiveCurrQ;
+
+      const qLabels = { 1: 'T1 (Jan - Mar)', 2: 'T2 (Avr - Juin)', 3: 'T3 (Juil - Sep)', 4: 'T4 (Oct - Déc)' };
+
+      currSel.innerHTML = completeQuarters.map(qKey => {
+        const [yStr, qN] = qKey.split('-Q');
+        const label = `${yStr}-${qLabels[qN] || qKey}`;
+        return `<option value="${qKey}" ${qKey === effectiveCurrQ ? 'selected' : ''}>${label}</option>`;
+      }).join('');
+
+      prevSel.innerHTML = completeQuarters.map(qKey => {
+        const [yStr, qN] = qKey.split('-Q');
+        const label = `${yStr}-${qLabels[qN] || qKey}`;
+        return `<option value="${qKey}" ${qKey === effectivePrevQ ? 'selected' : ''}>${label}</option>`;
+      }).join('');
+
+    } else {
+      document.getElementById('label-curr-sel').innerText = "Année analysée";
+      document.getElementById('label-prev-sel').innerText = "Année de référence (N-1)";
+
+      const years = [...new Set(db.records.map(r => r.month.slice(0, 4)))].sort();
+      
+      // FILTRE : On ne propose QUE des années 100% complètes (12 mois réels) !
+      const completeYears = years.filter(isYearComplete).sort();
+
+      if (completeYears.length === 0) {
+        currSel.innerHTML = '<option value="">Aucune année complète (12 mois requis)</option>';
+        prevSel.innerHTML = '<option value="">--</option>';
+        return;
+      }
+
+      const ctxYear = contextMonth.slice(0, 4);
+      let effectiveCurrY = null;
+      
+      // Si l'année actuelle a bien ses 12 mois complets on la prend, sinon on prend la dernière année complète antérieure !
+      if (completeYears.includes(ctxYear)) {
+        effectiveCurrY = ctxYear;
+      } else {
+        const pastYears = completeYears.filter(y => y < ctxYear);
+        effectiveCurrY = pastYears.length > 0 ? pastYears[pastYears.length - 1] : completeYears[completeYears.length - 1];
+      }
+
+      const idx = completeYears.indexOf(effectiveCurrY);
+      const effectivePrevY = idx > 0 ? completeYears[idx - 1] : effectiveCurrY;
+
+      currSel.innerHTML = completeYears.map(y => `<option value="${y}" ${y === effectiveCurrY ? 'selected' : ''}>Année ${y}</option>`).join('');
+      prevSel.innerHTML = completeYears.map(y => `<option value="${y}" ${y === effectivePrevY ? 'selected' : ''}>Année ${y}</option>`).join('');
+    }
+  }
+  
+  function onCurrPeriodChange() {
+    const currSel = document.getElementById('select-curr-period');
+    const prevSel = document.getElementById('select-prev-period');
+    const val = currSel.value;
+    if (!val) return;
+
+    // Mémorise la période choisie pour que le changement d'horizon la conserve
+    if (currentHorizon === 'monthly') {
+      contextMonth = val;
+      let [y, m] = val.split('-').map(Number);
+      m--; if (m < 1) { m = 12; y--; }
+      const prev = `${y}-${String(m).padStart(2, '0')}`;
+      if (Array.from(prevSel.options).some(o => o.value === prev)) prevSel.value = prev;
+    } else if (currentHorizon === 'quarterly') {
+      const [y, q] = val.split('-Q').map(Number);
+      contextMonth = `${y}-${String((q - 1) * 3 + 1).padStart(2, '0')}`;
+      let pQ = q - 1, pY = y;
+      if (pQ < 1) { pQ = 4; pY--; }
+      const prev = `${pY}-Q${pQ}`;
+      if (Array.from(prevSel.options).some(o => o.value === prev)) prevSel.value = prev;
+    } else {
+      contextMonth = `${val}-01`;
+      const prev = String(parseInt(val, 10) - 1);
+      if (Array.from(prevSel.options).some(o => o.value === prev)) prevSel.value = prev;
+    }
+
+    renderStockReport();
+  }
+  
+  function saveCompanyName() {
+    db.companyName = document.getElementById('company-name-input').value.trim();
+    saveData();
+    updateAppHeader();
+  }
+
+  /* MODALE PERSONNALISÉE DU TICKER */
+  function openTickerModal() {
+    const current = db.ticker || '';
+    document.getElementById('modal-ticker-input').value = current;
+    document.getElementById('ticker-modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      const input = document.getElementById('modal-ticker-input');
+      input.focus();
+      input.select();
+    }, 100);
+  }
+
+  function closeTickerModal() {
+    document.getElementById('ticker-modal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function saveModalTicker() {
+    const val = document.getElementById('modal-ticker-input').value.trim().toUpperCase();
+    db.ticker = val;
+    saveData();
+    updateAppHeader();
+    closeTickerModal();
+  }
+
+  function resetModalTicker() {
+    db.ticker = '';
+    saveData();
+    updateAppHeader();
+    closeTickerModal();
+  }
+
+  function calculateAIMultiple() {
+    if (db.records.length === 0) return { multiple: 12.0, reasons: "Initialisation standard (12x)" };
+
+    const recs = db.records.slice(-12);
+    const totalBrut = recs.reduce((acc, r) => acc + r.brut, 0);
+    const totalFcf = recs.reduce((acc, r) => acc + (r.brut - r.taxes - r.frais - r.charges), 0);
+    const avgMargin = totalBrut > 0 ? (totalFcf / totalBrut) * 100 : 0;
+
+    let mult = 8.0;
+    let reasons = [];
+
+    if (avgMargin >= 45) { mult += 12.0; reasons.push("Rentabilité Exceptionnelle (45%+)"); }
+    else if (avgMargin >= 35) { mult += 8.5; reasons.push("Marge Excellente (35%+)"); }
+    else if (avgMargin >= 25) { mult += 5.5; reasons.push("Marge Solide (25%+)"); }
+    else if (avgMargin >= 15) { mult += 3.0; reasons.push("Marge Standard (15%+)"); }
+    else if (avgMargin > 0) { mult += 1.0; reasons.push("Marge Sous Tension (<15%)"); }
+    else { mult -= 2.0; reasons.push("Déficit FCF"); }
+
+    const negativeMonths = recs.filter(r => (r.brut - r.taxes - r.frais - r.charges) < 0).length;
+    if (negativeMonths === 0 && recs.length >= 6) {
+      mult += 2.5;
+      reasons.push("0 Déficit (Prime Régularité)");
+    } else if (negativeMonths >= 2) {
+      mult -= 2.0;
+      reasons.push("Volatilité Négative");
+    }
+
+    if (db.records.length >= 12) {
+      const recent6 = db.records.slice(-6).reduce((acc, r) => acc + (r.brut - r.taxes - r.frais - r.charges), 0);
+      const prev6 = db.records.slice(-12, -6).reduce((acc, r) => acc + (r.brut - r.taxes - r.frais - r.charges), 0);
+      if (prev6 > 0 && recent6 > prev6) {
+        const growth = ((recent6 - prev6) / prev6) * 100;
+        const bonus = Math.min(4.0, growth / 10);
+        mult += bonus;
+        reasons.push(`Dynamique FCF (+${growth.toFixed(0)}%)`);
+      }
+    }
+
+    mult = Math.max(6.0, Math.min(30.0, Math.round(mult * 10) / 10));
+    return { multiple: mult, reasons: reasons.join(" • ") };
+  }
+
+  function updateAppHeader() {
+    let raw = (db.companyName || '').trim();
+    raw = raw.replace(/corp\.?/gi, '').replace(/corporation/gi, '').trim();
+
+    if (!raw) {
+      document.getElementById('app-company-name').innerHTML = `KLON <span>CORP.</span>`;
+    } else {
+      const cleanName = raw.toUpperCase();
+      document.getElementById('app-company-name').innerHTML = `${cleanName} <span>CORP.</span>`;
+    }
+
+    let effectiveTicker = db.ticker;
+    if (!effectiveTicker) {
+      const cleanName = raw.toUpperCase();
+      const tickerPrefix = cleanName.replace(/[^A-Z]/g, '').slice(0, 3) || 'KCN';
+      effectiveTicker = `${tickerPrefix}.PA`;
+    }
+    document.getElementById('header-ticker').innerText = `TICKER: ${effectiveTicker}`;
+    
+    const yCurr = db.records.slice(-12);
+    const fcfTTM = yCurr.reduce((acc, r) => acc + (r.brut - r.taxes - r.frais - r.charges), 0);
+    const aiData = calculateAIMultiple();
+    const fixedMarketCap = Math.max(0, fcfTTM * aiData.multiple);
+    document.getElementById('header-market-cap').innerText = 'Valorisation : ' + fmt(fixedMarketCap);
+  }
+
+  function addMonthlyRecord() {
+    const periodStr = `${activeYear}-${activeMonthNum}`;
+    const rec = {
+      month: periodStr,
+      brut: parseFloat(document.getElementById('in-brut').value) || 0,
+      taxes: parseFloat(document.getElementById('in-taxes').value) || 0,
+      frais: parseFloat(document.getElementById('in-frais').value) || 0,
+      charges: parseFloat(document.getElementById('in-charges').value) || 0
+    };
+
+    const idx = db.records.findIndex(r => r.month === periodStr);
+    if (idx >= 0) db.records[idx] = rec;
+    else db.records.push(rec);
+
+    db.records.sort((a, b) => a.month.localeCompare(b.month));
+    saveData();
+    updatePeriodDisplay();
+    renderRecordsList();
+    updateAppHeader();
+    alert(`Mois ${periodStr} clôturé avec succès !`);
+  }
+
+  function deleteRecord(month, e) {
+    if (e) e.stopPropagation();
+    db.records = db.records.filter(r => r.month !== month);
+    saveData();
+    updatePeriodDisplay();
+    renderRecordsList();
+    updateAppHeader();
+  }
+
+  function selectRowForEdit(m) {
+    const parts = m.split('-');
+    activeYear = parseInt(parts[0], 10);
+    activeMonthNum = parts[1];
+    document.getElementById('select-active-year').value = activeYear;
+    document.getElementById('select-active-month').value = activeMonthNum;
+    updatePeriodDisplay();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderRecordsList() {
+    const box = document.getElementById('records-list');
+    document.getElementById('history-count-badge').innerText = `${db.records.length} mois enregistrés`;
+    box.innerHTML = '';
+
+    if (db.records.length === 0) {
+      box.innerHTML = `<div style="font-size:0.85rem; opacity:0.6; text-align:center; padding:12px;">Aucun mois enregistré.</div>`;
+      return;
+    }
+
+    [...db.records].reverse().forEach(r => {
+      const opex = r.taxes + r.frais + r.charges;
+      const fcf = r.brut - opex;
+      box.innerHTML += `
+        <div class="record-row" onclick="selectRowForEdit('${r.month}')" title="Cliquer pour charger et modifier ce mois">
+          <div>
+            <strong>📅 ${r.month}</strong>
+            <div style="font-size:0.73rem; opacity:0.7; margin-top:2px;">
+              Brut: ${fmt(r.brut)} | Charges: ${fmt(opex)}
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <strong style="color:${fcf >= 0 ? 'var(--accent-green-bright)' : 'var(--accent-red)'}; font-size:0.9rem;">
+              FCF: ${fmt(fcf)}
+            </strong>
+            <button class="btn-danger" onclick="deleteRecord('${r.month}', event)">✕</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function getAggregateDataForKey(key, mode) {
+    let recs = [];
+    if (mode === 'monthly') {
+      recs = db.records.filter(r => r.month === key);
+    } else if (mode === 'quarterly') {
+      const [year, qStr] = key.split('-Q');
+      const q = parseInt(qStr, 10);
+      const startMonth = (q - 1) * 3 + 1;
+      const endMonth = q * 3;
+      recs = db.records.filter(r => {
+        if (!r.month.startsWith(year)) return false;
+        const m = parseInt(r.month.slice(5, 7), 10);
+        return m >= startMonth && m <= endMonth;
+      });
+    } else {
+      recs = db.records.filter(r => r.month.startsWith(key));
+    }
+
+    return recs.reduce((a, b) => ({
+      brut: a.brut + b.brut,
+      taxes: a.taxes + b.taxes,
+      frais: a.frais + b.frais,
+      charges: a.charges + b.charges
+    }), { brut: 0, taxes: 0, frais: 0, charges: 0 });
+  }
+
+  function renderStockReport() {
+    if (db.records.length === 0) {
+      document.getElementById('hero-fcf-val').innerText = '0 ' + db.currency;
+      document.getElementById('hero-fcf-sub').innerText = 'Marge Nette : 0 %';
+      document.getElementById('hero-annuity-val').innerText = '+0 ' + db.currency + ' / mois';
+      document.getElementById('hero-annuity-sub').innerText = 'soit +0 ' + db.currency + ' / an à vie';
+      document.getElementById('report-tbody').innerHTML = '<tr><td colspan="3" style="text-align:center; opacity:0.6; padding:16px;">Aucune donnée enregistrée</td></tr>';
+      document.getElementById('gadget-market-cap').innerText = 'Valorisation : 0 ' + db.currency;
+      document.getElementById('gadget-rank-title').innerText = 'Penny Stock';
+      document.getElementById('total-cumul-cash').innerText = '0 ' + db.currency;
+      document.getElementById('total-cumul-annuity').innerText = '+0 ' + db.currency + ' / mois';
+      if (typeof updateRewardsDisplay === 'function') updateRewardsDisplay();
+      else if (typeof updateBadgesDisplay === 'function') updateBadgesDisplay();
+      return;
+    }
+
+    // CASH TOTAL HISTORIQUE & RENTE DÉFINITIVE
+    const totalCashCumul = db.records.reduce((acc, r) => acc + (r.brut - r.taxes - r.frais - r.charges), 0);
+    const totalAnnuityCumul = Math.max(0, Math.round((totalCashCumul * 0.04) / 12));
+    document.getElementById('total-cumul-cash').innerText = fmt(totalCashCumul);
+    document.getElementById('total-cumul-annuity').innerText = `+${fmt(totalAnnuityCumul)} / mois`;
+
+    const currKey = document.getElementById('select-curr-period').value;
+    const prevKey = document.getElementById('select-prev-period').value;
+
+    const currData = getAggregateDataForKey(currKey, currentHorizon);
+    const prevData = getAggregateDataForKey(prevKey, currentHorizon);
+
+    const currNetIncome = currData.brut - currData.taxes;
+    const prevNetIncome = prevData.brut - prevData.taxes;
+
+    const currOpex = currData.taxes + currData.frais + currData.charges;
+    const prevOpex = prevData.taxes + prevData.frais + prevData.charges;
+
+    const currFcf = currData.brut - currOpex;
+    const prevFcf = prevData.brut - prevOpex;
+    const currMargin = currData.brut > 0 ? (currFcf / currData.brut) * 100 : 0;
+
+    // CALCUL DE RENTE : TOUJOURS EN MENSUEL AVEC RAPPEL ANNUEL EN DESSOUS
+    const annualAnnuity = Math.max(0, Math.round(currFcf * 0.04));
+    const monthlyAnnuity = Math.max(0, Math.round((currFcf * 0.04) / 12));
+
+    const prevAnnualAnnuity = Math.max(0, Math.round(prevFcf * 0.04));
+    const prevMonthlyAnnuity = Math.max(0, Math.round((prevFcf * 0.04) / 12));
+
+    let heroPeriodLabel = "FCF DISPONIBLE";
+    if (currentHorizon === 'monthly') heroPeriodLabel = "FCF DU MOIS";
+    else if (currentHorizon === 'quarterly') heroPeriodLabel = "FCF DU TRIMESTRE";
+    else heroPeriodLabel = "FCF DE L'ANNÉE";
+
+    // HERO DASHBOARD
+    document.getElementById('hero-label-period').innerText = heroPeriodLabel;
+    document.getElementById('hero-fcf-val').innerText = fmt(currFcf);
+    document.getElementById('hero-fcf-sub').innerText = `Marge Nette : ${currMargin.toFixed(1)} %`;
+    
+    // Le gros chiffre reste TOUJOURS en € / mois !
+    document.getElementById('hero-annuity-val').innerText = `+${new Intl.NumberFormat('fr-FR').format(monthlyAnnuity)} ${db.currency} / mois`;
+    // La petite ligne en dessous affiche le cumul annuel à vie
+    document.getElementById('hero-annuity-sub').innerText = `soit +${new Intl.NumberFormat('fr-FR').format(annualAnnuity)} ${db.currency} / an à vie`;
+
+    // SCORECARD DIAGNOSTIC
+    document.getElementById('diag-fcf-margin').innerText = `${currMargin.toFixed(1)} %`;
+    const diagGrade = document.getElementById('diag-margin-grade');
+    if (currMargin >= 40) { diagGrade.innerText = "👑 Rentabilité Exceptionnelle"; diagGrade.style.color = "var(--accent-purple)"; }
+    else if (currMargin >= 25) { diagGrade.innerText = "💎 Machine à Cash Solide"; diagGrade.style.color = "var(--accent-green-bright)"; }
+    else if (currMargin >= 10) { diagGrade.innerText = "⚖️ Équilibre Sain"; diagGrade.style.color = "var(--accent-blue)"; }
+    else { diagGrade.innerText = "⚠️ Coûts Élevés"; diagGrade.style.color = "var(--accent-orange)"; }
+
+    document.getElementById('diag-burn-rate').innerText = fmt(currData.charges);
+    const convRate = currNetIncome > 0 ? Math.max(0, Math.min(100, (currFcf / currNetIncome) * 100)) : 0;
+    document.getElementById('diag-conversion-rate').innerText = `${convRate.toFixed(1)} %`;
+
+    renderWaterfall(currData, currFcf);
+
+    // CALCUL DES VARIATIONS
+    const calcVar = (c, p) => p !== 0 ? ((c - p) / Math.abs(p)) * 100 : 0;
+    const brutVar = calcVar(currData.brut, prevData.brut);
+    const taxesVar = calcVar(currData.taxes, prevData.taxes);
+    const netVar = calcVar(currNetIncome, prevNetIncome);
+    const fraisVar = calcVar(currData.frais, prevData.frais);
+    const chargesVar = calcVar(currData.charges, prevData.charges);
+    const fcfVar = calcVar(currFcf, prevFcf);
+    const annuityVar = calcVar(monthlyAnnuity, prevMonthlyAnnuity);
+
+    const renderVarBadge = (pct, inverseGood = false) => {
+      const isGood = inverseGood ? pct <= 0 : pct >= 0;
+      const color = isGood ? 'var(--accent-green-bright)' : 'var(--accent-red)';
+      const sign = pct >= 0 ? '+' : '';
+      return `<span class="var-badge" style="color:${color}; background:rgba(255,255,255,0.04);">${sign}${pct.toFixed(1)}%</span>`;
+    };
+
+    document.getElementById('th-variation-label').innerText = `VAR (${currKey} vs ${prevKey})`;
+    
+    // COMPTE DE RÉSULTAT ENRICHI EN 7 LIGNES
+    document.getElementById('report-tbody').innerHTML = `
+      <tr>
+        <td><strong>1. Chiffre d'Affaires Brut</strong><br><span style="font-size:0.7rem; opacity:0.6;">Total entrées générées</span></td>
+        <td class="val-cell">${fmt(currData.brut)}</td>
+        <td class="val-cell">${renderVarBadge(brutVar)}</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--accent-red);">—</span> <strong>Impôts & Cotisations</strong><br><span style="font-size:0.7rem; opacity:0.6;">Prélèvements obligatoires État</span></td>
+        <td class="val-cell" style="color:var(--accent-red);">${fmt(-currData.taxes)}</td>
+        <td class="val-cell">${renderVarBadge(taxesVar, true)}</td>
+      </tr>
+      <tr style="background: rgba(255,255,255,0.015);">
+        <td><strong style="color:var(--accent-blue);">= Revenu Net d'Activité</strong><br><span style="font-size:0.7rem; opacity:0.6;">Reste avant charges personnelles</span></td>
+        <td class="val-cell" style="color:var(--accent-blue);">${fmt(currNetIncome)}</td>
+        <td class="val-cell">${renderVarBadge(netVar)}</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--accent-orange);">—</span> <strong>Frais Pro Directs</strong><br><span style="font-size:0.7rem; opacity:0.6;">Transports, matériel, abonnements</span></td>
+        <td class="val-cell" style="color:var(--accent-orange);">${fmt(-currData.frais)}</td>
+        <td class="val-cell">${renderVarBadge(fraisVar, true)}</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--accent-orange);">—</span> <strong>Charges Vitales de Base</strong><br><span style="font-size:0.7rem; opacity:0.6;">Logement, énergie, nourriture</span></td>
+        <td class="val-cell" style="color:var(--accent-orange);">${fmt(-currData.charges)}</td>
+        <td class="val-cell">${renderVarBadge(chargesVar, true)}</td>
+      </tr>
+      <tr style="background: rgba(126, 231, 135, 0.05); border-top: 1px solid var(--accent-green-bright);">
+        <td><strong style="color:var(--accent-green-bright); font-size:0.92rem;">★ FREE CASH-FLOW DISPONIBLE</strong><br><span style="font-size:0.7rem; opacity:0.7;">Trésorerie nette disponible dégagée</span></td>
+        <td class="val-cell" style="color:var(--accent-green-bright); font-size:1.05rem;">${fmt(currFcf)}</td>
+        <td class="val-cell">${renderVarBadge(fcfVar)}</td>
+      </tr>
+      <tr style="background: rgba(163, 113, 247, 0.04);">
+        <td><strong style="color:var(--accent-purple);">⛽ Rente Passive Créée</strong><br><span style="font-size:0.7rem; opacity:0.6;">Flux définitif mensuel (soit +${fmt(annualAnnuity)}/an)</span></td>
+        <td class="val-cell" style="color:var(--accent-purple); font-weight:800;">+${fmt(monthlyAnnuity)} / mois</td>
+        <td class="val-cell">${renderVarBadge(annuityVar)}</td>
+      </tr>
+    `;
+
+    // VALORISATION BOURSIÈRE IA
+    const aiData = calculateAIMultiple();
+    document.getElementById('ai-multiple-badge').innerText = `Multiple IA : ${aiData.multiple.toFixed(1)}x`;
+    document.getElementById('ai-multiple-reasons').innerText = `Analyse IA : ${aiData.reasons}`;
+
+    const annualFcfBase = currentHorizon === 'annual' ? currFcf : (currFcf * (currentHorizon === 'monthly' ? 12 : 4));
+    const fixedMarketCap = Math.max(0, annualFcfBase * aiData.multiple);
+    document.getElementById('gadget-market-cap').innerText = `Valorisation : ${fmt(fixedMarketCap)}`;
+    
+    const rankTitle = document.getElementById('gadget-rank-title');
+    if (fixedMarketCap >= 1000000) rankTitle.innerText = "👑 Statut : S&P 500 #1 (Titan Industriel)";
+    else if (fixedMarketCap >= 400000) rankTitle.innerText = "🏛️ Statut : S&P 500 Top 50";
+    else if (fixedMarketCap >= 150000) rankTitle.innerText = "🇫🇷 Statut : CAC 40";
+    else if (fixedMarketCap >= 50000) rankTitle.innerText = "🏢 Statut : Mid-Cap Établie";
+    else rankTitle.innerText = "🚀 Statut : Penny Stock à Forte Croissance";
+
+    if (typeof updateRewardsDisplay === 'function') updateRewardsDisplay();
+    else if (typeof updateBadgesDisplay === 'function') updateBadgesDisplay();
+  }
+
+  function renderWaterfall(data, fcf) {
+    const total = data.brut || 1;
+    const pTaxes = Math.max(0, (data.taxes / total) * 100);
+    const pFrais = Math.max(0, (data.frais / total) * 100);
+    const pCharges = Math.max(0, (data.charges / total) * 100);
+    const pFcf = Math.max(0, (fcf / total) * 100);
+
+    document.getElementById('pct-taxes').innerText = `${pTaxes.toFixed(0)}%`;
+    document.getElementById('pct-frais').innerText = `${pFrais.toFixed(0)}%`;
+    document.getElementById('pct-charges').innerText = `${pCharges.toFixed(0)}%`;
+    document.getElementById('pct-fcf').innerText = `${pFcf.toFixed(0)}%`;
+
+    const bar = document.getElementById('waterfall-bar');
+    bar.innerHTML = `
+      <div class="waterfall-seg" style="width:${pTaxes}%; background:var(--accent-red);" title="Taxes: ${pTaxes.toFixed(1)}%"></div>
+      <div class="waterfall-seg" style="width:${pFrais}%; background:var(--accent-orange);" title="Frais Pro: ${pFrais.toFixed(1)}%"></div>
+      <div class="waterfall-seg" style="width:${pCharges}%; background:var(--accent-blue);" title="Maintien Vital: ${pCharges.toFixed(1)}%"></div>
+      <div class="waterfall-seg" style="width:${pFcf}%; background:var(--accent-green-bright);" title="FCF Net: ${pFcf.toFixed(1)}%"></div>
+    `;
+  }
+
+  function openHistoryModal() {
+    renderCumulChart();
+    document.getElementById('history-modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeHistoryModal() {
+    document.getElementById('history-modal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function renderCumulChart() {
+    const svg = document.getElementById('cumul-chart-svg');
+    svg.innerHTML = '';
+    document.getElementById('chart-hover-label').innerText = 'Survolez les points';
+
+    if (db.records.length < 2) {
+      svg.innerHTML = `<text x="250" y="75" fill="var(--text-main)" font-size="12" text-anchor="middle" opacity="0.6">Au moins 2 mois enregistrés nécessaires</text>`;
+      return;
+    }
+
+    let cumul = 0;
+    let series = [];
+    let fcfList = [];
+
+    db.records.forEach(r => {
+      const fcf = r.brut - r.taxes - r.frais - r.charges;
+      cumul += fcf;
+      fcfList.push(fcf);
+      series.push({ month: r.month, cumul: cumul, fcf: fcf });
+    });
+
+    const avgFcf = fcfList.reduce((a, b) => a + b, 0) / fcfList.length;
+    const bestFcf = Math.max(...fcfList);
+
+    document.getElementById('modal-avg-fcf').innerText = fmt(avgFcf);
+    document.getElementById('modal-best-fcf').innerText = fmt(bestFcf);
+
+    const padLeft = 40, padRight = 25, padTop = 20, padBottom = 30;
+    const width = 500 - padLeft - padRight;
+    const height = 150 - padTop - padBottom;
+
+    const minCumul = Math.min(0, ...series.map(s => s.cumul));
+    const maxCumul = Math.max(1000, ...series.map(s => s.cumul));
+
+    const getY = val => padTop + height - ((val - minCumul) / (maxCumul - minCumul)) * height;
+
+    const gridVals = [minCumul, (minCumul + maxCumul) / 2, maxCumul];
+    gridVals.forEach(gv => {
+      const gy = getY(gv);
+      svg.innerHTML += `
+        <line x1="${padLeft}" y1="${gy}" x2="${500 - padRight}" y2="${gy}" stroke="var(--border-color)" stroke-dasharray="3,3" stroke-width="1" />
+        <text x="${padLeft - 6}" y="${gy + 3}" fill="var(--text-main)" font-size="9" text-anchor="end" opacity="0.65">${new Intl.NumberFormat('fr-FR', { notation: 'compact' }).format(gv)}</text>
+      `;
+    });
+
+    let points = [];
+    series.forEach((s, idx) => {
+      const x = padLeft + (idx / (series.length - 1)) * width;
+      const y = getY(s.cumul);
+      points.push({ x, y, month: s.month, cumul: s.cumul, fcf: s.fcf });
+    });
+
+    let pathD = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) pathD += ` L ${points[i].x} ${points[i].y}`;
+
+    svg.innerHTML += `<path d="${pathD}" fill="none" stroke="var(--accent-purple)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+    
+    const areaD = `${pathD} L ${points[points.length - 1].x} ${padTop + height} L ${points[0].x} ${padTop + height} Z`;
+    svg.innerHTML += `<path d="${areaD}" fill="var(--accent-purple)" opacity="0.12" />`;
+
+    points.forEach(p => {
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", p.x);
+      circle.setAttribute("cy", p.y);
+      circle.setAttribute("r", "4.5");
+      circle.setAttribute("fill", "var(--bg-color)");
+      circle.setAttribute("stroke", "var(--accent-purple)");
+      circle.setAttribute("stroke-width", "2");
+      circle.style.cursor = "pointer";
+
+      const showInfo = () => {
+        document.getElementById('chart-hover-label').innerText = `${p.month} : Cumul ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
+      };
+
+      circle.addEventListener("mouseenter", showInfo);
+      circle.addEventListener("click", showInfo);
+      svg.appendChild(circle);
+    });
+  }
+
+  // 25 RÉCOMPENSES ADAPTÉES DU SMIC AUX HAUTS REVENUS
+  const REWARDS_CONFIG = [
+    { id: "b_first", icon: "🚀", label: "Premier Mois", desc: "Premier mois d'exploitation clôturé ! Ta machine de production de FCF est officiellement lancée.", anim: "confetti" },
+    { id: "b_3m", icon: "🌱", label: "3 Mois Réguliers", desc: "Un trimestre complet enregistré. La régularité de gestion commence à payer.", anim: "confetti" },
+    { id: "b_6m", icon: "🌿", label: "Semestre Maîtrisé", desc: "6 mois de suivi budgétaire sans faillir. Ton pilotage financier est solide.", anim: "cash" },
+    { id: "b_12m", icon: "📅", label: "1 An d'Exploitation", desc: "12 mois complets enregistrés ! Tu as un recul annuel parfait sur tes flux.", anim: "fireworks" },
+    { id: "b_24m", icon: "🏛️", label: "2 Ans de Bilan", desc: "24 mois de rigueur. Tu gères tes finances personnelles comme un véritable directeur financier.", anim: "gold" },
+    { id: "b_36m", icon: "👑", label: "3 Ans de Maîtrise", desc: "36 mois de clôtures consécutives ! Un historique patrimonial d'exception.", anim: "crowns" },
+
+    { id: "b_pos", icon: "🪙", label: "Premier Euro Net", desc: "Cash-flow positif (> 0 €) ! Tu as dégagé un surplus financier ce mois-ci.", anim: "confetti" },
+    { id: "b_50", icon: "💵", label: "Cap des 50 €", desc: "Au moins 50 € de FCF dégagés ce mois. Chaque euro de surplus compte !", anim: "cash" },
+    { id: "b_100", icon: "💶", label: "Cap des 100 €", desc: "100 € de cash libre mensuel extrait ! Le carburant pour tes investissements prend forme.", anim: "cash" },
+    { id: "b_250", icon: "💳", label: "Cap des 250 €", desc: "250 € de trésorerie disponible en un seul mois. Un superbe élan d'autonomie.", anim: "cash" },
+    { id: "b_500", icon: "💰", label: "Cap des 500 €", desc: "500 € de FCF en un mois ! Près d'un tiers de SMIC injecté en liberté financière.", anim: "gold" },
+    { id: "b_1k", icon: "💎", label: "Cap des 1 000 €", desc: "1 000 € de FCF potentiel en un seul mois ! Une vraie machine à cash.", anim: "gold" },
+    { id: "b_2k5", icon: "🪐", label: "Cap des 2 500 €", desc: "2 500 € de cash-flow mensuel ! Ta capacité d'épargne surclasse largement la moyenne.", anim: "diamonds" },
+    { id: "b_5k", icon: "🌟", label: "Cap des 5 000 €", desc: "5 000 € de FCF mensuel ! Niveau d'extraction digne d'un cadre dirigeant ou entrepreneur à succès.", anim: "crowns" },
+
+    { id: "b_rate_10", icon: "🛡️", label: "Épargne 10%+", desc: "Tu as conservé au moins 10% de ton revenu net sous forme de FCF disponible.", anim: "confetti" },
+    { id: "b_rate_20", icon: "⚡", label: "Règle d'Or 20%+", desc: "20% de taux d'épargne atteint ! Tu appliques à la perfection la règle d'or de l'enrichissement.", anim: "cash" },
+    { id: "b_rate_35", icon: "🎯", label: "Épargne 35%+", desc: "Plus d'un tiers de ton revenu net disponible est conservé en trésorerie pure !", anim: "gold" },
+    { id: "b_rate_50", icon: "🏆", label: "Épargne 50%+", desc: "Incroyable ! Tu conserves plus de la moitié exacte de ton revenu net. Mode moine financier validé.", anim: "fireworks" },
+
+    { id: "b_m20", icon: "🔥", label: "Marge 20%+", desc: "Marge nette supérieure à 20% de ton chiffre d'affaires brut. Modèle très sain.", anim: "cash" },
+    { id: "b_m40", icon: "👑", label: "Marge 40%+", desc: "Marge digne d'un monopole tech ! Plus de 40% de tes entrées brutes ressortent en FCF net.", anim: "fireworks" },
+
+    { id: "b_cumul_500", icon: "🥉", label: "500 € Cumulés", desc: "500 € de cash produit depuis le début pour alimenter tes Klons.", anim: "confetti" },
+    { id: "b_cumul_1k", icon: "🥈", label: "1 000 € Cumulés", desc: "Premier cap symbolique des 1 000 € de cash cumulé extrait par ton unité.", anim: "cash" },
+    { id: "b_cumul_5k", icon: "🥇", label: "5 000 € Cumulés", desc: "5 000 € de trésorerie totale dégagée. La boule de neige patrimoniale commence à rouler !", anim: "gold" },
+    { id: "b_cumul_10k", icon: "🏆", label: "10 000 € Cumulés", desc: "Cap des 10 000 € de FCF cumulé ! Une rente passive de +33 €/mois à vie créée à 4%.", anim: "gold" },
+    { id: "b_cumul_25k", icon: "🏰", label: "25 000 € Cumulés", desc: "25 000 € de carburant produit ! De quoi sécuriser plusieurs années de charges.", anim: "diamonds" },
+    { id: "b_cumul_50k", icon: "💎", label: "50 000 € Cumulés", desc: "50 000 € de cash total extrait par ton appareil productif. Performance magistrale.", anim: "crowns" },
+    { id: "b_cumul_100k", icon: "🌌", label: "100 000 € Cumulés", desc: "Légendaire ! 100 000 € de cash-flow historique cumulé. Tu as bâti un empire de trésorerie.", anim: "crowns" }
+  ];
+
+  /* GESTION DU BOUTON TOGGLE VISIBILITÉ DES RÉCOMPENSES */
+  function toggleRewardsVisibility() {
+    isRewardsVisible = !isRewardsVisible;
+    const wrapper = document.getElementById('hero-rewards-wrapper');
+    const btn = document.getElementById('btn-toggle-rewards');
+
+    if (isRewardsVisible) {
+      wrapper.style.display = 'flex';
+      btn.innerHTML = '🏆 Masquer les Récompenses ▴';
+    } else {
+      wrapper.style.display = 'none';
+      btn.innerHTML = '🏆 Voir les Récompenses ▾';
+    }
+  }
+
+  function updateRewardsDisplay() {
+    const box = document.getElementById('corp-rewards-box');
+    const toggleRow = document.getElementById('hero-rewards-toggle-row');
+    const wrapper = document.getElementById('hero-rewards-wrapper');
+    box.innerHTML = '';
+
+    if (db.records.length === 0) {
+      toggleRow.classList.remove('has-rewards');
+      wrapper.style.display = 'none';
+      return;
+    }
+
+    const totalFcf = db.records.reduce((acc, r) => acc + (r.brut - r.taxes - r.frais - r.charges), 0);
+    const maxFcf = Math.max(...db.records.map(r => r.brut - r.taxes - r.frais - r.charges));
+    const hasMargin20 = db.records.some(r => r.brut > 0 && ((r.brut - r.taxes - r.frais - r.charges) / r.brut) >= 0.2);
+    const hasMargin40 = db.records.some(r => r.brut > 0 && ((r.brut - r.taxes - r.frais - r.charges) / r.brut) >= 0.4);
+
+    const hasRate = (target) => db.records.some(r => {
+      const net = r.brut - r.taxes;
+      const fcf = r.brut - r.taxes - r.frais - r.charges;
+      return net > 0 && (fcf / net) >= target;
+    });
+
+    let newlyUnlockedRewardId = null;
+
+    REWARDS_CONFIG.forEach(rItem => {
+      let isUnlocked = false;
+
+      if (rItem.id === "b_first") isUnlocked = db.records.length >= 1;
+      if (rItem.id === "b_3m") isUnlocked = db.records.length >= 3;
+      if (rItem.id === "b_6m") isUnlocked = db.records.length >= 6;
+      if (rItem.id === "b_12m") isUnlocked = db.records.length >= 12;
+      if (rItem.id === "b_24m") isUnlocked = db.records.length >= 24;
+      if (rItem.id === "b_36m") isUnlocked = db.records.length >= 36;
+
+      if (rItem.id === "b_pos") isUnlocked = maxFcf > 0;
+      if (rItem.id === "b_50") isUnlocked = maxFcf >= 50;
+      if (rItem.id === "b_100") isUnlocked = maxFcf >= 100;
+      if (rItem.id === "b_250") isUnlocked = maxFcf >= 250;
+      if (rItem.id === "b_500") isUnlocked = maxFcf >= 500;
+      if (rItem.id === "b_1k") isUnlocked = maxFcf >= 1000;
+      if (rItem.id === "b_2k5") isUnlocked = maxFcf >= 2500;
+      if (rItem.id === "b_5k") isUnlocked = maxFcf >= 5000;
+
+      if (rItem.id === "b_rate_10") isUnlocked = hasRate(0.10);
+      if (rItem.id === "b_rate_20") isUnlocked = hasRate(0.20);
+      if (rItem.id === "b_rate_35") isUnlocked = hasRate(0.35);
+      if (rItem.id === "b_rate_50") isUnlocked = hasRate(0.50);
+
+      if (rItem.id === "b_m20") isUnlocked = hasMargin20;
+      if (rItem.id === "b_m40") isUnlocked = hasMargin40;
+
+      if (rItem.id === "b_cumul_500") isUnlocked = totalFcf >= 500;
+      if (rItem.id === "b_cumul_1k") isUnlocked = totalFcf >= 1000;
+      if (rItem.id === "b_cumul_5k") isUnlocked = totalFcf >= 5000;
+      if (rItem.id === "b_cumul_10k") isUnlocked = totalFcf >= 10000;
+      if (rItem.id === "b_cumul_25k") isUnlocked = totalFcf >= 25000;
+      if (rItem.id === "b_cumul_50k") isUnlocked = totalFcf >= 50000;
+      if (rItem.id === "b_cumul_100k") isUnlocked = totalFcf >= 100000;
+
+      if (isUnlocked) {
+        if (!db.everUnlockedRewards.includes(rItem.id)) {
+          db.everUnlockedRewards.push(rItem.id);
+          newlyUnlockedRewardId = rItem.id;
+          saveData();
+        }
+
+        box.innerHTML += `
+          <div class="corp-reward-pill" onclick="openCorpRewardModal('${rItem.id}')">
+            <span>${rItem.icon}</span> ${rItem.label}
+          </div>
+        `;
+      }
+    });
+
+    if (box.children.length > 0) {
+      toggleRow.classList.add('has-rewards');
+      wrapper.style.display = isRewardsVisible ? 'flex' : 'none';
+      document.getElementById('btn-toggle-rewards').innerHTML = isRewardsVisible ? '🏆 Masquer les Récompenses ▴' : '🏆 Voir les Récompenses ▾';
+    } else {
+      toggleRow.classList.remove('has-rewards');
+      wrapper.style.display = 'none';
+    }
+
+    if (newlyUnlockedRewardId) {
+      const rObj = REWARDS_CONFIG.find(r => r.id === newlyUnlockedRewardId);
+      if (rObj) triggerCelebration(rObj.anim);
+    }
+  }
+
+  function openCorpRewardModal(rewardId) {
+    const r = REWARDS_CONFIG.find(item => item.id === rewardId);
+    if (!r) return;
+
+    currentRewardAnimType = r.anim || 'confetti';
+    document.getElementById('reward-detail-icon').innerText = r.icon;
+    document.getElementById('reward-detail-title').innerText = r.label;
+    document.getElementById('reward-detail-desc').innerText = r.desc;
+
+    document.getElementById('corp-reward-modal').classList.add('active');
+  }
+
+  function closeCorpRewardModal() {
+    document.getElementById('corp-reward-modal').classList.remove('active');
+  }
+
+  function replayRewardAnimation() {
+    triggerCelebration(currentRewardAnimType);
+  }
+
+  /* MOTEUR D'EXPLOSION ET CÉLÉBRATION (CONFETTIS, CASH, OR, FIREWORKS...) */
+  function triggerCelebration(type = 'confetti') {
+    const canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    if (type === 'gold') {
+      const icons = ['✨', '🪙', '⭐', '💫'];
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: Math.random() * canvas.width, y: -20,
+          vx: (Math.random() - 0.5) * 4, vy: Math.random() * 5 + 3,
+          size: Math.random() * 12 + 16, icon: icons[Math.floor(Math.random() * icons.length)],
+          rotation: Math.random() * 360, vRot: (Math.random() - 0.5) * 6
+        });
+      }
+    } else if (type === 'cash') {
+      const icons = ['💵', '💸', '💰', '✨'];
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: canvas.width / 2, y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.7) * 15,
+          size: 22, icon: icons[Math.floor(Math.random() * icons.length)],
+          rotation: 0, vRot: (Math.random() - 0.5) * 8
+        });
+      }
+    } else if (type === 'crowns') {
+      const icons = ['👑', '⚡', '✨'];
+      for (let i = 0; i < 45; i++) {
+        particles.push({
+          x: canvas.width / 2, y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 16, vy: (Math.random() - 0.7) * 17,
+          size: 26, icon: icons[Math.floor(Math.random() * icons.length)],
+          rotation: 0, vRot: (Math.random() - 0.5) * 5
+        });
+      }
+    } else if (type === 'diamonds') {
+      const icons = ['💎', '✨', '🪐', '🌟'];
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: canvas.width / 2, y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 18, vy: (Math.random() - 0.7) * 18,
+          size: 24, icon: icons[Math.floor(Math.random() * icons.length)],
+          rotation: 0, vRot: (Math.random() - 0.5) * 6
+        });
+      }
+    } else if (type === 'fireworks') {
+      const colors = ['#a371f7', '#7ee787', '#58a6ff', '#ffffff', '#f0883e'];
+      for (let i = 0; i < 110; i++) {
+        let angle = Math.random() * Math.PI * 2;
+        let speed = Math.random() * 14 + 3;
+        particles.push({
+          x: canvas.width / 2, y: canvas.height / 2,
+          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+          size: Math.random() * 6 + 3, color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: 0, vRot: 0
+        });
+      }
+    } else {
+      const colors = ['#7ee787', '#58a6ff', '#a371f7', '#f0883e', '#ffff00'];
+      for (let i = 0; i < 75; i++) {
+        particles.push({
+          x: canvas.width / 2, y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 13, vy: (Math.random() - 0.7) * 15,
+          size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360, vRot: (Math.random() - 0.5) * 10
+        });
+      }
+    }
+
+    let frame = 0;
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (type !== 'fireworks') p.vy += 0.25;
+        p.rotation += p.vRot;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+
+        if (p.icon) {
+          ctx.font = `${p.size}px sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(p.icon, 0, 0);
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        }
+        ctx.restore();
+
+        if (p.y > canvas.height || p.x < 0 || p.x > canvas.width) particles.splice(index, 1);
+      });
+
+      if (particles.length > 0 && frame < 120) {
+        frame++;
+        requestAnimationFrame(animate);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+    animate();
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `KLON_CORP_${(db.companyName || 'DEFAULT').toUpperCase()}_backup.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (imported && Array.isArray(imported.records)) {
+          db = imported;
+          if (!Array.isArray(db.everUnlockedRewards)) {
+            db.everUnlockedRewards = Array.isArray(db.everUnlockedBadges) ? db.everUnlockedBadges : [];
+          }
+          if (db.ticker === undefined) db.ticker = '';
+          saveData();
+          document.getElementById('company-name-input').value = db.companyName || '';
+          document.getElementById('currency-select').value = db.currency || '€';
+          document.getElementById('theme-select').value = db.theme || 'dark';
+          document.documentElement.setAttribute('data-theme', db.theme || 'dark');
+          initPeriodNavigator();
+          updateAppHeader();
+          renderRecordsList();
+          populateCompareSelectors();
+          alert('Données importées avec succès !');
+        } else {
+          alert('Fichier JSON invalide.');
+        }
+      } catch (err) {
+        alert('Erreur lors de la lecture du fichier JSON.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function copyFortuneoCode() {
+    const code = "12874482";
+    const btn = document.getElementById('fortuneo-btn');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).catch(() => {});
+    }
+    if (btn) btn.innerText = "✅ Code copié ! Redirection...";
+    window.open("https://www.fortuneo.fr", "_blank");
+    setTimeout(() => {
+      if (btn) btn.innerText = "Fortuneo (Code Parrain : 12874482)";
+    }, 1800);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('company-name-input').value = db.companyName || '';
+    document.getElementById('currency-select').value = db.currency || '€';
+    document.getElementById('theme-select').value = db.theme || 'dark';
+    document.documentElement.setAttribute('data-theme', db.theme || 'dark');
+
+    initPeriodNavigator();
+    updateAppHeader();
+    renderRecordsList();
+    populateCompareSelectors();
+  });
+</script>
+
+</body>
+</html>
