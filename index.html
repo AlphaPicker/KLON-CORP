@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>KLON Corp. — Unité de Production de FCF</title>
+  <title>KLON Corp.</title>
+  
+    <!-- Affichage et plein écran mobile -->
+  <meta name="color-scheme" content="dark light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0d1117">
+
+  <!-- Fichiers PWA externes (liés à ton icon.svg violet et manifest.json) -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon.svg">
 
   <style>
     :root[data-theme="dark"] {
@@ -2025,5 +2036,11 @@
   });
 </script>
 
+<!-- Enregistrement du Service Worker PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
 </body>
 </html>
