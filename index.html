@@ -2062,7 +2062,9 @@
   function renderStockReport() {
     const periodUnitLabel = (db.lang === 'EN') ? '/ month' : '/ mois';
     const yearUnitLabel = (db.lang === 'EN') ? '/ year for life' : '/ an à vie';
-    const companyDisplayName = (db.companyName || 'KLON Corp.').trim().toUpperCase();
+    
+    let rawName = (db.companyName || '').trim().replace(/corp\.?/gi, '').replace(/corporation/gi, '').trim();
+    const companyDisplayName = rawName ? `${rawName.toUpperCase()} CORP.` : 'KLON CORP.';
 
     if (db.records.length === 0) {
       document.getElementById('hero-fcf-val').innerText = '0 ' + db.currency;
