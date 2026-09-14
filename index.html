@@ -85,7 +85,6 @@
       padding-bottom: env(safe-area-inset-bottom);
     }
 
-    /* ALIGNEMENT STRICT AU PIXEL PRÈS AVEC KLON */
     .app-header {
       text-align: center;
       padding: 12px 8px 4px 8px;
@@ -129,6 +128,7 @@
       z-index: 9999;
     }
 
+    /* LARGEUR DE BASE À 600PX */
     .app-container {
       width: 100%;
       max-width: 600px;
@@ -155,7 +155,7 @@
       gap: 6px;
       text-align: center;
     }
-	.nav-btn .nav-icon {
+    .nav-btn .nav-icon {
       font-size: 1.1rem;
       line-height: 1;
     }
@@ -243,10 +243,11 @@
     }
     .hero-rewards-toggle-row.has-rewards { display: flex; }
 
+    /* BOUTON VOIR / MASQUER : NEUTRE DE BASE, VERT AU SURVOL */
     .rewards-toggle-btn {
       background: var(--bg-color);
-      border: 1px solid var(--accent-green-bright);
-      color: var(--accent-green-bright);
+      border: 1px solid var(--border-color);
+      color: var(--text-bright);
       padding: 5px 14px;
       border-radius: 14px;
       font-size: 0.75rem;
@@ -261,26 +262,25 @@
     .rewards-toggle-btn:hover {
       border-color: var(--accent-green-bright);
       color: var(--accent-green-bright);
-      box-shadow: 0 0 8px rgba(126, 231, 135, 0.4);
+      box-shadow: 0 0 8px rgba(126, 231, 135, 0.3);
     }
 
-	  .fuel-card-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
+    .fuel-card-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
-/* Ajustement sur grand écran (PC / Tablette > 500px) */
     @media (min-width: 501px) {
      .fuel-card-content {
-      /* Ressert les deux blocs vers le centre au lieu d'aller aux extrémités */
         justify-content: space-around;
         padding: 0 24px;
       }
     }
 
+    /* BADGES DE RÉCOMPENSE : CONTOUR VERT, TEXTE EN BLANC */
     .corp-reward-pill {
       display: inline-flex;
       align-items: center;
@@ -291,16 +291,24 @@
       font-weight: 500;
       background: var(--bg-color);
       border: 1px solid var(--accent-green-bright);
-      color: var(--accent-green-bright);
-      box-shadow: 0 0 6px rgba(126, 231, 135, 0.25);
+      color: var(--text-bright);
+      box-shadow: 0 0 6px rgba(126, 231, 135, 0.2);
       cursor: pointer;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       user-select: none;
       line-height: 1.2;
     }
     .corp-reward-pill:hover {
-       transform: translateY(-2px);
-       box-shadow: 0 0 10px rgba(126, 231, 135, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 0 10px rgba(126, 231, 135, 0.4);
+    }
+
+    .hero-rewards-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 10px;
+      margin-top: 4px;
     }
 
     .corp-rewards-grid {
@@ -413,7 +421,7 @@
       color: var(--text-bright);
     }
 	
-	select {
+    select {
       cursor: pointer;
       font-weight: bold;
       color: var(--accent-purple);
@@ -512,7 +520,7 @@
       width: 100%;
       padding: 14px;
       background-color: var(--bg-color);
-      color: var(--accent-purple); /* ✅ Liens en violet signature */
+      color: var(--accent-purple);
       text-align: center;
       text-decoration: none;
       border-radius: 6px;
@@ -543,13 +551,12 @@
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type="number"] { -moz-appearance: textfield; }
 	
-	/* STYLE DU BADGE TICKER CLIQUABLE */
     .ticker-pill {
       cursor: pointer;
       padding: 2px 8px;
       border-radius: 6px;
       font-size: 0.75rem;
-      font-weight: 500; /* ✅ Fini le gras agressif, typographie fine et douce */
+      font-weight: 500;
       color: var(--accent-purple);
       background: var(--badge-bg);
       border: 1px solid var(--accent-purple);
@@ -565,14 +572,12 @@
       transform: translateY(-1px);
     }
 	
-	/* 1. SEULEMENT LES 3 CONTRÔLES EN VIOLET */
     #lang-select, #theme-select, #currency-select {
       cursor: pointer;
       font-weight: bold;
       color: var(--accent-purple) !important;
     }
 
-    /* 2. TOUTES LES DATES, MOIS, ANNÉES ET TRIMESTRES EN BLANC PUR */
     .period-select, #select-curr-period, #select-prev-period {
       cursor: pointer;
       font-weight: 700;
@@ -616,13 +621,11 @@
         </div>
         
         <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-          <!-- SELECTION LANGUE COMPACTE -->
           <select id="lang-select" onchange="changeLanguage(this.value)" style="width: auto; padding: 6px 8px; font-size: 0.85rem;">
             <option value="FR">FR</option>
             <option value="EN">EN</option>
           </select>
 
-          <!-- MODE VISUEL -->
           <select id="theme-select" onchange="changeTheme(this.value)" style="width: auto; padding: 6px 8px; font-size: 0.85rem;">
             <option value="dark" data-i18n="opt_theme_dark">🌙 Sombre</option>
             <option value="light" data-i18n="opt_theme_light">☀️ Clair</option>
@@ -640,7 +643,6 @@
           <span id="period-status-badge" class="period-status-pill new">⚪</span>
         </div>
 
-        <!-- SÉLECTEUR DE MONNAIE -->
         <select id="currency-select" onchange="changeCurrency(this.value)" style="width: auto; padding: 4px 6px; font-size: 0.8rem;">
           <option value="€">EUR (€)</option>
           <option value="$">USD ($)</option>
@@ -650,7 +652,6 @@
         </select>
       </div>
 
-      <!-- SÉLECTEUR DE DATE ÉPURÉ -->
       <div class="period-navigator-bar">
         <button class="nav-arrow-btn" onclick="stepMonth(-1)" data-i18n-title="prev_month_title">◀</button>
         
@@ -662,9 +663,7 @@
         <button class="nav-arrow-btn" onclick="stepMonth(1)" data-i18n-title="next_month_title">▶</button>
       </div>
 
-      <!-- GRILLE DE SAISIE -->
       <div class="input-grid" style="margin-top:4px;">
-        <!-- CA BRUT -->
         <div class="field-group">
           <div class="field-label-row">
             <label data-i18n="lbl_brut">CA Brut</label>
@@ -676,7 +675,6 @@
           <input type="number" id="in-brut" value="0" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
         </div>
 
-        <!-- IMPÔTS & TAXES -->
         <div class="field-group">
           <div class="field-label-row">
             <label data-i18n="lbl_taxes">Impôts & Taxes</label>
@@ -688,7 +686,6 @@
           <input type="number" id="in-taxes" value="0" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
         </div>
 
-        <!-- FRAIS PRO -->
         <div class="field-group">
           <div class="field-label-row">
             <label data-i18n="lbl_frais">Frais Pro</label>
@@ -700,7 +697,6 @@
           <input type="number" id="in-frais" value="0" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
         </div>
 
-        <!-- CHARGES VITALES -->
         <div class="field-group">
           <div class="field-label-row">
             <label data-i18n="lbl_charges">Charges Vitales</label>
@@ -712,7 +708,6 @@
           <input type="number" id="in-charges" value="0" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
         </div>
 
-        <!-- HEURES TRAVAILLÉES -->
         <div class="field-group">
           <div class="field-label-row">
             <label data-i18n="lbl_hours">Heures Travaillées</label>
@@ -790,18 +785,17 @@
         <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openHistoryModal()" data-i18n="btn_chart"></button>
       </div>
   
-      <!-- CONTENEUR RECENTRÉ SUR PC -->
-    <div class="fuel-card-content">
-      <div>
-        <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_cash">Trésorerie Cumulée :</div>
-        <div id="total-cumul-cash" style="font-size: 1.4rem; font-weight: 900; color: var(--accent-green-bright);">0 €</div>
-      </div>
+      <div class="fuel-card-content">
+        <div>
+          <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_cash">Trésorerie Cumulée :</div>
+          <div id="total-cumul-cash" style="font-size: 1.4rem; font-weight: 900; color: var(--accent-green-bright);">0 €</div>
+        </div>
         <div style="text-align: right;">
           <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_annuity">Rente Passive Totale :</div>
           <div id="total-cumul-annuity" style="font-size: 1.1rem; font-weight: 800; color: var(--accent-blue);">+0 € / m</div>
         </div>
+      </div>
     </div>
-  </div>
 
     <!-- DIAGNOSTIC SCORECARD -->
     <div class="diag-grid">
@@ -883,7 +877,6 @@
       <div class="card-title">
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <span data-i18n="card_val_title">🏛️ Valorisation Boursière</span>
-          <!-- LE TICKER INTÉGRÉ ICI, CLIQUABLE ET STYLISÉ -->
           <span id="header-ticker" class="ticker-pill" onclick="openTickerModal()" title="Cliquer pour personnaliser">KCN.PA</span>
         </div>
       </div>
@@ -1003,12 +996,12 @@
   </div>
 </div>
 
-<!-- MODALE COURBE TRÉSORERIE -->
+<!-- MODALE COURBE TRÉSORERIE EN VERT -->
 <div id="history-modal" class="modal-overlay">
   <div class="modal-card">
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <div class="card-title" style="margin-bottom: 0;" data-i18n="modal_chart_title"></div>
-      <span id="chart-hover-label" style="font-size:0.75rem; color:var(--accent-purple); font-weight:800;" data-i18n="chart_hover_default"></span>
+      <span id="chart-hover-label" style="font-size:0.75rem; color:var(--accent-green-bright); font-weight:800;" data-i18n="chart_hover_default"></span>
     </div>
     <p style="font-size: 0.8rem; opacity: 0.8; margin-top: -6px;" data-i18n="modal_chart_sub">
       Trajectoire d'accumulation du cash disponible produit pour alimenter KLON.
@@ -1058,7 +1051,7 @@
       La <strong>règle des 4 %</strong> est un standard mondial d'indépendance financière issu d'études historiques de référence (notamment la <em>Trinity Study</em>).<br><br>
       Elle repose sur les performances historiques à long terme des grands indices comme le <strong>S&P 500</strong> (~10 % de rendement brut moyen/an, soit ~7 % net d'inflation). Elle postule qu'en retirant 4 % d'un capital investi chaque année, celui-ci ne s'épuise théoriquement jamais.<br><br>
       Chaque euro de <strong>Free Cash-Flow</strong> disponible extrait par ton unité et injecté dans tes investissements génère ainsi une rente perpétuelle calculée selon :<br>
-      <code style="background: rgba(163,113,247,0.15); padding: 2px 6px; border-radius: 4px; color: var(--accent-purple); font-weight: bold;">(FCF × 4%) ÷ 12 mois</code>.<br><br>
+      <code style="background: rgba(163,113,247,0.15); padding: 2px 6px; border-radius: 4px; color: var(--accent-blue); font-weight: bold;">(FCF × 4%) ÷ 12 mois</code>.<br><br>
       <div style="border-top: 1px solid var(--border-color); padding-top: 8px; font-size: 0.72rem; opacity: 0.75; font-style: italic;">
         ⚠️ <strong>Avertissement :</strong> Cet outil sert exclusivement de simulation personnelle et éducative. Il ne constitue en aucun cas un conseil en investissement.
       </div>
@@ -1089,7 +1082,6 @@
 
     <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
       
-      <!-- GRID MÉTRIQUES TEMPS -->
       <div class="diag-grid">
         <div class="diag-item">
           <div class="diag-title" data-i18n="diag_hourly_net">Taux Horaire Net</div>
@@ -1108,7 +1100,6 @@
         </div>
       </div>
 
-      <!-- RECAP -->
       <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; font-size: 0.82rem; line-height: 1.4;">
         <div><strong data-i18n="m_worked_hours_lbl">Heures travaillées cette période :</strong> <span id="m-val-hours" style="font-weight:bold;">0 h</span></div>
         <div style="margin-top: 4px; opacity: 0.85;" id="m-hours-summary-txt">
@@ -1136,9 +1127,7 @@
 </div>
 
 <script>
-  /* ==========================================================================
-     DICTIONNAIRE BILINGUE (I18N) - FR / EN
-     ========================================================================== */
+  /* DICTIONNAIRE BILINGUE (I18N) */
   const I18N = {
     FR: {
       subtitle: "Simulateur de Capacité Financière",
@@ -1561,7 +1550,6 @@
     }
   };
 
-  /* Helper I18N */
   function t(key, params = {}) {
     const lang = (db && db.lang) ? db.lang : 'FR';
     let text = (I18N[lang] && I18N[lang][key] !== undefined) 
@@ -1595,9 +1583,6 @@
     }
   }
 
-  /* ==========================================================================
-     1. ÉTAT DE L'APPLICATION & INITIALISATION LOCALSTORAGE
-     ========================================================================== */
   let contextMonth = '2026-09';
   let currentHorizon = 'monthly';
   let activeYear = 2026;
@@ -1644,9 +1629,6 @@
     return new Intl.NumberFormat(locale).format(Math.round(v || 0)) + ' ' + db.currency; 
   }
 
-  /* ==========================================================================
-     2. GESTION DU HEADER & DU SÉLECTEUR TEMPOREL
-     ========================================================================== */
   function updateAppHeader() {
     let raw = (db.companyName || '').trim();
     raw = raw.replace(/corp\.?/gi, '').replace(/corporation/gi, '').trim();
@@ -1739,9 +1721,6 @@
     }
   }
 
-  /* ==========================================================================
-     3. PARAMÈTRES & PRÉFÉRENCES (THEME, MONNAIE, LANGUE)
-     ========================================================================== */
   function changeTheme(themeName) {
     db.theme = themeName;
     saveData();
@@ -1787,9 +1766,6 @@
     if (el) el.classList.toggle('active');
   }
 
-  /* ==========================================================================
-     4. SAISIE & HISTORIQUE D'EXPLOITATION
-     ========================================================================== */
   function addMonthlyRecord() {
     const periodStr = `${activeYear}-${activeMonthNum}`;
     const rec = {
@@ -1811,7 +1787,6 @@
     renderRecordsList();
     updateAppHeader();
 
-    // Notification personnalisée intégrée à l'application
     const monthList = (db.lang === 'EN') ? monthNamesEN : monthNamesFR;
     const monthName = monthList[parseInt(activeMonthNum, 10) - 1] || activeMonthNum;
     const msg = (db.lang === 'EN') 
@@ -1881,9 +1856,6 @@
     });
   }
 
-  /* ==========================================================================
-     5. CALCULS, COMPARATIFS & MULTIPLE IA
-     ========================================================================== */
   function isQuarterComplete(qKey) {
     const [year, qStr] = qKey.split('-Q');
     const q = parseInt(qStr, 10);
@@ -2088,9 +2060,6 @@
     return { multiple: mult, reasons: reasons.join(" • ") };
   }
 
-  /* ==========================================================================
-     6. RENDU DE L'ONGLET 2 (RAPPORT & VALORISATION BOURSIÈRE)
-     ========================================================================== */
   function renderStockReport() {
     const periodUnitLabel = (db.lang === 'EN') ? '/ month' : '/ mois';
     const yearUnitLabel = (db.lang === 'EN') ? '/ year for life' : '/ an à vie';
@@ -2165,7 +2134,6 @@
     const fcfVar = calcVar(currFcf, prevFcf);
     const annuityVar = calcVar(monthlyAnnuity, Math.max(0, Math.round((prevFcf * 0.04) / 12)));
 
-    // Calculs métriques Heures Travaillées
     const currHours = currData.hours || 152;
     const prevHours = prevData.hours || 152;
     const currHourlyFcf = currHours > 0 ? (currFcf / currHours) : 0;
@@ -2242,7 +2210,6 @@
       </tr>
     `;
 
-    // Mise à jour des valeurs dans la modale Heures & Rendement
     document.getElementById('m-hourly-net').innerText = fmt(currHourlyNet) + '/h';
     document.getElementById('m-hourly-fcf').innerText = fmt(currHourlyFcf) + '/h';
     document.getElementById('m-hours-per-annuity').innerText = hoursPerAnnuityEuro > 0 ? hoursPerAnnuityEuro.toFixed(1) + ' h' : '-- h';
@@ -2325,11 +2292,7 @@
     `;
   }
 
-  /* ==========================================================================
-     7. RÉCOMPENSES & GAMIFICATION (VERSION ÉQUILIBRÉE ET NETTOYÉE)
-     ========================================================================== */
   const REWARDS_CONFIG = [
-    // 1. DURÉE & DISCIPLINE
     { id: "b_first", icon: "🚀", label_fr: "1er Mois", title_fr: "Premier Mois d'Exploitation", label_en: "1st Month", title_en: "First Operating Month", desc_fr: "Premier mois d'exploitation clôturé ! Ta machine de production de FCF est lancée.", desc_en: "First operating month closed! Your FCF machine is launched.", anim: "confetti" },
     { id: "b_3m", icon: "🌱", label_fr: "3 Mois", title_fr: "3 Mois d'Exploitation", label_en: "3 Months", title_en: "3 Operating Months", desc_fr: "Un trimestre complet enregistré. La régularité de gestion commence à payer.", desc_en: "A full quarter recorded. Management consistency starts paying off.", anim: "confetti" },
     { id: "b_6m", icon: "🌿", label_fr: "6 Mois", title_fr: "6 Mois d'Exploitation", label_en: "6 Months", title_en: "6 Operating Months", desc_fr: "6 mois de suivi budgétaire sans faillir. Ton pilotage financier est solide.", desc_en: "6 months of budget tracking. Your financial management is rock solid.", anim: "cash" },
@@ -2337,7 +2300,6 @@
     { id: "b_24m", icon: "🏛️", label_fr: "2 Ans", title_fr: "2 Ans de Bilan", label_en: "2 Years", title_en: "2 Years Milestone", desc_fr: "24 mois de rigueur. Tu gères tes finances comme un véritable directeur financier.", desc_en: "24 months of discipline. Managing finances like a true CFO.", anim: "gold" },
     { id: "b_36m", icon: "👑", label_fr: "3 Ans", title_fr: "3 Ans de Maîtrise", label_en: "3 Years", title_en: "3 Years Mastery", desc_fr: "36 mois de clôtures consécutives ! Un historique patrimonial d'exception.", desc_en: "36 consecutive months closed! An exceptional financial track record.", anim: "crowns" },
 
-    // 2. CAPS FCF MENSUELS
     { id: "b_pos", icon: "🪙", label_fr: "FCF > 0", title_fr: "Premier Euro Net Extrait", label_en: "FCF > 0", title_en: "First Net Unit Extracted", desc_fr: "Cash-flow positif (> 0 €) ! Tu as dégagé un surplus financier ce mois-ci.", desc_en: "Positive cash flow (> 0)! You generated a financial surplus this month.", anim: "confetti" },
     { id: "b_50", icon: "💵", label_fr: "Cap 50 €", title_fr: "Cap des 50 € de FCF", label_en: "50 Cap", title_en: "50 FCF Benchmark", desc_fr: "Au moins 50 € de FCF dégagés ce mois. Chaque euro de surplus compte !", desc_en: "At least 50 in FCF generated this month. Every surplus unit counts!", anim: "cash" },
     { id: "b_100", icon: "💶", label_fr: "Cap 100 €", title_fr: "Cap des 100 € de FCF", label_en: "100 Cap", title_en: "100 FCF Benchmark", desc_fr: "100 € de cash libre mensuel extrait ! Le carburant pour tes investissements prend forme.", desc_en: "100 free monthly cash extracted! Fuel for your investments is building up.", anim: "cash" },
@@ -2347,12 +2309,10 @@
     { id: "b_2k5", icon: "🪐", label_fr: "Cap 2,5k €", title_fr: "Cap des 2 500 € de FCF", label_en: "2.5k Cap", title_en: "2,500 FCF Milestone", desc_fr: "2 500 € de cash-flow mensuel ! Ta capacité d'épargne surclasse largement la moyenne.", desc_en: "2,500 monthly cash flow! Savings capacity way above average.", anim: "diamonds" },
     { id: "b_5k", icon: "🌟", label_fr: "Cap 5k €", title_fr: "Cap des 5 000 € de FCF", label_en: "5k Cap", title_en: "5,000 FCF Milestone", desc_fr: "5 000 € de FCF mensuel ! Niveau d'extraction digne d'un cadre dirigeant.", desc_en: "5,000 monthly FCF! C-suite executive level cash extraction.", anim: "crowns" },
 
-    // 3. RENTE PASSIVE (Factures Auto-Financées à 4%)
     { id: "b_ann_10", icon: "📱", label_fr: "Rente +10 €/m", title_fr: "Petite Facture Neutralisée (+10 €/m)", label_en: "Yield +10/mo", title_en: "Small Bill Covered (+10/mo)", desc_fr: "Tes flux créent +10 €/mois de rente perpétuelle à vie (ex: petit forfait mobile couvert à vie).", desc_en: "Your cash flow creates +10/month perpetual passive income for life.", anim: "confetti" },
     { id: "b_ann_30", icon: "🔌", label_fr: "Rente +30 €/m", title_fr: "Moyenne Facture Neutralisée (+30 €/m)", label_en: "Yield +30/mo", title_en: "Medium Bill Covered (+30/mo)", desc_fr: "Tes flux créent +30 €/mois de rente à vie (ex: abonnement Fibre / Électricité de base).", desc_en: "Your cash flow creates +30/month perpetual passive income for life.", anim: "cash" },
     { id: "b_ann_80", icon: "🏠", label_fr: "Rente +80 €/m", title_fr: "Grosse Facture Neutralisée (+80 €/m)", label_en: "Yield +80/mo", title_en: "Large Bill Covered (+80/mo)", desc_fr: "Tes flux créent +80 €/mois de rente à vie (ex: eau, assurance et charges de logement).", desc_en: "Your cash flow creates +80/month perpetual passive income for life.", anim: "fireworks" },
 
-    // 4. TAUX D'ÉPARGNE & MARGES
     { id: "b_rate_10", icon: "🛡️", label_fr: "Épargne 10%", title_fr: "Taux d'Épargne 10%+", label_en: "Savings 10%", title_en: "Savings Rate 10%+", desc_fr: "Tu as conservé au moins 10% de ton revenu net sous forme de FCF disponible.", desc_en: "Retained at least 10% of your net income as available FCF.", anim: "confetti" },
     { id: "b_rate_20", icon: "⚡", label_fr: "Épargne 20%", title_fr: "Règle d'Or : Épargne 20%+", label_en: "Savings 20%", title_en: "Golden Rule: Savings 20%+", desc_fr: "20% de taux d'épargne atteint ! Tu appliques la règle d'or de l'enrichissement.", desc_en: "20% savings rate achieved! Applying the golden rule of wealth creation.", anim: "cash" },
     { id: "b_rate_35", icon: "🎯", label_fr: "Épargne 35%", title_fr: "Taux d'Épargne 35%+", label_en: "Savings 35%", title_en: "Savings Rate 35%+", desc_fr: "Plus d'un tiers de ton revenu net disponible est conservé en trésorerie pure !", desc_en: "Over one third of your net available income kept as pure cash flow!", anim: "gold" },
@@ -2361,12 +2321,10 @@
     { id: "b_m20", icon: "🔥", label_fr: "Marge 20%", title_fr: "Marge Nette 20%+", label_en: "Margin 20%", title_en: "Net Margin 20%+", desc_fr: "Marge nette supérieure à 20% de ton chiffre d'affaires brut. Modèle très sain.", desc_en: "Net margin exceeding 20% of gross revenue. Very healthy business model.", anim: "cash" },
     { id: "b_m40", icon: "🗝️", label_fr: "Marge 40%", title_fr: "Marge Nette 40%+", label_en: "Margin 40%", title_en: "Net Margin 40%+", desc_fr: "Marge digne d'un monopole tech ! Plus de 40% de tes entrées ressortent en FCF.", desc_en: "Tech monopoly level margin! Over 40% of revenue converted to FCF.", anim: "fireworks" },
 
-    // 5. TEMPS & EFFICIENCE NET-NET
     { id: "b_hourly_20", icon: "⏱️", label_fr: "20 € / h Net", title_fr: "Socle Horaire (20 €/h Net)", label_en: "20/h Net", title_en: "Base Rate (20/h Net)", desc_fr: "Ton activité produit au moins 20 € net-net par heure travaillée.", desc_en: "Your activity extracts at least 20 net per worked hour.", anim: "confetti" },
     { id: "b_hourly_30", icon: "⚡", label_fr: "30 € / h Net", title_fr: "Efficience Solide (30 €/h Net)", label_en: "30/h Net", title_en: "Solid Efficiency (30/h Net)", desc_fr: "Niveau d'extraction élevé : plus de 30 € de revenu net par heure consacrée.", desc_en: "High extraction level: over 30 net income per worked hour.", anim: "cash" },
     { id: "b_hourly_40", icon: "🎯", label_fr: "40 € / h Net", title_fr: "Haute Valeur (40 €/h Net)", label_en: "40/h Net", title_en: "High Value Rate (40/h Net)", desc_fr: "Performance exceptionnelle : 40 € de trésorerie nette extraite par heure de vie.", desc_en: "Exceptional performance: 40 net cash extracted per life hour.", anim: "gold" },
 
-    // 6. CUMULS HISTORIQUES
     { id: "b_cumul_500", icon: "🥉", label_fr: "500 € Cumul", title_fr: "500 € Cumulés", label_en: "500 Total", title_en: "500 Cumulative", desc_fr: "500 € de cash produit depuis le début pour alimenter tes Klons.", desc_en: "500 total cash produced since launch to fuel your Klons.", anim: "confetti" },
     { id: "b_cumul_1k", icon: "🥈", label_fr: "1k € Cumul", title_fr: "1 000 € Cumulés", label_en: "1k Total", title_en: "1,000 Cumulative", desc_fr: "Premier cap symbolique des 1 000 € de cash cumulé extrait par ton unité.", desc_en: "First milestone of 1,000 total cash extracted by your unit.", anim: "cash" },
     { id: "b_cumul_5k", icon: "🥇", label_fr: "5k € Cumul", title_fr: "5 000 € Cumulés", label_en: "5k Total", title_en: "5,000 Cumulative", desc_fr: "5 000 € de trésorerie totale dégagée. La boule de neige patrimoniale commence !", desc_en: "5,000 total treasury unlocked. Wealth snowball effect begins!", anim: "gold" },
@@ -2426,7 +2384,6 @@
     REWARDS_CONFIG.forEach(rItem => {
       let isUnlocked = false;
 
-      // Durée
       if (rItem.id === "b_first") isUnlocked = db.records.length >= 1;
       if (rItem.id === "b_3m") isUnlocked = db.records.length >= 3;
       if (rItem.id === "b_6m") isUnlocked = db.records.length >= 6;
@@ -2434,7 +2391,6 @@
       if (rItem.id === "b_24m") isUnlocked = db.records.length >= 24;
       if (rItem.id === "b_36m") isUnlocked = db.records.length >= 36;
 
-      // Caps Mensuels FCF
       if (rItem.id === "b_pos") isUnlocked = maxFcf > 0;
       if (rItem.id === "b_50") isUnlocked = maxFcf >= 50;
       if (rItem.id === "b_100") isUnlocked = maxFcf >= 100;
@@ -2444,12 +2400,10 @@
       if (rItem.id === "b_2k5") isUnlocked = maxFcf >= 2500;
       if (rItem.id === "b_5k") isUnlocked = maxFcf >= 5000;
 
-      // Rentes Passive & Factures
       if (rItem.id === "b_ann_10") isUnlocked = maxMonthlyAnnuity >= 10;
       if (rItem.id === "b_ann_30") isUnlocked = maxMonthlyAnnuity >= 30;
       if (rItem.id === "b_ann_80") isUnlocked = maxMonthlyAnnuity >= 80;
 
-      // Taux d'Épargne & Marges
       if (rItem.id === "b_rate_10") isUnlocked = hasRate(0.10);
       if (rItem.id === "b_rate_20") isUnlocked = hasRate(0.20);
       if (rItem.id === "b_rate_35") isUnlocked = hasRate(0.35);
@@ -2458,12 +2412,10 @@
       if (rItem.id === "b_m20") isUnlocked = hasMargin20;
       if (rItem.id === "b_m40") isUnlocked = hasMargin40;
 
-      // Temps & Efficience Net
       if (rItem.id === "b_hourly_20") isUnlocked = hasHourly(20);
       if (rItem.id === "b_hourly_30") isUnlocked = hasHourly(30);
       if (rItem.id === "b_hourly_40") isUnlocked = hasHourly(40);
 
-      // Cumuls Historiques
       if (rItem.id === "b_cumul_500") isUnlocked = totalFcf >= 500;
       if (rItem.id === "b_cumul_1k") isUnlocked = totalFcf >= 1000;
       if (rItem.id === "b_cumul_5k") isUnlocked = totalFcf >= 5000;
@@ -2503,9 +2455,6 @@
     }
   }
 
-  /* ==========================================================================
-     8. GESTION DES MODALES, GRAPHIQUE SVG & ANIMATIONS
-     ========================================================================== */
   function openRankModal() {
     document.getElementById('rank-modal-title').innerText = currentRankInfo.title;
     document.getElementById('rank-modal-desc').innerText = currentRankInfo.desc;
@@ -2611,17 +2560,22 @@
     triggerCelebration(currentRewardAnimType);
   }
 
+  /* RENDU COURBE EN VERT ET SURVOL DU CHARTE */
   function renderCumulChart() {
     const svg = document.getElementById('cumul-chart-svg');
     svg.innerHTML = '';
-    document.getElementById('chart-hover-label').innerText = t('chart_hover_default');
+    
+    const hoverLbl = document.getElementById('chart-hover-label');
+    if (hoverLbl) {
+      hoverLbl.innerText = t('chart_hover_default');
+      hoverLbl.style.color = "var(--accent-green-bright)";
+    }
 
     if (db.records.length < 2) {
       svg.innerHTML = `<text x="250" y="130" fill="var(--text-main)" font-size="12" text-anchor="middle" opacity="0.6">${t('chart_need_records')}</text>`;
       return;
     }
 
-    // 1. DÉCOUPE LOGIQUE PAR PAS TEMPOREL
     const totalMonths = db.records.length;
     let aggregationMode = 'monthly';
     if (totalMonths > 36) {
@@ -2630,7 +2584,6 @@
       aggregationMode = 'quarterly';
     }
 
-    // 2. AGRÉGATION DE LA SÉRIE
     let cumul = 0;
     let rawSeries = [];
     let fcfList = [];
@@ -2668,7 +2621,6 @@
     document.getElementById('modal-avg-fcf').innerText = fmt(avgFcf);
     document.getElementById('modal-best-fcf').innerText = fmt(bestFcf);
 
-    // 3. DIMENSIONS AVEC MARGE GAUCHE ÉLARGIE (60px) POUR N'IMPORTE QUEL CHIFFRE
     const padLeft = 60, padRight = 20, padTop = 20, padBottom = 30;
     const width = 500 - padLeft - padRight;
     const height = 260 - padTop - padBottom;
@@ -2679,7 +2631,6 @@
     const getY = val => padTop + height - ((val - minCumul) / (maxCumul - minCumul || 1)) * height;
     const numLocale = (db.lang === 'EN') ? 'en-US' : 'fr-FR';
 
-    // 4. AXE Y & ÉTIQUETTES SANS DÉFORMATION
     const gridVals = [minCumul, (minCumul + maxCumul) / 2, maxCumul];
     gridVals.forEach(gv => {
       const gy = getY(gv);
@@ -2689,7 +2640,6 @@
       `;
     });
 
-    // 5. TRACÉ DE LA COURBE
     let points = [];
     series.forEach((s, idx) => {
       const x = padLeft + (idx / (series.length - 1 || 1)) * width;
@@ -2700,26 +2650,30 @@
     let pathD = `M ${points[0].x} ${points[0].y}`;
     for (let i = 1; i < points.length; i++) pathD += ` L ${points[i].x} ${points[i].y}`;
 
-    svg.innerHTML += `<path d="${pathD}" fill="none" stroke="var(--accent-purple)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+    /* TRACÉ DE LA COURBE EN VERT */
+    svg.innerHTML += `<path d="${pathD}" fill="none" stroke="var(--accent-green-bright)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
 
     const areaD = `${pathD} L ${points[points.length - 1].x} ${padTop + height} L ${points[0].x} ${padTop + height} Z`;
-    svg.innerHTML += `<path d="${areaD}" fill="var(--accent-purple)" opacity="0.12" />`;
+    svg.innerHTML += `<path d="${areaD}" fill="var(--accent-green-bright)" opacity="0.12" />`;
 
-    // 6. ROND PARFAIT (SE CALE SUR LE RATIO ET NE S'ÉCRASE PAS)
     points.forEach(p => {
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       circle.setAttribute("cx", p.x);
       circle.setAttribute("cy", p.y);
       circle.setAttribute("r", "5.5");
       circle.setAttribute("fill", "var(--bg-color)");
-      circle.setAttribute("stroke", "var(--accent-purple)");
+      circle.setAttribute("stroke", "var(--accent-green-bright)");
       circle.setAttribute("stroke-width", "2.5");
       circle.style.cursor = "pointer";
 
       const displayKey = (db.lang !== 'EN' && p.label.includes('-Q')) ? p.label.replace('-Q', '-T') : p.label;
 
       const showInfo = () => {
-        document.getElementById('chart-hover-label').innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
+        const hLabel = document.getElementById('chart-hover-label');
+        if (hLabel) {
+          hLabel.innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
+          hLabel.style.color = "var(--accent-green-bright)";
+        }
       };
 
       circle.addEventListener("mouseenter", showInfo);
@@ -2838,9 +2792,6 @@
     animate();
   }
   
-  /* ==========================================================================
-     SYSTÈME DE DIALOGUE PERSONNALISÉ (SANS ALERT NI CONFIRM DU NAVIGATEUR)
-     ========================================================================== */
   let dialogConfirmCallback = null;
 
   function showCustomDialog(icon, title, message, isConfirm = false, onConfirm = null) {
@@ -2878,9 +2829,6 @@
     if (typeof cb === 'function') cb();
   }
 
-  /* ==========================================================================
-     9. IMPORT, EXPORT & RÉINITIALISATION
-     ========================================================================== */
   function exportJSON() {
     const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
@@ -2955,9 +2903,6 @@
     }, 1800);
   }
 
-  /* ==========================================================================
-     10. CHARGEMENT DE LA PAGE
-     ========================================================================== */
   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('company-name-input').value = db.companyName || '';
     document.getElementById('currency-select').value = db.currency || '€';
@@ -2971,14 +2916,6 @@
   });
 </script>
 
-<!-- Enregistrement Service Worker PWA -->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
-  }
-</script>
-
-<!-- Enregistrement Service Worker PWA -->
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js');
