@@ -81,6 +81,7 @@
       align-items: center;
       min-height: 100vh;
       transition: background-color 0.2s, color 0.2s;
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     /* TYPOGRAPHIE ET ALIGNEMENT */
@@ -145,24 +146,58 @@
       background: none;
       border: none;
       color: var(--text-main);
-      font-weight: 700;
+      font-weight: bold;
       cursor: pointer;
       font-size: 0.85rem;
-      transition: 0.2s;
+      transition: background-color 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       text-align: center;
-      white-space: nowrap;
     }
-    .nav-btn.active { background-color: var(--nav-active-bg); color: var(--accent-purple); border-bottom: 3px solid var(--accent-purple); }
+	.nav-btn .nav-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+    .nav-btn.active {
+      background-color: var(--nav-active-bg);
+      color: var(--accent-purple);
+      border-bottom: 3px solid var(--accent-purple);
+    }
 
     @media (max-width: 500px) {
-      .nav-btn { padding: 10px 3px; font-size: 0.75rem; }
+      .nav-btn {
+        flex-direction: column;
+        gap: 3px;
+        padding: 10px 4px;
+        font-size: 0.75rem;
+      }
+      .nav-btn .nav-icon {
+        font-size: 1.25rem;
+      }
     }
 
     .tab-content { display: none; flex-direction: column; gap: 14px; }
     .tab-content.active { display: flex; }
 
-    .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .card-title { font-size: 0.95rem; color: var(--text-bright); font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      color: var(--text-bright);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
     /* HERO BLOC */
     .fcf-hero-card {
@@ -370,11 +405,11 @@
     .tooltip-btn {
       background: var(--bg-color);
       border: 1px solid var(--border-color);
-      color: var(--accent-blue);
+      color: var(--accent-purple);
       border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 0.7rem;
+      width: 22px;
+      height: 22px;
+      font-size: 0.75rem;
       font-weight: bold;
       cursor: pointer;
       display: inline-flex;
@@ -382,7 +417,16 @@
       justify-content: center;
       transition: all 0.2s;
     }
-    .tooltip-btn:hover { border-color: var(--accent-purple); color: var(--accent-purple); }
+    .tooltip-btn:hover {
+      border-color: var(--accent-purple);
+      color: var(--text-bright);
+    }
+	
+	select {
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--accent-purple);
+    }
 
     .help-box {
       display: none;
@@ -404,7 +448,7 @@
     button.btn-primary { background-color: var(--accent-green); color: #fff; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.95rem; }
     
     button.btn-secondary, label.btn-secondary {
-      background-color: var(--bg-color); color: var(--accent-blue); border: 1px solid var(--border-color);
+      background-color: var(--bg-color); color: var(--accent-purple); border: 1px solid var(--border-color);
       padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold;
       display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; text-align: center;
     }
@@ -471,9 +515,27 @@
 
     /* ÉCOSYSTÈME */
     .link-btn {
-      display: flex; align-items: center; justify-content: center; width: 100%; padding: 14px;
-      background-color: var(--bg-color); color: var(--accent-blue); text-align: center; text-decoration: none;
-      border-radius: 6px; font-size: 1rem; font-weight: bold; border: 1px solid var(--border-color); cursor: pointer; box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 14px;
+      background-color: var(--bg-color);
+      color: var(--accent-purple); /* ✅ Liens en violet signature */
+      text-align: center;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .link-btn:hover {
+      border-color: var(--accent-purple);
+      color: var(--text-bright);
     }
     .link-btn-paypal { background-color: var(--btn-paypal-bg) !important; color: var(--btn-paypal-text) !important; }
     .site-footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.75rem; color: var(--text-main); opacity: 0.75; display: flex; flex-direction: column; gap: 8px; line-height: 1.4; }
@@ -489,6 +551,42 @@
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type="number"] { -moz-appearance: textfield; }
+	
+	/* STYLE DU BADGE TICKER CLIQUABLE */
+    .ticker-pill {
+      cursor: pointer;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500; /* ✅ Fini le gras agressif, typographie fine et douce */
+      color: var(--accent-purple);
+      background: var(--badge-bg);
+      border: 1px solid var(--accent-purple);
+      transition: all 0.2s ease;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      line-height: 1.2;
+    }
+    .ticker-pill:hover {
+      background: rgba(163, 113, 247, 0.25);
+      color: var(--text-bright);
+      transform: translateY(-1px);
+    }
+	
+	/* 1. SEULEMENT LES 3 CONTRÔLES EN VIOLET */
+    #lang-select, #theme-select, #currency-select {
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--accent-purple) !important;
+    }
+
+    /* 2. TOUTES LES DATES, MOIS, ANNÉES ET TRIMESTRES EN BLANC PUR */
+    .period-select, #select-curr-period, #select-prev-period {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--text-bright) !important;
+    }
   </style>
 </head>
 <body>
@@ -507,9 +605,15 @@
   </header>
 
   <nav>
-    <button class="nav-btn active" onclick="switchTab('tab1', event)" data-i18n="nav_tab1">📊 Saisie & Flux</button>
-    <button class="nav-btn" onclick="switchTab('tab2', event)" data-i18n="nav_tab2">📈 Trésorerie Klon</button>
-    <button class="nav-btn" onclick="switchTab('tab3', event)" data-i18n="nav_tab3">🌐 Écosystème</button>
+    <button class="nav-btn active" id="nav-tab1" onclick="switchTab('tab1', event)">
+      <span class="nav-icon">📊</span> <span class="nav-text" data-i18n="nav_tab1">Saisie & Flux</span>
+    </button>
+    <button class="nav-btn" id="nav-tab2" onclick="switchTab('tab2', event)">
+      <span class="nav-icon">📈</span> <span class="nav-text" data-i18n="nav_tab2">Trésorerie Klon</span>
+    </button>
+    <button class="nav-btn" id="nav-tab3" onclick="switchTab('tab3', event)">
+      <span class="nav-icon">🌐</span> <span class="nav-text" data-i18n="nav_tab3">Écosystème</span>
+    </button>
   </nav>
 
   <!-- ONGLET 1 : SAISIE & FLUX -->
@@ -517,7 +621,7 @@
     <div class="card" style="padding: 12px 14px;">
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
         <div style="flex: 1;">
-          <input type="text" id="company-name-input" class="inline-firstname-input" style="padding: 8px 12px; font-size: 0.95rem; font-weight: bold; color: var(--accent-purple);" placeholder="Ex: KLON Corp." maxlength="25" oninput="saveCompanyName()">
+          <input type="text" id="company-name-input" class="inline-firstname-input" style="padding: 8px 12px; font-size: 0.95rem; font-weight: bold; color: var(--text-bright);" placeholder="Ex: KLON Corp." maxlength="25" oninput="saveCompanyName()">
         </div>
         
         <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
@@ -669,10 +773,10 @@
         </div>
         <div class="hero-box hero-box-right">
           <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-            <span class="label" style="color:var(--accent-purple);" data-i18n="hero_annuity">RENTE PASSIVE CRÉÉE</span>
-            <button class="tooltip-btn" onclick="openAnnuityHelpModal()" data-i18n-title="help_4pct_title">?</button>
+            <span class="label" style="color:var(--accent-blue);">RENTE PASSIVE CRÉÉE</span>
+            <button class="tooltip-btn" onclick="openAnnuityHelpModal()" style="color:var(--accent-blue); border-color:var(--accent-blue);" title="Explication règle des 4%">?</button>
           </div>
-          <div class="val" id="hero-annuity-val" style="color:var(--accent-purple);">+0 € / mois</div>
+          <div class="val" id="hero-annuity-val" style="color:var(--accent-blue);">+0 € / mois</div>
           <div class="sub" id="hero-annuity-sub">soit +0 € / an à vie</div>
         </div>
       </div>
@@ -702,9 +806,9 @@
         <div id="total-cumul-cash" style="font-size: 1.4rem; font-weight: 900; color: var(--accent-green-bright);">0 €</div>
       </div>
         <div style="text-align: right;">
-        <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_annuity">Rente Passive Totale :</div>
-        <div id="total-cumul-annuity" style="font-size: 1.1rem; font-weight: 800; color: var(--accent-purple);">+0 € / m</div>
-      </div>
+          <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_annuity">Rente Passive Totale :</div>
+          <div id="total-cumul-annuity" style="font-size: 1.1rem; font-weight: 800; color: var(--accent-blue);">+0 € / m</div>
+        </div>
     </div>
   </div>
 
@@ -786,14 +890,18 @@
     <!-- VALORISATION BOURSIÈRE -->
     <div class="card">
       <div class="card-title">
-        <span data-i18n="card_val_title">🏛️ Valorisation Boursière</span>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span data-i18n="card_val_title">🏛️ Valorisation Boursière</span>
+          <!-- LE TICKER INTÉGRÉ ICI, CLIQUABLE ET STYLISÉ -->
+          <span id="header-ticker" class="ticker-pill" onclick="openTickerModal()" title="Cliquer pour personnaliser">KCN.PA</span>
+        </div>
       </div>
       <div style="font-size: 0.85rem; line-height: 1.5;">
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <div id="gadget-market-cap" style="font-size: 1.2rem; font-weight: 900; color: var(--text-bright);">Valorisation : 0 €</div>
-          <span id="ai-multiple-badge" onclick="openAIMultipleModal()" data-i18n-title="ai_badge_title" style="cursor: pointer; font-size: 0.78rem; color: var(--accent-purple); font-weight: 800; background: var(--badge-bg); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--accent-purple);">-- x</span>
+          <span id="ai-multiple-badge" onclick="openAIMultipleModal()" data-i18n-title="ai_badge_title" style="cursor: pointer; font-size: 0.78rem; color: var(--accent-orange); font-weight: 800; background: rgba(240, 136, 62, 0.12); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--accent-orange);">⚡ -- x</span>
         </div>
-        <div id="gadget-rank-title" onclick="openRankModal()" data-i18n-title="rank_title_click" style="cursor: pointer; display: inline-block; color:var(--accent-purple); font-weight:700; margin-top: 2px;">Penny Stock</div>
+        <div id="gadget-rank-title" onclick="openRankModal()" data-i18n-title="rank_title_click" style="cursor: pointer; display: inline-block; color: #e3b341; font-weight: 700; margin-top: 2px;">Penny Stock</div>
       </div>
     </div>
 
@@ -801,7 +909,7 @@
 
   <!-- ONGLET 3 : ÉCOSYSTÈME -->
   <div class="tab-content" id="tab3">
-    <div class="card" style="border-left: 4px solid var(--accent-blue);">
+    <div class="card" style="border-left: 4px solid var(--accent-purple);">
       <div style="font-size: 0.85rem; line-height: 1.5; color: var(--text-main);" data-i18n="tab3_disclaimer">
         <strong>🤝 Transparence & Parrainage :</strong> Les liens ci-dessous sont des liens d'affiliation et de parrainage. En ouvrant un compte via ces accès, vous pouvez bénéficier des bonus de bienvenue proposés par les plateformes tout en soutenant le développement gratuit de l'application.
       </div>
@@ -891,8 +999,8 @@
     </div>
 
     <div style="margin-top: 10px; font-size: 0.85rem; line-height: 1.5; color: var(--text-main);">
-      <div style="background: var(--bg-color); border: 1px solid var(--accent-purple); border-radius: 8px; padding: 10px; margin-bottom: 10px;">
-        <div id="rank-modal-title" style="font-weight: 800; color: var(--accent-purple); font-size: 0.95rem;">-</div>
+      <div style="background: var(--bg-color); border: 1px solid #e3b341; border-radius: 8px; padding: 10px; margin-bottom: 10px;">
+        <div id="rank-modal-title" style="font-weight: 800; color: #e3b341; font-size: 0.95rem;">-</div>
       </div>
 
       <p id="rank-modal-desc" style="opacity: 0.9; margin-bottom: 12px;"></p>
@@ -943,7 +1051,6 @@
 
     <div style="display: flex; gap: 8px; justify-content: center; margin-top: 6px;">
       <button class="btn-primary" style="flex: 1; padding: 10px;" onclick="saveModalTicker()" data-i18n="btn_validate">Valider</button>
-      <button class="btn-secondary" style="padding: 10px;" onclick="resetModalTicker()" data-i18n-title="btn_auto_ticker_title" data-i18n="btn_auto">Auto</button>
       <button class="btn-secondary" style="padding: 10px;" onclick="closeTickerModal()" data-i18n="btn_cancel">Annuler</button>
     </div>
   </div>
@@ -1034,9 +1141,9 @@
       desc: "Renseigne tes revenus bruts et tes charges d'exploitation pour maximiser ton Free Cash-Flow.",
       link_klon_title: "Basculer vers KLON (Simulateur d'autonomie)",
       
-      nav_tab1: "📊 Saisie & Flux",
-      nav_tab2: "📈 Trésorerie Klon",
-      nav_tab3: "🌐 Écosystème",
+      nav_tab1: "Saisie & Flux",
+      nav_tab2: "Trésorerie Klon",
+      nav_tab3: "Écosystème",
 
       opt_theme_dark: "🌙 Sombre",
       opt_theme_light: "☀️ Clair",
@@ -1556,7 +1663,7 @@
       effectiveTicker = `${tickerPrefix}.PA`;
     }
     const tickerEl = document.getElementById('header-ticker');
-    if (tickerEl) tickerEl.innerText = `TICKER: ${effectiveTicker}`;
+    if (tickerEl) tickerEl.innerText = effectiveTicker;
   }
 
   function saveCompanyName() {
@@ -1740,7 +1847,6 @@
 
       box.innerHTML += `
         <div class="record-row" onclick="selectRowForEdit('${r.month}')" title="${rowTitle}" style="flex-direction: column; align-items: stretch; gap: 4px; padding: 10px 8px;">
-          <!-- LIGNE 1 : DATE ET FCF (ALIGNÉS À DROITE) -->
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <strong style="font-size: 0.9rem;">📅 ${r.month}</strong>
              <div style="display: flex; align-items: center; gap: 8px;">
@@ -1750,7 +1856,6 @@
                 <button class="btn-danger" onclick="deleteRecord('${r.month}', event)" style="padding: 2px 6px; font-size: 0.75rem;">✕</button>
             </div>
           </div>
-          <!-- LIGNE 2 : DETAIL TEMPS & FLUX EN SECONDE LIGNE -->
           <div style="font-size: 0.72rem; opacity: 0.65; display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 4px;">
              <span>${brutLabel}: ${fmt(r.brut)}</span>
             <span>•</span>
@@ -2079,9 +2184,14 @@
         <td class="val-cell" style="color:var(--accent-red);">${fmt(-currData.taxes)}</td>
         <td class="val-cell">${renderVarBadge(taxesVar, true)}</td>
       </tr>
-      <tr style="background: rgba(255,255,255,0.015);">
-        <td><strong style="color:var(--accent-blue);">${t('row_net')}</strong><br><span style="font-size:0.7rem; opacity:0.6;">${t('row_net_sub')}</span></td>
-        <td class="val-cell" style="color:var(--accent-blue);">${fmt(currNetIncome)}</td>
+      <tr style="background: rgba(255,255,255,0.025); border-top: 1px dashed rgba(255,255,255,0.1); border-bottom: 1px dashed rgba(255,255,255,0.1);">
+        <td>
+          <strong style="color:var(--text-bright); font-size:0.88rem; font-weight:700;">= Revenu Net d'Activité</strong><br>
+          <span style="font-size:0.7rem; opacity:0.65;">Reste avant charges personnelles</span>
+        </td>
+        <td class="val-cell" style="color:var(--text-bright); font-size:0.96rem; font-weight:700;">
+          ${fmt(currNetIncome)}
+        </td>
         <td class="val-cell">${renderVarBadge(netVar)}</td>
       </tr>
       <tr>
@@ -2099,22 +2209,22 @@
         <td class="val-cell" style="color:var(--accent-green-bright); font-size:1.05rem;">${fmt(currFcf)}</td>
         <td class="val-cell">${renderVarBadge(fcfVar)}</td>
       </tr>
-      <tr style="background: rgba(163, 113, 247, 0.04);">
+      <tr style="background: rgba(88, 166, 255, 0.05);">
         <td>
-          <strong style="color:var(--accent-purple);">${t('row_annuity')}</strong><br>
+          <strong style="color:var(--accent-blue);">${t('row_annuity')}</strong><br>
           <span style="font-size:0.7rem; opacity:0.6;">${t('row_annuity_sub', { val: fmt(annualAnnuity) })}</span>
         </td>
-        <td class="val-cell" style="color:var(--accent-purple); font-weight:800;">
+        <td class="val-cell" style="color:var(--accent-blue); font-weight:800;">
           +${fmt(monthlyAnnuity)} / m
         </td>
         <td class="val-cell">${renderVarBadge(annuityVar)}</td>
       </tr>
-      <tr onclick="openHoursModal()" style="cursor: pointer; background: rgba(163, 113, 247, 0.08); border-top: 1px dashed var(--accent-purple);">
+      <tr onclick="openHoursModal()" style="cursor: pointer; background: rgba(88, 166, 255, 0.08); border-top: 1px dashed var(--accent-blue);">
         <td>
-          <strong style="color:var(--accent-purple);">${t('row_hourly_fcf')}</strong><br>
+          <strong style="color:var(--accent-blue);">${t('row_hourly_fcf')}</strong><br>
           <span style="font-size:0.7rem; opacity:0.7;">${t('row_hourly_fcf_sub')}</span>
         </td>
-        <td class="val-cell" style="color:var(--accent-purple); font-weight:800;">${fmt(currHourlyFcf)} / h</td>
+        <td class="val-cell" style="color:var(--accent-blue); font-weight:800;">${fmt(currHourlyFcf)} / h</td>
         <td class="val-cell">${renderVarBadge(hourlyFcfVar)}</td>
       </tr>
     `;
@@ -2127,7 +2237,7 @@
     document.getElementById('m-hours-summary-txt').innerText = t('m_hours_summary_txt', { fcf_h: fmt(currHourlyFcf) });
 
     const aiData = calculateAIMultiple();
-    document.getElementById('ai-multiple-badge').innerText = `${aiData.multiple.toFixed(1)}x`;
+    document.getElementById('ai-multiple-badge').innerText = `⚡ ${aiData.multiple.toFixed(1)}x`;
     
     const modalReasonsEl = document.getElementById('modal-ai-reasons');
     if (modalReasonsEl) modalReasonsEl.innerText = aiData.reasons;
@@ -2203,46 +2313,55 @@
   }
 
   /* ==========================================================================
-     7. RÉCOMPENSES & GAMIFICATION
+     7. RÉCOMPENSES & GAMIFICATION (VERSION ÉQUILIBRÉE ET NETTOYÉE)
      ========================================================================== */
   const REWARDS_CONFIG = [
-  // DURÉE
-  { id: "b_first", icon: "🚀", label_fr: "1er Mois", title_fr: "Premier Mois d'Exploitation", label_en: "1st Month", title_en: "First Operating Month", desc_fr: "Premier mois d'exploitation clôturé ! Ta machine de production de FCF est lancée.", desc_en: "First operating month closed! Your FCF machine is launched.", anim: "confetti" },
-  { id: "b_3m", icon: "🌱", label_fr: "3 Mois", title_fr: "3 Mois d'Exploitation", label_en: "3 Months", title_en: "3 Operating Months", desc_fr: "Un trimestre complet enregistré. La régularité de gestion commence à payer.", desc_en: "A full quarter recorded. Management consistency starts paying off.", anim: "confetti" },
-  { id: "b_6m", icon: "🌿", label_fr: "6 Mois", title_fr: "6 Mois d'Exploitation", label_en: "6 Months", title_en: "6 Operating Months", desc_fr: "6 mois de suivi budgétaire sans faillir. Ton pilotage financier est solide.", desc_en: "6 months of budget tracking. Your financial management is rock solid.", anim: "cash" },
-  { id: "b_12m", icon: "📅", label_fr: "1 An", title_fr: "1 An d'Exploitation", label_en: "1 Year", title_en: "1 Operating Year", desc_fr: "12 mois complets enregistrés ! Tu as un recul annuel parfait sur tes flux.", desc_en: "12 full months recorded! You have clear annual perspective on your cash flows.", anim: "fireworks" },
-  { id: "b_24m", icon: "🏛️", label_fr: "2 Ans", title_fr: "2 Ans de Bilan", label_en: "2 Years", title_en: "2 Years Milestone", desc_fr: "24 mois de rigueur. Tu gères tes finances comme un véritable directeur financier.", desc_en: "24 months of discipline. Managing finances like a true CFO.", anim: "gold" },
-  { id: "b_36m", icon: "👑", label_fr: "3 Ans", title_fr: "3 Ans de Maîtrise", label_en: "3 Years", title_en: "3 Years Mastery", desc_fr: "36 mois de clôtures consécutives ! Un historique patrimonial d'exception.", desc_en: "36 consecutive months closed! An exceptional financial track record.", anim: "crowns" },
+    // 1. DURÉE & DISCIPLINE
+    { id: "b_first", icon: "🚀", label_fr: "1er Mois", title_fr: "Premier Mois d'Exploitation", label_en: "1st Month", title_en: "First Operating Month", desc_fr: "Premier mois d'exploitation clôturé ! Ta machine de production de FCF est lancée.", desc_en: "First operating month closed! Your FCF machine is launched.", anim: "confetti" },
+    { id: "b_3m", icon: "🌱", label_fr: "3 Mois", title_fr: "3 Mois d'Exploitation", label_en: "3 Months", title_en: "3 Operating Months", desc_fr: "Un trimestre complet enregistré. La régularité de gestion commence à payer.", desc_en: "A full quarter recorded. Management consistency starts paying off.", anim: "confetti" },
+    { id: "b_6m", icon: "🌿", label_fr: "6 Mois", title_fr: "6 Mois d'Exploitation", label_en: "6 Months", title_en: "6 Operating Months", desc_fr: "6 mois de suivi budgétaire sans faillir. Ton pilotage financier est solide.", desc_en: "6 months of budget tracking. Your financial management is rock solid.", anim: "cash" },
+    { id: "b_12m", icon: "🎂", label_fr: "1 An", title_fr: "1 An d'Exploitation", label_en: "1 Year", title_en: "1 Operating Year", desc_fr: "12 mois complets enregistrés ! Tu as un recul annuel parfait sur tes flux.", desc_en: "12 full months recorded! You have clear annual perspective on your cash flows.", anim: "fireworks" },
+    { id: "b_24m", icon: "🏛️", label_fr: "2 Ans", title_fr: "2 Ans de Bilan", label_en: "2 Years", title_en: "2 Years Milestone", desc_fr: "24 mois de rigueur. Tu gères tes finances comme un véritable directeur financier.", desc_en: "24 months of discipline. Managing finances like a true CFO.", anim: "gold" },
+    { id: "b_36m", icon: "👑", label_fr: "3 Ans", title_fr: "3 Ans de Maîtrise", label_en: "3 Years", title_en: "3 Years Mastery", desc_fr: "36 mois de clôtures consécutives ! Un historique patrimonial d'exception.", desc_en: "36 consecutive months closed! An exceptional financial track record.", anim: "crowns" },
 
-  // CAPS FCF MENSUELS
-  { id: "b_pos", icon: "🪙", label_fr: "FCF > 0", title_fr: "Premier Euro Net Extrait", label_en: "FCF > 0", title_en: "First Net Unit Extracted", desc_fr: "Cash-flow positif (> 0 €) ! Tu as dégagé un surplus financier ce mois-ci.", desc_en: "Positive cash flow (> 0)! You generated a financial surplus this month.", anim: "confetti" },
-  { id: "b_50", icon: "💵", label_fr: "Cap 50 €", title_fr: "Cap des 50 € de FCF", label_en: "50 Cap", title_en: "50 FCF Benchmark", desc_fr: "Au moins 50 € de FCF dégagés ce mois. Chaque euro de surplus compte !", desc_en: "At least 50 in FCF generated this month. Every surplus unit counts!", anim: "cash" },
-  { id: "b_100", icon: "💶", label_fr: "Cap 100 €", title_fr: "Cap des 100 € de FCF", label_en: "100 Cap", title_en: "100 FCF Benchmark", desc_fr: "100 € de cash libre mensuel extrait ! Le carburant pour tes investissements prend forme.", desc_en: "100 free monthly cash extracted! Fuel for your investments is building up.", anim: "cash" },
-  { id: "b_250", icon: "💳", label_fr: "Cap 250 €", title_fr: "Cap des 250 € de FCF", label_en: "250 Cap", title_en: "250 FCF Benchmark", desc_fr: "250 € de trésorerie disponible en un seul mois. Un superbe élan d'autonomie.", desc_en: "250 available cash in a single month. Great momentum towards autonomy.", anim: "cash" },
-  { id: "b_500", icon: "💰", label_fr: "Cap 500 €", title_fr: "Cap des 500 € de FCF", label_en: "500 Cap", title_en: "500 FCF Benchmark", desc_fr: "500 € de FCF en un mois ! Près d'un tiers de SMIC injecté en liberté financière.", desc_en: "500 in FCF in a single month! Significant capital injected into financial freedom.", anim: "gold" },
-  { id: "b_1k", icon: "💎", label_fr: "Cap 1k €", title_fr: "Cap des 1 000 € de FCF", label_en: "1k Cap", title_en: "1,000 FCF Milestone", desc_fr: "1 000 € de FCF potentiel en un seul mois ! Une vraie machine à cash.", desc_en: "1,000 in potential FCF in a single month! A real cash machine.", anim: "gold" },
-  { id: "b_2k5", icon: "🪐", label_fr: "Cap 2,5k €", title_fr: "Cap des 2 500 € de FCF", label_en: "2.5k Cap", title_en: "2,500 FCF Milestone", desc_fr: "2 500 € de cash-flow mensuel ! Ta capacité d'épargne surclasse largement la moyenne.", desc_en: "2,500 monthly cash flow! Savings capacity way above average.", anim: "diamonds" },
-  { id: "b_5k", icon: "🌟", label_fr: "Cap 5k €", title_fr: "Cap des 5 000 € de FCF", label_en: "5k Cap", title_en: "5,000 FCF Milestone", desc_fr: "5 000 € de FCF mensuel ! Niveau d'extraction digne d'un cadre dirigeant.", desc_en: "5,000 monthly FCF! C-suite executive level cash extraction.", anim: "crowns" },
+    // 2. CAPS FCF MENSUELS
+    { id: "b_pos", icon: "🪙", label_fr: "FCF > 0", title_fr: "Premier Euro Net Extrait", label_en: "FCF > 0", title_en: "First Net Unit Extracted", desc_fr: "Cash-flow positif (> 0 €) ! Tu as dégagé un surplus financier ce mois-ci.", desc_en: "Positive cash flow (> 0)! You generated a financial surplus this month.", anim: "confetti" },
+    { id: "b_50", icon: "💵", label_fr: "Cap 50 €", title_fr: "Cap des 50 € de FCF", label_en: "50 Cap", title_en: "50 FCF Benchmark", desc_fr: "Au moins 50 € de FCF dégagés ce mois. Chaque euro de surplus compte !", desc_en: "At least 50 in FCF generated this month. Every surplus unit counts!", anim: "cash" },
+    { id: "b_100", icon: "💶", label_fr: "Cap 100 €", title_fr: "Cap des 100 € de FCF", label_en: "100 Cap", title_en: "100 FCF Benchmark", desc_fr: "100 € de cash libre mensuel extrait ! Le carburant pour tes investissements prend forme.", desc_en: "100 free monthly cash extracted! Fuel for your investments is building up.", anim: "cash" },
+    { id: "b_250", icon: "💳", label_fr: "Cap 250 €", title_fr: "Cap des 250 € de FCF", label_en: "250 Cap", title_en: "250 FCF Benchmark", desc_fr: "250 € de trésorerie disponible en un seul mois. Un superbe élan d'autonomie.", desc_en: "250 available cash in a single month. Great momentum towards autonomy.", anim: "cash" },
+    { id: "b_500", icon: "💰", label_fr: "Cap 500 €", title_fr: "Cap des 500 € de FCF", label_en: "500 Cap", title_en: "500 FCF Benchmark", desc_fr: "500 € de FCF en un mois ! Près d'un tiers de SMIC injecté en liberté financière.", desc_en: "500 in FCF in a single month! Significant capital injected into financial freedom.", anim: "gold" },
+    { id: "b_1k", icon: "💎", label_fr: "Cap 1k €", title_fr: "Cap des 1 000 € de FCF", label_en: "1k Cap", title_en: "1,000 FCF Milestone", desc_fr: "1 000 € de FCF potentiel en un seul mois ! Une vraie machine à cash.", desc_en: "1,000 in potential FCF in a single month! A real cash machine.", anim: "gold" },
+    { id: "b_2k5", icon: "🪐", label_fr: "Cap 2,5k €", title_fr: "Cap des 2 500 € de FCF", label_en: "2.5k Cap", title_en: "2,500 FCF Milestone", desc_fr: "2 500 € de cash-flow mensuel ! Ta capacité d'épargne surclasse largement la moyenne.", desc_en: "2,500 monthly cash flow! Savings capacity way above average.", anim: "diamonds" },
+    { id: "b_5k", icon: "🌟", label_fr: "Cap 5k €", title_fr: "Cap des 5 000 € de FCF", label_en: "5k Cap", title_en: "5,000 FCF Milestone", desc_fr: "5 000 € de FCF mensuel ! Niveau d'extraction digne d'un cadre dirigeant.", desc_en: "5,000 monthly FCF! C-suite executive level cash extraction.", anim: "crowns" },
 
-  // TAUX D'ÉPARGNE
-  { id: "b_rate_10", icon: "🛡️", label_fr: "Épargne 10%", title_fr: "Taux d'Épargne 10%+", label_en: "Savings 10%", title_en: "Savings Rate 10%+", desc_fr: "Tu as conservé au moins 10% de ton revenu net sous forme de FCF disponible.", desc_en: "Retained at least 10% of your net income as available FCF.", anim: "confetti" },
-  { id: "b_rate_20", icon: "⚡", label_fr: "Épargne 20%", title_fr: "Règle d'Or : Épargne 20%+", label_en: "Savings 20%", title_en: "Golden Rule: Savings 20%+", desc_fr: "20% de taux d'épargne atteint ! Tu appliques la règle d'or de l'enrichissement.", desc_en: "20% savings rate achieved! Applying the golden rule of wealth creation.", anim: "cash" },
-  { id: "b_rate_35", icon: "🎯", label_fr: "Épargne 35%", title_fr: "Taux d'Épargne 35%+", label_en: "Savings 35%", title_en: "Savings Rate 35%+", desc_fr: "Plus d'un tiers de ton revenu net disponible est conservé en trésorerie pure !", desc_en: "Over one third of your net available income kept as pure cash flow!", anim: "gold" },
-  { id: "b_rate_50", icon: "🏆", label_fr: "Épargne 50%", title_fr: "Taux d'Épargne 50%+", label_en: "Savings 50%", title_en: "Savings Rate 50%+", desc_fr: "Incroyable ! Tu conserves plus de la moitié exacte de ton revenu net.", desc_en: "Incredible! Retaining over half of your exact net income.", anim: "fireworks" },
+    // 3. RENTE PASSIVE (Factures Auto-Financées à 4%)
+    { id: "b_ann_10", icon: "📱", label_fr: "Rente +10 €/m", title_fr: "Petite Facture Neutralisée (+10 €/m)", label_en: "Yield +10/mo", title_en: "Small Bill Covered (+10/mo)", desc_fr: "Tes flux créent +10 €/mois de rente perpétuelle à vie (ex: petit forfait mobile couvert à vie).", desc_en: "Your cash flow creates +10/month perpetual passive income for life.", anim: "confetti" },
+    { id: "b_ann_30", icon: "🔌", label_fr: "Rente +30 €/m", title_fr: "Moyenne Facture Neutralisée (+30 €/m)", label_en: "Yield +30/mo", title_en: "Medium Bill Covered (+30/mo)", desc_fr: "Tes flux créent +30 €/mois de rente à vie (ex: abonnement Fibre / Électricité de base).", desc_en: "Your cash flow creates +30/month perpetual passive income for life.", anim: "cash" },
+    { id: "b_ann_80", icon: "🏠", label_fr: "Rente +80 €/m", title_fr: "Grosse Facture Neutralisée (+80 €/m)", label_en: "Yield +80/mo", title_en: "Large Bill Covered (+80/mo)", desc_fr: "Tes flux créent +80 €/mois de rente à vie (ex: eau, assurance et charges de logement).", desc_en: "Your cash flow creates +80/month perpetual passive income for life.", anim: "fireworks" },
 
-  // MARGES
-  { id: "b_m20", icon: "🔥", label_fr: "Marge 20%", title_fr: "Marge Nette 20%+", label_en: "Margin 20%", title_en: "Net Margin 20%+", desc_fr: "Marge nette supérieure à 20% de ton chiffre d'affaires brut. Modèle très sain.", desc_en: "Net margin exceeding 20% of gross revenue. Very healthy business model.", anim: "cash" },
-  { id: "b_m40", icon: "👑", label_fr: "Marge 40%", title_fr: "Marge Nette 40%+", label_en: "Margin 40%", title_en: "Net Margin 40%+", desc_fr: "Marge digne d'un monopole tech ! Plus de 40% de tes entrées ressortent en FCF.", desc_en: "Tech monopoly level margin! Over 40% of revenue converted to FCF.", anim: "fireworks" },
+    // 4. TAUX D'ÉPARGNE & MARGES
+    { id: "b_rate_10", icon: "🛡️", label_fr: "Épargne 10%", title_fr: "Taux d'Épargne 10%+", label_en: "Savings 10%", title_en: "Savings Rate 10%+", desc_fr: "Tu as conservé au moins 10% de ton revenu net sous forme de FCF disponible.", desc_en: "Retained at least 10% of your net income as available FCF.", anim: "confetti" },
+    { id: "b_rate_20", icon: "⚡", label_fr: "Épargne 20%", title_fr: "Règle d'Or : Épargne 20%+", label_en: "Savings 20%", title_en: "Golden Rule: Savings 20%+", desc_fr: "20% de taux d'épargne atteint ! Tu appliques la règle d'or de l'enrichissement.", desc_en: "20% savings rate achieved! Applying the golden rule of wealth creation.", anim: "cash" },
+    { id: "b_rate_35", icon: "🎯", label_fr: "Épargne 35%", title_fr: "Taux d'Épargne 35%+", label_en: "Savings 35%", title_en: "Savings Rate 35%+", desc_fr: "Plus d'un tiers de ton revenu net disponible est conservé en trésorerie pure !", desc_en: "Over one third of your net available income kept as pure cash flow!", anim: "gold" },
+    { id: "b_rate_50", icon: "🏆", label_fr: "Épargne 50%", title_fr: "Taux d'Épargne 50%+", label_en: "Savings 50%", title_en: "Savings Rate 50%+", desc_fr: "Incroyable ! Tu conserves plus de la moitié exacte de ton revenu net.", desc_en: "Incredible! Retaining over half of your exact net income.", anim: "fireworks" },
 
-  // CUMULS HISTORIQUES
-  { id: "b_cumul_500", icon: "🥉", label_fr: "500 € Cumul", title_fr: "500 € Cumulés", label_en: "500 Total", title_en: "500 Cumulative", desc_fr: "500 € de cash produit depuis le début pour alimenter tes Klons.", desc_en: "500 total cash produced since launch to fuel your Klons.", anim: "confetti" },
-  { id: "b_cumul_1k", icon: "🥈", label_fr: "1k € Cumul", title_fr: "1 000 € Cumulés", label_en: "1k Total", title_en: "1,000 Cumulative", desc_fr: "Premier cap symbolique des 1 000 € de cash cumulé extrait par ton unité.", desc_en: "First milestone of 1,000 total cash extracted by your unit.", anim: "cash" },
-  { id: "b_cumul_5k", icon: "🥇", label_fr: "5k € Cumul", title_fr: "5 000 € Cumulés", label_en: "5k Total", title_en: "5,000 Cumulative", desc_fr: "5 000 € de trésorerie totale dégagée. La boule de neige patrimoniale commence !", desc_en: "5,000 total treasury unlocked. Wealth snowball effect begins!", anim: "gold" },
-  { id: "b_cumul_10k", icon: "🏆", label_fr: "10k € Cumul", title_fr: "10 000 € Cumulés", label_en: "10k Total", title_en: "10,000 Cumulative", desc_fr: "Cap des 10 000 € de FCF cumulé ! Une rente passive de +33 €/mois créée à 4%.", desc_en: "10,000 cumulative FCF! Created a +33/month passive income at 4%.", anim: "gold" },
-  { id: "b_cumul_25k", icon: "🏰", label_fr: "25k € Cumul", title_fr: "25 000 € Cumulés", label_en: "25k Total", title_en: "25,000 Cumulative", desc_fr: "25 000 € de carburant produit ! De quoi sécuriser plusieurs années de charges.", desc_en: "25,000 total fuel produced! Securing years of basic expenses.", anim: "diamonds" },
-  { id: "b_cumul_50k", icon: "💎", label_fr: "50k € Cumul", title_fr: "50 000 € Cumulés", label_en: "50k Total", title_en: "50,000 Cumulative", desc_fr: "50 000 € de cash total extrait par ton appareil productif. Performance magistrale.", desc_en: "50,000 total cash extracted by your engine. Masterclass performance.", anim: "crowns" },
-  { id: "b_cumul_100k", icon: "🌌", label_fr: "100k € Cumul", title_fr: "100 000 € Cumulés", label_en: "100k Total", title_en: "100,000 Cumulative", desc_fr: "Légendaire ! 100 000 € de cash-flow historique cumulé.", desc_en: "Legendary! 100,000 historical cumulative cash flow.", anim: "crowns" }
-];
+    { id: "b_m20", icon: "🔥", label_fr: "Marge 20%", title_fr: "Marge Nette 20%+", label_en: "Margin 20%", title_en: "Net Margin 20%+", desc_fr: "Marge nette supérieure à 20% de ton chiffre d'affaires brut. Modèle très sain.", desc_en: "Net margin exceeding 20% of gross revenue. Very healthy business model.", anim: "cash" },
+    { id: "b_m40", icon: "🗝️", label_fr: "Marge 40%", title_fr: "Marge Nette 40%+", label_en: "Margin 40%", title_en: "Net Margin 40%+", desc_fr: "Marge digne d'un monopole tech ! Plus de 40% de tes entrées ressortent en FCF.", desc_en: "Tech monopoly level margin! Over 40% of revenue converted to FCF.", anim: "fireworks" },
+
+    // 5. TEMPS & EFFICIENCE NET-NET
+    { id: "b_hourly_20", icon: "⏱️", label_fr: "20 € / h Net", title_fr: "Socle Horaire (20 €/h Net)", label_en: "20/h Net", title_en: "Base Rate (20/h Net)", desc_fr: "Ton activité produit au moins 20 € net-net par heure travaillée.", desc_en: "Your activity extracts at least 20 net per worked hour.", anim: "confetti" },
+    { id: "b_hourly_30", icon: "⚡", label_fr: "30 € / h Net", title_fr: "Efficience Solide (30 €/h Net)", label_en: "30/h Net", title_en: "Solid Efficiency (30/h Net)", desc_fr: "Niveau d'extraction élevé : plus de 30 € de revenu net par heure consacrée.", desc_en: "High extraction level: over 30 net income per worked hour.", anim: "cash" },
+    { id: "b_hourly_40", icon: "🎯", label_fr: "40 € / h Net", title_fr: "Haute Valeur (40 €/h Net)", label_en: "40/h Net", title_en: "High Value Rate (40/h Net)", desc_fr: "Performance exceptionnelle : 40 € de trésorerie nette extraite par heure de vie.", desc_en: "Exceptional performance: 40 net cash extracted per life hour.", anim: "gold" },
+
+    // 6. CUMULS HISTORIQUES
+    { id: "b_cumul_500", icon: "🥉", label_fr: "500 € Cumul", title_fr: "500 € Cumulés", label_en: "500 Total", title_en: "500 Cumulative", desc_fr: "500 € de cash produit depuis le début pour alimenter tes Klons.", desc_en: "500 total cash produced since launch to fuel your Klons.", anim: "confetti" },
+    { id: "b_cumul_1k", icon: "🥈", label_fr: "1k € Cumul", title_fr: "1 000 € Cumulés", label_en: "1k Total", title_en: "1,000 Cumulative", desc_fr: "Premier cap symbolique des 1 000 € de cash cumulé extrait par ton unité.", desc_en: "First milestone of 1,000 total cash extracted by your unit.", anim: "cash" },
+    { id: "b_cumul_5k", icon: "🥇", label_fr: "5k € Cumul", title_fr: "5 000 € Cumulés", label_en: "5k Total", title_en: "5,000 Cumulative", desc_fr: "5 000 € de trésorerie totale dégagée. La boule de neige patrimoniale commence !", desc_en: "5,000 total treasury unlocked. Wealth snowball effect begins!", anim: "gold" },
+    { id: "b_cumul_10k", icon: "🏦", label_fr: "10k € Cumul", title_fr: "10 000 € Cumulés", label_en: "10k Total", title_en: "10,000 Cumulative", desc_fr: "Cap des 10 000 € de FCF cumulé ! Une rente passive de +33 €/mois créée à 4%.", desc_en: "10,000 cumulative FCF! Created a +33/month passive income at 4%.", anim: "gold" },
+    { id: "b_cumul_25k", icon: "🏰", label_fr: "25k € Cumul", title_fr: "25 000 € Cumulés", label_en: "25k Total", title_en: "25,000 Cumulative", desc_fr: "25 000 € de carburant produit ! De quoi sécuriser plusieurs années de charges.", desc_en: "25,000 total fuel produced! Securing years of basic expenses.", anim: "diamonds" },
+    { id: "b_cumul_50k", icon: "💎", label_fr: "50k € Cumul", title_fr: "50 000 € Cumulés", label_en: "50k Total", title_en: "50,000 Cumulative", desc_fr: "50 000 € de cash total extrait par ton appareil productif. Performance magistrale.", desc_en: "50,000 total cash extracted by your engine. Masterclass performance.", anim: "crowns" },
+    { id: "b_cumul_100k", icon: "🌌", label_fr: "100k € Cumul", title_fr: "100 000 € Cumulés", label_en: "100k Total", title_en: "100,000 Cumulative", desc_fr: "Légendaire ! 100 000 € de cash-flow historique cumulé.", desc_en: "Legendary! 100,000 historical cumulative cash flow.", anim: "crowns" }
+  ];
 
   function toggleRewardsVisibility() {
     isRewardsVisible = !isRewardsVisible;
@@ -2272,6 +2391,8 @@
 
     const totalFcf = db.records.reduce((acc, r) => acc + (r.brut - r.taxes - r.frais - r.charges), 0);
     const maxFcf = Math.max(...db.records.map(r => r.brut - r.taxes - r.frais - r.charges));
+    const maxMonthlyAnnuity = Math.max(...db.records.map(r => Math.max(0, Math.round(((r.brut - r.taxes - r.frais - r.charges) * 0.04) / 12))));
+
     const hasMargin20 = db.records.some(r => r.brut > 0 && ((r.brut - r.taxes - r.frais - r.charges) / r.brut) >= 0.2);
     const hasMargin40 = db.records.some(r => r.brut > 0 && ((r.brut - r.taxes - r.frais - r.charges) / r.brut) >= 0.4);
 
@@ -2281,11 +2402,18 @@
       return net > 0 && (fcf / net) >= target;
     });
 
+    const hasHourly = (target) => db.records.some(r => {
+      const net = r.brut - r.taxes;
+      const hrs = r.hours !== undefined ? r.hours : 152;
+      return hrs > 0 && (net / hrs) >= target;
+    });
+
     let newlyUnlockedRewardId = null;
 
     REWARDS_CONFIG.forEach(rItem => {
       let isUnlocked = false;
 
+      // Durée
       if (rItem.id === "b_first") isUnlocked = db.records.length >= 1;
       if (rItem.id === "b_3m") isUnlocked = db.records.length >= 3;
       if (rItem.id === "b_6m") isUnlocked = db.records.length >= 6;
@@ -2293,6 +2421,7 @@
       if (rItem.id === "b_24m") isUnlocked = db.records.length >= 24;
       if (rItem.id === "b_36m") isUnlocked = db.records.length >= 36;
 
+      // Caps Mensuels FCF
       if (rItem.id === "b_pos") isUnlocked = maxFcf > 0;
       if (rItem.id === "b_50") isUnlocked = maxFcf >= 50;
       if (rItem.id === "b_100") isUnlocked = maxFcf >= 100;
@@ -2302,6 +2431,12 @@
       if (rItem.id === "b_2k5") isUnlocked = maxFcf >= 2500;
       if (rItem.id === "b_5k") isUnlocked = maxFcf >= 5000;
 
+      // Rentes Passive & Factures
+      if (rItem.id === "b_ann_10") isUnlocked = maxMonthlyAnnuity >= 10;
+      if (rItem.id === "b_ann_30") isUnlocked = maxMonthlyAnnuity >= 30;
+      if (rItem.id === "b_ann_80") isUnlocked = maxMonthlyAnnuity >= 80;
+
+      // Taux d'Épargne & Marges
       if (rItem.id === "b_rate_10") isUnlocked = hasRate(0.10);
       if (rItem.id === "b_rate_20") isUnlocked = hasRate(0.20);
       if (rItem.id === "b_rate_35") isUnlocked = hasRate(0.35);
@@ -2310,6 +2445,12 @@
       if (rItem.id === "b_m20") isUnlocked = hasMargin20;
       if (rItem.id === "b_m40") isUnlocked = hasMargin40;
 
+      // Temps & Efficience Net
+      if (rItem.id === "b_hourly_20") isUnlocked = hasHourly(20);
+      if (rItem.id === "b_hourly_30") isUnlocked = hasHourly(30);
+      if (rItem.id === "b_hourly_40") isUnlocked = hasHourly(40);
+
+      // Cumuls Historiques
       if (rItem.id === "b_cumul_500") isUnlocked = totalFcf >= 500;
       if (rItem.id === "b_cumul_1k") isUnlocked = totalFcf >= 1000;
       if (rItem.id === "b_cumul_5k") isUnlocked = totalFcf >= 5000;
@@ -2436,19 +2577,18 @@
   }
 
   function openCorpRewardModal(rewardId) {
-  const r = REWARDS_CONFIG.find(item => item.id === rewardId);
-  if (!r) return;
+    const r = REWARDS_CONFIG.find(item => item.id === rewardId);
+    if (!r) return;
 
-  currentRewardAnimType = r.anim || 'confetti';
-  document.getElementById('reward-detail-icon').innerText = r.icon;
-  
-  // Utilise le titre complet s'il existe, sinon retombe sur le label
-  const fullTitle = (db.lang === 'EN') ? (r.title_en || r.label_en) : (r.title_fr || r.label_fr);
-  document.getElementById('reward-detail-title').innerText = fullTitle;
-  
-  document.getElementById('reward-detail-desc').innerText = (db.lang === 'EN') ? r.desc_en : r.desc_fr;
-  document.getElementById('corp-reward-modal').classList.add('active');
-}
+    currentRewardAnimType = r.anim || 'confetti';
+    document.getElementById('reward-detail-icon').innerText = r.icon;
+
+    const fullTitle = (db.lang === 'EN') ? (r.title_en || r.label_en) : (r.title_fr || r.label_fr);
+    document.getElementById('reward-detail-title').innerText = fullTitle;
+    document.getElementById('reward-detail-desc').innerText = (db.lang === 'EN') ? r.desc_en : r.desc_fr;
+
+    document.getElementById('corp-reward-modal').classList.add('active');
+  }
 
   function closeCorpRewardModal() {
     document.getElementById('corp-reward-modal').classList.remove('active');
@@ -2459,121 +2599,121 @@
   }
 
   function renderCumulChart() {
-  const svg = document.getElementById('cumul-chart-svg');
-  svg.innerHTML = '';
-  document.getElementById('chart-hover-label').innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
+    const svg = document.getElementById('cumul-chart-svg');
+    svg.innerHTML = '';
+    document.getElementById('chart-hover-label').innerText = t('chart_hover_default');
 
-  if (db.records.length < 2) {
-    svg.innerHTML = `<text x="250" y="130" fill="var(--text-main)" font-size="12" text-anchor="middle" opacity="0.6">${t('chart_need_records')}</text>`;
-    return;
-  }
-
-  // 1. DÉCOUPE LOGIQUE PAR PAS TEMPOREL
-  const totalMonths = db.records.length;
-  let aggregationMode = 'monthly';
-  if (totalMonths > 36) {
-    aggregationMode = 'annual';
-  } else if (totalMonths > 12) {
-    aggregationMode = 'quarterly';
-  }
-
-  // 2. AGRÉGATION DE LA SÉRIE
-  let cumul = 0;
-  let rawSeries = [];
-  let fcfList = [];
-
-  db.records.forEach(r => {
-    const fcf = r.brut - r.taxes - r.frais - r.charges;
-    cumul += fcf;
-    fcfList.push(fcf);
-
-    let key = r.month;
-    if (aggregationMode === 'quarterly') {
-      const y = r.month.slice(0, 4);
-      const m = parseInt(r.month.slice(5, 7), 10);
-      const q = Math.ceil(m / 3);
-      key = `${y}-Q${q}`;
-    } else if (aggregationMode === 'annual') {
-      key = r.month.slice(0, 4);
+    if (db.records.length < 2) {
+      svg.innerHTML = `<text x="250" y="130" fill="var(--text-main)" font-size="12" text-anchor="middle" opacity="0.6">${t('chart_need_records')}</text>`;
+      return;
     }
 
-    rawSeries.push({ key, month: r.month, cumul, fcf });
-  });
+    // 1. DÉCOUPE LOGIQUE PAR PAS TEMPOREL
+    const totalMonths = db.records.length;
+    let aggregationMode = 'monthly';
+    if (totalMonths > 36) {
+      aggregationMode = 'annual';
+    } else if (totalMonths > 12) {
+      aggregationMode = 'quarterly';
+    }
 
-  let series = [];
-  if (aggregationMode === 'monthly') {
-    series = rawSeries;
-  } else {
-    const mapLast = new Map();
-    rawSeries.forEach(item => mapLast.set(item.key, item));
-    series = Array.from(mapLast.values());
+    // 2. AGRÉGATION DE LA SÉRIE
+    let cumul = 0;
+    let rawSeries = [];
+    let fcfList = [];
+
+    db.records.forEach(r => {
+      const fcf = r.brut - r.taxes - r.frais - r.charges;
+      cumul += fcf;
+      fcfList.push(fcf);
+
+      let key = r.month;
+      if (aggregationMode === 'quarterly') {
+        const y = r.month.slice(0, 4);
+        const m = parseInt(r.month.slice(5, 7), 10);
+        const q = Math.ceil(m / 3);
+        key = `${y}-Q${q}`;
+      } else if (aggregationMode === 'annual') {
+        key = r.month.slice(0, 4);
+      }
+
+      rawSeries.push({ key, month: r.month, cumul, fcf });
+    });
+
+    let series = [];
+    if (aggregationMode === 'monthly') {
+      series = rawSeries;
+    } else {
+      const mapLast = new Map();
+      rawSeries.forEach(item => mapLast.set(item.key, item));
+      series = Array.from(mapLast.values());
+    }
+
+    const avgFcf = fcfList.reduce((a, b) => a + b, 0) / fcfList.length;
+    const bestFcf = Math.max(...fcfList);
+
+    document.getElementById('modal-avg-fcf').innerText = fmt(avgFcf);
+    document.getElementById('modal-best-fcf').innerText = fmt(bestFcf);
+
+    // 3. DIMENSIONS AVEC MARGE GAUCHE ÉLARGIE (60px) POUR N'IMPORTE QUEL CHIFFRE
+    const padLeft = 60, padRight = 20, padTop = 20, padBottom = 30;
+    const width = 500 - padLeft - padRight;
+    const height = 260 - padTop - padBottom;
+
+    const minCumul = Math.min(0, ...series.map(s => s.cumul));
+    const maxCumul = Math.max(1000, ...series.map(s => s.cumul));
+
+    const getY = val => padTop + height - ((val - minCumul) / (maxCumul - minCumul || 1)) * height;
+    const numLocale = (db.lang === 'EN') ? 'en-US' : 'fr-FR';
+
+    // 4. AXE Y & ÉTIQUETTES SANS DÉFORMATION
+    const gridVals = [minCumul, (minCumul + maxCumul) / 2, maxCumul];
+    gridVals.forEach(gv => {
+      const gy = getY(gv);
+      svg.innerHTML += `
+        <line x1="${padLeft}" y1="${gy}" x2="${500 - padRight}" y2="${gy}" stroke="var(--border-color)" stroke-dasharray="3,3" stroke-width="1" />
+        <text x="${padLeft - 10}" y="${gy + 4}" fill="var(--text-main)" font-size="10" font-weight="700" text-anchor="end" opacity="0.8">${new Intl.NumberFormat(numLocale, { notation: 'compact' }).format(gv)} ${db.currency}</text>
+      `;
+    });
+
+    // 5. TRACÉ DE LA COURBE
+    let points = [];
+    series.forEach((s, idx) => {
+      const x = padLeft + (idx / (series.length - 1 || 1)) * width;
+      const y = getY(s.cumul);
+      points.push({ x, y, label: s.key, cumul: s.cumul, fcf: s.fcf });
+    });
+
+    let pathD = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) pathD += ` L ${points[i].x} ${points[i].y}`;
+
+    svg.innerHTML += `<path d="${pathD}" fill="none" stroke="var(--accent-purple)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+
+    const areaD = `${pathD} L ${points[points.length - 1].x} ${padTop + height} L ${points[0].x} ${padTop + height} Z`;
+    svg.innerHTML += `<path d="${areaD}" fill="var(--accent-purple)" opacity="0.12" />`;
+
+    // 6. ROND PARFAIT (SE CALE SUR LE RATIO ET NE S'ÉCRASE PAS)
+    points.forEach(p => {
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", p.x);
+      circle.setAttribute("cy", p.y);
+      circle.setAttribute("r", "5.5");
+      circle.setAttribute("fill", "var(--bg-color)");
+      circle.setAttribute("stroke", "var(--accent-purple)");
+      circle.setAttribute("stroke-width", "2.5");
+      circle.style.cursor = "pointer";
+
+      const displayKey = (db.lang !== 'EN' && p.label.includes('-Q')) ? p.label.replace('-Q', '-T') : p.label;
+
+      const showInfo = () => {
+        document.getElementById('chart-hover-label').innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
+      };
+
+      circle.addEventListener("mouseenter", showInfo);
+      circle.addEventListener("click", showInfo);
+      svg.appendChild(circle);
+    });
   }
-
-  const avgFcf = fcfList.reduce((a, b) => a + b, 0) / fcfList.length;
-  const bestFcf = Math.max(...fcfList);
-
-  document.getElementById('modal-avg-fcf').innerText = fmt(avgFcf);
-  document.getElementById('modal-best-fcf').innerText = fmt(bestFcf);
-
-  // 3. DIMENSIONS AVEC MARGE GAUCHE ÉLARGIE (60px) POUR N'IMPORTE QUEL CHIFFRE
-  const padLeft = 60, padRight = 20, padTop = 20, padBottom = 30;
-  const width = 500 - padLeft - padRight;
-  const height = 260 - padTop - padBottom;
-
-  const minCumul = Math.min(0, ...series.map(s => s.cumul));
-  const maxCumul = Math.max(1000, ...series.map(s => s.cumul));
-
-  const getY = val => padTop + height - ((val - minCumul) / (maxCumul - minCumul || 1)) * height;
-  const numLocale = (db.lang === 'EN') ? 'en-US' : 'fr-FR';
-
-  // 4. AXE Y & ÉTIQUETTES SANS DÉFORMATION
-  const gridVals = [minCumul, (minCumul + maxCumul) / 2, maxCumul];
-  gridVals.forEach(gv => {
-    const gy = getY(gv);
-    svg.innerHTML += `
-      <line x1="${padLeft}" y1="${gy}" x2="${500 - padRight}" y2="${gy}" stroke="var(--border-color)" stroke-dasharray="3,3" stroke-width="1" />
-      <text x="${padLeft - 10}" y="${gy + 4}" fill="var(--text-main)" font-size="10" font-weight="700" text-anchor="end" opacity="0.8">${new Intl.NumberFormat(numLocale, { notation: 'compact' }).format(gv)} ${db.currency}</text>
-    `;
-  });
-
-  // 5. TRACÉ DE LA COURBE
-  let points = [];
-  series.forEach((s, idx) => {
-    const x = padLeft + (idx / (series.length - 1 || 1)) * width;
-    const y = getY(s.cumul);
-    points.push({ x, y, label: s.key, cumul: s.cumul, fcf: s.fcf });
-  });
-
-  let pathD = `M ${points[0].x} ${points[0].y}`;
-  for (let i = 1; i < points.length; i++) pathD += ` L ${points[i].x} ${points[i].y}`;
-
-  svg.innerHTML += `<path d="${pathD}" fill="none" stroke="var(--accent-purple)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
-
-  const areaD = `${pathD} L ${points[points.length - 1].x} ${padTop + height} L ${points[0].x} ${padTop + height} Z`;
-  svg.innerHTML += `<path d="${areaD}" fill="var(--accent-purple)" opacity="0.12" />`;
-
-  // 6. ROND PARFAIT (SE CALE SUR LE RATIO ET NE S'ÉTRASE PAS)
-  points.forEach(p => {
-    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", p.x);
-    circle.setAttribute("cy", p.y);
-    circle.setAttribute("r", "5.5");
-    circle.setAttribute("fill", "var(--bg-color)");
-    circle.setAttribute("stroke", "var(--accent-purple)");
-    circle.setAttribute("stroke-width", "2.5");
-    circle.style.cursor = "pointer";
-
-    const displayKey = (db.lang !== 'EN' && p.label.includes('-Q')) ? p.label.replace('-Q', '-T') : p.label;
-
-    const showInfo = () => {
-  document.getElementById('chart-hover-label').innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
-};
-
-    circle.addEventListener("mouseenter", showInfo);
-    circle.addEventListener("click", showInfo);
-    svg.appendChild(circle);
-  });
-}
 
   function triggerCelebration(type = 'confetti') {
     const canvas = document.getElementById('confetti-canvas');
@@ -2776,6 +2916,13 @@
     updateAppHeader();
     applyLanguageUI();
   });
+</script>
+
+<!-- Enregistrement Service Worker PWA -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
 </script>
 
 <!-- Enregistrement Service Worker PWA -->
