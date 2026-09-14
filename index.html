@@ -2076,8 +2076,13 @@
         <td class="val-cell">${renderVarBadge(fcfVar)}</td>
       </tr>
       <tr style="background: rgba(163, 113, 247, 0.04);">
-        <td><strong style="color:var(--accent-purple);">${t('row_annuity')}</strong><br><span style="font-size:0.7rem; opacity:0.6;">${t('row_annuity_sub', { val: fmt(annualAnnuity) })}</span></td>
-        <td class="val-cell" style="color:var(--accent-purple); font-weight:800;">+${fmt(monthlyAnnuity)} ${periodUnitLabel}</td>
+        <td>
+          <strong style="color:var(--accent-purple);">${t('row_annuity')}</strong><br>
+          <span style="font-size:0.7rem; opacity:0.6;">${t('row_annuity_sub', { val: fmt(annualAnnuity) })}</span>
+        </td>
+        <td class="val-cell" style="color:var(--accent-purple); font-weight:800;">
+          +${fmt(monthlyAnnuity)} / m
+        </td>
         <td class="val-cell">${renderVarBadge(annuityVar)}</td>
       </tr>
       <tr onclick="openHoursModal()" style="cursor: pointer; background: rgba(163, 113, 247, 0.08); border-top: 1px dashed var(--accent-purple);">
