@@ -881,7 +881,7 @@
       </div>
       <div style="font-size: 0.85rem; line-height: 1.5;">
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <div id="gadget-market-cap" style="font-size: 1.2rem; font-weight: 900; color: var(--text-bright);">Valorisation : 0 €</div>
+          <div id="gadget-market-cap" style="font-size: 1.2rem; font-weight: 900; color: var(--text-bright);">KLON Corp. : 0 €</div>
           <span id="ai-multiple-badge" class="ticker-pill" onclick="openAIMultipleModal()" data-i18n-title="ai_badge_title" style="color: var(--accent-orange);">⚡ -- x</span>
         </div>
         <div id="gadget-rank-title" onclick="openRankModal()" data-i18n-title="rank_title_click" style="cursor: pointer; display: inline-block; color: #e3b341; font-weight: 700; margin-top: 2px;">Penny Stock</div>
@@ -2062,6 +2062,7 @@
   function renderStockReport() {
     const periodUnitLabel = (db.lang === 'EN') ? '/ month' : '/ mois';
     const yearUnitLabel = (db.lang === 'EN') ? '/ year for life' : '/ an à vie';
+	const companyDisplayName = (db.companyName || 'KLON Corp.').trim().toUpperCase();
 
     if (db.records.length === 0) {
       document.getElementById('hero-fcf-val').innerText = '0 ' + db.currency;
@@ -2069,7 +2070,7 @@
       document.getElementById('hero-annuity-val').innerText = '+0 ' + db.currency + ' ' + periodUnitLabel;
       document.getElementById('hero-annuity-sub').innerText = 'soit +0 ' + db.currency + ' ' + yearUnitLabel;
       document.getElementById('report-tbody').innerHTML = `<tr><td colspan="3" style="text-align:center; opacity:0.6; padding:16px;">${t('no_data_report')}</td></tr>`;
-      document.getElementById('gadget-market-cap').innerText = t('val_label', { val: '0 ' + db.currency });
+      document.getElementById('gadget-market-cap').innerText = `${companyDisplayName} : ${fmt(fixedMarketCap)}`;
       document.getElementById('gadget-rank-title').innerText = 'Penny Stock';
       document.getElementById('total-cumul-cash').innerText = '0 ' + db.currency;
       document.getElementById('total-cumul-annuity').innerText = '+0 ' + db.currency + ' ' + periodUnitLabel;
