@@ -619,7 +619,7 @@
     <!-- HISTORIQUE D'EXPLOITATION -->
     <div class="card">
       <div class="card-title">
-        <span data-i18n="history_title">📜 Historique</span>
+        <span data-i18n="history_title"></span>
         <span id="history-count-badge" style="font-size:0.75rem; opacity:0.6;">0 mois</span>
       </div>
       <div id="records-list" style="max-height: 300px; overflow-y: auto; padding-right: 2px;"></div>
@@ -674,8 +674,8 @@
     <!-- CARTE PONT AVEC KLON -->
     <div class="card" style="border-left: 4px solid var(--accent-purple);">
       <div class="card-title">
-        <span data-i18n="card_fuel_title">⛽ Carburant d'Alimentation KLON</span>
-        <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openHistoryModal()" data-i18n="btn_chart">📜 Courbe de Trésorerie</button>
+        <span data-i18n="card_fuel_title"></span>
+        <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openHistoryModal()" data-i18n="btn_chart"></button>
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
         <div>
@@ -808,12 +808,12 @@
     </div>
 
     <div class="card">
-      <div class="card-title" data-i18n="tab3_portfolio_title">Portefeuille & Performances</div>
+      <div class="card-title" data-i18n="tab3_portfolio_title"></div>
       <a href="https://dub.sh/klon-wikifolio" target="_blank" rel="noopener noreferrer" class="link-btn" data-i18n="tab3_wikifolio_btn">Suivre le Wikifolio Alpha Picker</a>
     </div>
 
     <div class="card">
-      <div class="card-title" data-i18n="tab3_analysis_title">Analyses & Thèses</div>
+      <div class="card-title" data-i18n="tab3_analysis_title"></div>
       <a href="https://dub.sh/klon-substack" target="_blank" rel="noopener noreferrer" class="link-btn" data-i18n="tab3_substack_btn">Suivre le Substack Alpha Picker</a>
     </div>
 
@@ -853,7 +853,6 @@
       <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin: 10px 0;">
         <strong style="color: var(--accent-purple); font-size: 0.8rem;" data-i18n="modal_ai_details_lbl">DÉTAILS DE L'ANALYSE :</strong>
         <div id="modal-ai-reasons" style="font-size: 0.8rem; margin-top: 4px; opacity: 0.9; font-style: italic;">
-          Évaluation selon marge, régularité et dynamique.
         </div>
       </div>
       <p style="font-size: 0.75rem; opacity: 0.75;">
@@ -890,8 +889,8 @@
 <div id="history-modal" class="modal-overlay">
   <div class="modal-card">
     <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div class="card-title" style="margin-bottom: 0;" data-i18n="modal_chart_title">📈 Courbe de Trésorerie Cumulée</div>
-      <span id="chart-hover-label" style="font-size:0.75rem; color:var(--accent-purple); font-weight:800;" data-i18n="chart_hover_default">Survolez les points</span>
+      <div class="card-title" style="margin-bottom: 0;" data-i18n="modal_chart_title"></div>
+      <span id="chart-hover-label" style="font-size:0.75rem; color:var(--accent-purple); font-weight:800;" data-i18n="chart_hover_default"></span>
     </div>
     <p style="font-size: 0.8rem; opacity: 0.8; margin-top: -6px;" data-i18n="modal_chart_sub">
       Trajectoire d'accumulation du cash disponible produit pour alimenter KLON.
@@ -1063,7 +1062,7 @@
       btn_rewards: "🏆 Voir les Récompenses ▾",
       btn_rewards_hide: "🏆 Masquer les Récompenses ▴",
 
-      card_fuel_title: "⛽ Carburant d'Alimentation KLON",
+      card_fuel_title: "⛽ Carburant KLON",
       btn_chart: "📜 Trésorerie",
       lbl_total_cash: "Trésorerie Cumulée :",
       lbl_total_annuity: "Rente Passive Totale :",
@@ -1273,7 +1272,7 @@
       btn_rewards: "🏆 View Rewards ▾",
       btn_rewards_hide: "🏆 Hide Rewards ▴",
 
-      card_fuel_title: "⛽ KLON Power Supply Fuel",
+      card_fuel_title: "⛽ KLON Fuel",
       btn_chart: "📜 Treasury",
       lbl_total_cash: "Cumulative Treasury:",
       lbl_total_annuity: "Total Passive Income:",
@@ -2435,7 +2434,7 @@
   function renderCumulChart() {
   const svg = document.getElementById('cumul-chart-svg');
   svg.innerHTML = '';
-  document.getElementById('chart-hover-label').innerText = t('chart_hover_default');
+  document.getElementById('chart-hover-label').innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
 
   if (db.records.length < 2) {
     svg.innerHTML = `<text x="250" y="130" fill="var(--text-main)" font-size="12" text-anchor="middle" opacity="0.6">${t('chart_need_records')}</text>`;
