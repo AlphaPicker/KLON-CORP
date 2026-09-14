@@ -2540,8 +2540,8 @@
     const displayKey = (db.lang !== 'EN' && p.label.includes('-Q')) ? p.label.replace('-Q', '-T') : p.label;
 
     const showInfo = () => {
-      document.getElementById('chart-hover-label').innerText = `${displayKey} : Cumul ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
-    };
+  document.getElementById('chart-hover-label').innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
+};
 
     circle.addEventListener("mouseenter", showInfo);
     circle.addEventListener("click", showInfo);
