@@ -553,22 +553,22 @@
 	
     .ticker-pill {
       cursor: pointer;
-      padding: 2px 8px;
-      border-radius: 6px;
+      padding: 4px 12px;
+      border-radius: 20px; /* Forme ovale */
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 800; /* Texte en gras */
       color: var(--accent-purple);
-      background: var(--badge-bg);
+      background: var(--bg-color); /* Fond noir / neutre */
       border: none;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: transform 0.2s ease, opacity 0.2s ease;
       user-select: none;
       display: inline-flex;
       align-items: center;
       line-height: 1.2;
     }
     .ticker-pill:hover {
-      background: rgba(163, 113, 247, 0.25);
-      transform: translateY(-1px);
+      transform: translateY(-2px); /* Léger mouvement au survol */
+      opacity: 0.85;
     }
 	
     #lang-select, #theme-select, #currency-select {
@@ -882,7 +882,7 @@
       <div style="font-size: 0.85rem; line-height: 1.5;">
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <div id="gadget-market-cap" style="font-size: 1.2rem; font-weight: 900; color: var(--text-bright);">Valorisation : 0 €</div>
-          <span id="ai-multiple-badge" onclick="openAIMultipleModal()" data-i18n-title="ai_badge_title" style="cursor: pointer; font-size: 0.78rem; color: var(--accent-orange); font-weight: 800; background: rgba(240, 136, 62, 0.15); padding: 3px 8px; border-radius: 6px; border: none;">⚡ -- x</span>
+          <span id="ai-multiple-badge" onclick="openAIMultipleModal()" data-i18n-title="ai_badge_title" style="cursor: pointer; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 800; color: var(--accent-orange);  background: var(--bg-color); border: none; display: inline-flex; align-items: center; line-height: 1.2;">⚡ -- x</span>
         </div>
         <div id="gadget-rank-title" onclick="openRankModal()" data-i18n-title="rank_title_click" style="cursor: pointer; display: inline-block; color: #e3b341; font-weight: 700; margin-top: 2px;">Penny Stock</div>
       </div>
