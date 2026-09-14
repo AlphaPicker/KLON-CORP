@@ -245,8 +245,8 @@
 
     .rewards-toggle-btn {
       background: var(--bg-color);
-      border: 1px solid var(--border-color);
-      color: var(--text-bright);
+      border: 1px solid var(--accent-green-bright);
+      color: var(--accent-green-bright);
       padding: 5px 14px;
       border-radius: 14px;
       font-size: 0.75rem;
@@ -259,9 +259,9 @@
       user-select: none;
     }
     .rewards-toggle-btn:hover {
-      border-color: var(--accent-purple);
-      color: var(--accent-purple);
-      box-shadow: 0 0 8px rgba(163, 113, 247, 0.3);
+      border-color: var(--accent-green-bright);
+      color: var(--accent-green-bright);
+      box-shadow: 0 0 8px rgba(126, 231, 135, 0.4);
     }
 
 	  .fuel-card-content {
@@ -290,25 +290,17 @@
       font-size: 0.75rem;
       font-weight: 500;
       background: var(--bg-color);
-      border: 1px solid var(--accent-purple);
-      color: var(--text-bright);
-      box-shadow: 0 0 6px rgba(163, 113, 247, 0.2);
+      border: 1px solid var(--accent-green-bright);
+      color: var(--accent-green-bright);
+      box-shadow: 0 0 6px rgba(126, 231, 135, 0.25);
       cursor: pointer;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       user-select: none;
       line-height: 1.2;
     }
     .corp-reward-pill:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 10px rgba(163, 113, 247, 0.4);
-    }
-
-    .hero-rewards-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding-top: 10px;
-      margin-top: 4px;
+       transform: translateY(-2px);
+       box-shadow: 0 0 10px rgba(126, 231, 135, 0.5);
     }
 
     .corp-rewards-grid {
@@ -1028,7 +1020,7 @@
 
     <div style="display: flex; justify-content: space-between; font-size: 0.8rem; padding: 4px 0;">
       <span><span data-i18n="modal_avg_fcf_lbl">Moyenne FCF / mois :</span> <strong id="modal-avg-fcf" style="color:var(--accent-green-bright);">0 €</strong></span>
-      <span><span data-i18n="modal_best_fcf_lbl">Meilleur mois :</span><strong id="modal-best-fcf" style="color: #ffd700; text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);">0 €</strong>
+      <span><span data-i18n="modal_best_fcf_lbl">Meilleur mois :</span> <strong id="modal-best-fcf" style="color: #e3b341; text-shadow: 0 0 6px rgba(227, 179, 65, 0.4);">0 €</strong></span>
     </div>
 
     <button class="btn-secondary" onclick="closeHistoryModal()" style="margin-top: 6px;" data-i18n="btn_close">Fermer</button>
