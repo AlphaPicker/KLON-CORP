@@ -1715,18 +1715,24 @@
       const hoursVal = r.hours !== undefined ? r.hours : 152;
 
       box.innerHTML += `
-        <div class="record-row" onclick="selectRowForEdit('${r.month}')" title="${rowTitle}">
-          <div>
-            <strong>📅 ${r.month}</strong>
-            <div style="font-size:0.73rem; opacity:0.7; margin-top:2px;">
-              ${brutLabel}: ${fmt(r.brut)} | ${chargesLabel}: ${fmt(opex)} | ⏱️ ${hoursVal} h
+        <div class="record-row" onclick="selectRowForEdit('${r.month}')" title="${rowTitle}" style="flex-direction: column; align-items: stretch; gap: 4px; padding: 10px 8px;">
+          <!-- LIGNE 1 : DATE ET FCF (ALIGNÉS À DROITE) -->
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 0.9rem;">📅 ${r.month}</strong>
+             <div style="display: flex; align-items: center; gap: 8px;">
+               <strong style="color:${fcf >= 0 ? 'var(--accent-green-bright)' : 'var(--accent-red)'}; font-size: 0.95rem; white-space: nowrap;">
+                 FCF: ${fmt(fcf)}
+               </strong>
+                <button class="btn-danger" onclick="deleteRecord('${r.month}', event)" style="padding: 2px 6px; font-size: 0.75rem;">✕</button>
             </div>
           </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <strong style="color:${fcf >= 0 ? 'var(--accent-green-bright)' : 'var(--accent-red)'}; font-size:0.9rem;">
-              FCF: ${fmt(fcf)}
-            </strong>
-            <button class="btn-danger" onclick="deleteRecord('${r.month}', event)">✕</button>
+          <!-- LIGNE 2 : DETAIL TEMPS & FLUX EN SECONDE LIGNE -->
+          <div style="font-size: 0.72rem; opacity: 0.65; display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 4px;">
+             <span>${brutLabel}: ${fmt(r.brut)}</span>
+            <span>•</span>
+            <span>${chargesLabel}: ${fmt(opex)}</span>
+            <span>•</span>
+            <span>⏱️ ${hoursVal} h</span>
           </div>
         </div>
       `;
