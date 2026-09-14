@@ -2433,87 +2433,124 @@
   }
 
   function renderCumulChart() {
-    const svg = document.getElementById('cumul-chart-svg');
-    svg.innerHTML = '';
-    document.getElementById('chart-hover-label').innerText = t('chart_hover_default');
+  const svg = document.getElementById('cumul-chart-svg');
+  svg.innerHTML = '';
+  document.getElementById('chart-hover-label').innerText = t('chart_hover_default');
 
-    if (db.records.length < 2) {
-      svg.innerHTML = `<text x="250" y="75" fill="var(--text-main)" font-size="12" text-anchor="middle" opacity="0.6">${t('chart_need_records')}</text>`;
-      return;
+  if (db.records.length < 2) {
+    svg.innerHTML = `<text x="250" y="130" fill="var(--text-main)" font-size="12" text-anchor="middle" opacity="0.6">${t('chart_need_records')}</text>`;
+    return;
+  }
+
+  // 1. DÉTERMINATION DU PAS TEMPOREL DYNAMIQUE
+  const totalMonths = db.records.length;
+  let aggregationMode = 'monthly';
+
+  if (totalMonths > 36) {
+    aggregationMode = 'annual';     // Plus de 3 ans : vue par Année
+  } else if (totalMonths > 12) {
+    aggregationMode = 'quarterly';  // Plus de 1 an : vue par Trimestre (4 à 12 points)
+  }
+
+  // 2. CONSTRUCTION DE LA SÉRIE AGRÉGÉE
+  let cumul = 0;
+  let rawSeries = [];
+  let fcfList = [];
+
+  // Pré-calcul du cumul global et enregistrement des points de base
+  db.records.forEach(r => {
+    const fcf = r.brut - r.taxes - r.frais - r.charges;
+    cumul += fcf;
+    fcfList.push(fcf);
+
+    let key = r.month;
+    if (aggregationMode === 'quarterly') {
+      const y = r.month.slice(0, 4);
+      const m = parseInt(r.month.slice(5, 7), 10);
+      const q = Math.ceil(m / 3);
+      key = `${y}-Q${q}`;
+    } else if (aggregationMode === 'annual') {
+      key = r.month.slice(0, 4);
     }
 
-    let cumul = 0;
-    let series = [];
-    let fcfList = [];
+    rawSeries.push({ key, month: r.month, cumul, fcf });
+  });
 
-    db.records.forEach(r => {
-      const fcf = r.brut - r.taxes - r.frais - r.charges;
-      cumul += fcf;
-      fcfList.push(fcf);
-      series.push({ month: r.month, cumul: cumul, fcf: fcf });
-    });
-
-    const avgFcf = fcfList.reduce((a, b) => a + b, 0) / fcfList.length;
-    const bestFcf = Math.max(...fcfList);
-
-    document.getElementById('modal-avg-fcf').innerText = fmt(avgFcf);
-    document.getElementById('modal-best-fcf').innerText = fmt(bestFcf);
-
-    const padLeft = 32, padRight = 10, padTop = 15, padBottom = 22;
-    const width = 500 - padLeft - padRight;
-    const height = 260 - padTop - padBottom;
-
-    const minCumul = Math.min(0, ...series.map(s => s.cumul));
-    const maxCumul = Math.max(1000, ...series.map(s => s.cumul));
-
-    const getY = val => padTop + height - ((val - minCumul) / (maxCumul - minCumul)) * height;
-
-    const numLocale = (db.lang === 'EN') ? 'en-US' : 'fr-FR';
-
-    const gridVals = [minCumul, (minCumul + maxCumul) / 2, maxCumul];
-    gridVals.forEach(gv => {
-      const gy = getY(gv);
-      svg.innerHTML += `
-        <line x1="${padLeft}" y1="${gy}" x2="${500 - padRight}" y2="${gy}" stroke="var(--border-color)" stroke-dasharray="3,3" stroke-width="1" />
-        <text x="${padLeft - 6}" y="${gy + 3}" fill="var(--text-main)" font-size="9" text-anchor="end" opacity="0.65">${new Intl.NumberFormat(numLocale, { notation: 'compact' }).format(gv)}</text>
-      `;
-    });
-
-    let points = [];
-    series.forEach((s, idx) => {
-      const x = padLeft + (idx / (series.length - 1)) * width;
-      const y = getY(s.cumul);
-      points.push({ x, y, month: s.month, cumul: s.cumul, fcf: s.fcf });
-    });
-
-    let pathD = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 1; i < points.length; i++) pathD += ` L ${points[i].x} ${points[i].y}`;
-
-    svg.innerHTML += `<path d="${pathD}" fill="none" stroke="var(--accent-purple)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
-    
-    const areaD = `${pathD} L ${points[points.length - 1].x} ${padTop + height} L ${points[0].x} ${padTop + height} Z`;
-    svg.innerHTML += `<path d="${areaD}" fill="var(--accent-purple)" opacity="0.12" />`;
-
-    points.forEach(p => {
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      circle.setAttribute("cx", p.x);
-      circle.setAttribute("cy", p.y);
-      circle.setAttribute("r", "4.5");
-      circle.setAttribute("fill", "var(--bg-color)");
-      circle.setAttribute("stroke", "var(--accent-purple)");
-      circle.setAttribute("stroke-width", "2");
-      circle.style.cursor = "pointer";
-
-      const showInfo = () => {
-        const cumulLabel = (db.lang === 'EN') ? 'Cumul' : 'Cumul';
-        document.getElementById('chart-hover-label').innerText = `${p.month} : ${cumulLabel} ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
-      };
-
-      circle.addEventListener("mouseenter", showInfo);
-      circle.addEventListener("click", showInfo);
-      svg.appendChild(circle);
-    });
+  // Si agrégation nécessaire, on ne garde que le dernier point de chaque période (fin de trimestre / fin d'année)
+  let series = [];
+  if (aggregationMode === 'monthly') {
+    series = rawSeries;
+  } else {
+    const mapLast = new Map();
+    rawSeries.forEach(item => mapLast.set(item.key, item));
+    series = Array.from(mapLast.values());
   }
+
+  const avgFcf = fcfList.reduce((a, b) => a + b, 0) / fcfList.length;
+  const bestFcf = Math.max(...fcfList);
+
+  document.getElementById('modal-avg-fcf').innerText = fmt(avgFcf);
+  document.getElementById('modal-best-fcf').innerText = fmt(bestFcf);
+
+  // 3. DIMENSIONS & PADDING (MARGE À GAUCHE ÉTENDUE À 48PX POUR LES GRANDS CHIFFRES)
+  const padLeft = 48, padRight = 14, padTop = 18, padBottom = 26;
+  const width = 500 - padLeft - padRight;
+  const height = 260 - padTop - padBottom;
+
+  const minCumul = Math.min(0, ...series.map(s => s.cumul));
+  const maxCumul = Math.max(1000, ...series.map(s => s.cumul));
+
+  const getY = val => padTop + height - ((val - minCumul) / (maxCumul - minCumul || 1)) * height;
+  const numLocale = (db.lang === 'EN') ? 'en-US' : 'fr-FR';
+
+  // 4. LIGNES DE GRILLE & ÉTIQUETTES AXE Y (AVEC ESPACE DÉDIÉ)
+  const gridVals = [minCumul, (minCumul + maxCumul) / 2, maxCumul];
+  gridVals.forEach(gv => {
+    const gy = getY(gv);
+    svg.innerHTML += `
+      <line x1="${padLeft}" y1="${gy}" x2="${500 - padRight}" y2="${gy}" stroke="var(--border-color)" stroke-dasharray="3,3" stroke-width="1" />
+      <text x="${padLeft - 8}" y="${gy + 3}" fill="var(--text-main)" font-size="9" font-weight="700" text-anchor="end" opacity="0.75">${new Intl.NumberFormat(numLocale, { notation: 'compact' }).format(gv)}</text>
+    `;
+  });
+
+  // 5. TRACÉ DES POINTS ET DES LIGNES
+  let points = [];
+  series.forEach((s, idx) => {
+    const x = padLeft + (idx / (series.length - 1 || 1)) * width;
+    const y = getY(s.cumul);
+    points.push({ x, y, label: s.key, cumul: s.cumul, fcf: s.fcf });
+  });
+
+  let pathD = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length; i++) pathD += ` L ${points[i].x} ${points[i].y}`;
+
+  svg.innerHTML += `<path d="${pathD}" fill="none" stroke="var(--accent-purple)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+
+  const areaD = `${pathD} L ${points[points.length - 1].x} ${padTop + height} L ${points[0].x} ${padTop + height} Z`;
+  svg.innerHTML += `<path d="${areaD}" fill="var(--accent-purple)" opacity="0.12" />`;
+
+  // 6. INTERACTIVITÉ SUR LES POINTS
+  points.forEach(p => {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", p.x);
+    circle.setAttribute("cy", p.y);
+    circle.setAttribute("r", "5");
+    circle.setAttribute("fill", "var(--bg-color)");
+    circle.setAttribute("stroke", "var(--accent-purple)");
+    circle.setAttribute("stroke-width", "2");
+    circle.style.cursor = "pointer";
+
+    const displayKey = (db.lang !== 'EN' && p.label.includes('-Q')) ? p.label.replace('-Q', '-T') : p.label;
+
+    const showInfo = () => {
+      document.getElementById('chart-hover-label').innerText = `${displayKey} : Cumul ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
+    };
+
+    circle.addEventListener("mouseenter", showInfo);
+    circle.addEventListener("click", showInfo);
+    svg.appendChild(circle);
+  });
+}
 
   function triggerCelebration(type = 'confetti') {
     const canvas = document.getElementById('confetti-canvas');
