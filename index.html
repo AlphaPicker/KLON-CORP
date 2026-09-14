@@ -2062,14 +2062,15 @@
   function renderStockReport() {
     const periodUnitLabel = (db.lang === 'EN') ? '/ month' : '/ mois';
     const yearUnitLabel = (db.lang === 'EN') ? '/ year for life' : '/ an à vie';
-	    if (db.records.length === 0) {
+    const companyDisplayName = (db.companyName || 'KLON Corp.').trim().toUpperCase();
+
+    if (db.records.length === 0) {
       document.getElementById('hero-fcf-val').innerText = '0 ' + db.currency;
       document.getElementById('hero-fcf-sub').innerText = t('hero_margin_sub', { val: '0' });
       document.getElementById('hero-annuity-val').innerText = '+0 ' + db.currency + ' ' + periodUnitLabel;
       document.getElementById('hero-annuity-sub').innerText = 'soit +0 ' + db.currency + ' ' + yearUnitLabel;
       document.getElementById('report-tbody').innerHTML = `<tr><td colspan="3" style="text-align:center; opacity:0.6; padding:16px;">${t('no_data_report')}</td></tr>`;
-	  const companyDisplayName = (db.companyName || 'KLON Corp.').trim().toUpperCase();
-      document.getElementById('gadget-market-cap').innerText = `${companyDisplayName} : ${fmt(fixedMarketCap)}`;
+      document.getElementById('gadget-market-cap').innerText = `${companyDisplayName} : 0 ${db.currency}`;
       document.getElementById('gadget-rank-title').innerText = 'Penny Stock';
       document.getElementById('total-cumul-cash').innerText = '0 ' + db.currency;
       document.getElementById('total-cumul-annuity').innerText = '+0 ' + db.currency + ' ' + periodUnitLabel;
@@ -2223,7 +2224,7 @@
 
     const annualFcfBase = currentHorizon === 'annual' ? currFcf : (currFcf * (currentHorizon === 'monthly' ? 12 : 4));
     const fixedMarketCap = Math.max(0, annualFcfBase * aiData.multiple);
-    document.getElementById('gadget-market-cap').innerText = t('val_label', { val: fmt(fixedMarketCap) });
+    document.getElementById('gadget-market-cap').innerText = `${companyDisplayName} : ${fmt(fixedMarketCap)}`;
     
     const rankTitle = document.getElementById('gadget-rank-title');
     const nextTargetEl = document.getElementById('rank-next-target');
