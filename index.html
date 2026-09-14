@@ -230,6 +230,23 @@
       box-shadow: 0 0 8px rgba(163, 113, 247, 0.3);
     }
 
+	  .fuel-card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+/* Ajustement sur grand écran (PC / Tablette > 500px) */
+    @media (min-width: 501px) {
+     .fuel-card-content {
+      /* Ressert les deux blocs vers le centre au lieu d'aller aux extrémités */
+        justify-content: space-around;
+        padding: 0 24px;
+      }
+    }
+
     .corp-reward-pill {
       display: inline-flex;
       align-items: center;
@@ -677,17 +694,19 @@
         <span data-i18n="card_fuel_title"></span>
         <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openHistoryModal()" data-i18n="btn_chart"></button>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-        <div>
-          <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_cash">Trésorerie Cumulée :</div>
-          <div id="total-cumul-cash" style="font-size: 1.4rem; font-weight: 900; color: var(--accent-green-bright);">0 €</div>
-        </div>
+  
+      <!-- CONTENEUR RECENTRÉ SUR PC -->
+    <div class="fuel-card-content">
+      <div>
+        <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_cash">Trésorerie Cumulée :</div>
+        <div id="total-cumul-cash" style="font-size: 1.4rem; font-weight: 900; color: var(--accent-green-bright);">0 €</div>
+      </div>
         <div style="text-align: right;">
-          <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_annuity">Rente Passive Totale :</div>
-          <div id="total-cumul-annuity" style="font-size: 1.1rem; font-weight: 800; color: var(--accent-purple);">+0 € / mois</div>
-        </div>
+        <div style="font-size: 0.75rem; opacity: 0.8;" data-i18n="lbl_total_annuity">Rente Passive Totale :</div>
+        <div id="total-cumul-annuity" style="font-size: 1.1rem; font-weight: 800; color: var(--accent-purple);">+0 € / m</div>
       </div>
     </div>
+  </div>
 
     <!-- DIAGNOSTIC SCORECARD -->
     <div class="diag-grid">
