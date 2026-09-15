@@ -2608,7 +2608,7 @@
 
     const displayCurrKey = (db.lang !== 'EN' && currentHorizon === 'quarterly') ? currKey.replace('-Q', '-T') : currKey;
     const displayPrevKey = (db.lang !== 'EN' && currentHorizon === 'quarterly') ? prevKey.replace('-Q', '-T') : prevKey;
-    document.getElementById('th-variation-label').innerText = `VAR (${displayCurrKey} vs ${displayPrevKey})`;
+    document.getElementById('th-variation-label').innerText = `${displayCurrKey} vs ${displayPrevKey}`;
     
     document.getElementById('report-tbody').innerHTML = `
       <tr>
