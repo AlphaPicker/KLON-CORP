@@ -974,7 +974,7 @@
       <div class="card-title">
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <span data-i18n="card_val_title">🏛️ Valorisation Boursière</span>
-          <span id="header-ticker" class="ticker-pill" onclick="openTickerModal()" title="Cliquer pour personnaliser">KCN.PA</span>
+          <span id="header-ticker" class="ticker-pill" onclick="openTickerModal()" title="Cliquer pour personnaliser">KLN.CP</span>
         </div>
       </div>
       <div style="font-size: 0.85rem; line-height: 1.5;">
@@ -1802,8 +1802,8 @@
     let effectiveTicker = db.ticker;
     if (!effectiveTicker) {
       const cleanName = raw.toUpperCase();
-      const tickerPrefix = cleanName.replace(/[^A-Z]/g, '').slice(0, 3) || 'KCN';
-      effectiveTicker = `${tickerPrefix}.PA`;
+      const tickerPrefix = cleanName.replace(/[^A-Z]/g, '').slice(0, 3) || 'KLN';
+      effectiveTicker = `${tickerPrefix}.CP`;
     }
     const tickerEl = document.getElementById('header-ticker');
     if (tickerEl) tickerEl.innerText = effectiveTicker;
