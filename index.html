@@ -1024,7 +1024,7 @@
         <svg id="cumul-chart-svg" width="100%" height="100%" viewBox="0 0 500 125" style="overflow: visible;"></svg>
       </div>
       <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px dashed var(--border-color); padding-top: 4px; margin-top: 2px;">
-        <span><span data-i18n="lbl_avg_fcf">Moyenne FCF / mois :</span> <strong id="modal-avg-fcf" style="color:var(--accent-green-bright);">0 €</strong></span>
+        <span><span data-i18n="lbl_avg_fcf">Moyenne FCF / m :</span> <strong id="modal-avg-fcf" style="color:var(--accent-green-bright);">0 €</strong></span>
         <span><span data-i18n="lbl_best_fcf">Meilleur mois :</span> <strong id="modal-best-fcf" style="color: #e3b341; cursor: pointer; display: inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onclick="showRecordDetail('fcf')" title="Cliquer pour voir la date">0 €</strong></span>
       </div>
     </div>
@@ -1039,8 +1039,8 @@
         <svg id="hourly-chart-svg" width="100%" height="100%" viewBox="0 0 500 125" style="overflow: visible;"></svg>
       </div>
       <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px dashed var(--border-color); padding-top: 4px; margin-top: 2px;">
-        <span><span data-i18n="lbl_avg_hourly">Moyenne FCF / h :</span> <strong id="modal-avg-hourly" style="color:var(--accent-blue);">0,00 €/h</strong></span>
-        <span><span data-i18n="lbl_best_hourly">Meilleur taux horaire :</span> <strong id="modal-best-hourly" style="color: #e3b341; cursor: pointer; display: inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onclick="showRecordDetail('hourly')" title="Cliquer pour voir la date">0,00 €/h</strong></span>
+        <span><span data-i18n="lbl_avg_hourly"></span> <strong id="modal-avg-hourly" style="color:var(--accent-blue);">0,00 €/h</strong></span>
+        <span><span data-i18n="lbl_best_hourly"></span> <strong id="modal-best-hourly" style="color: #e3b341; cursor: pointer; display: inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onclick="showRecordDetail('hourly')" title="Cliquer pour voir la date">0,00 €/h</strong></span>
       </div>
     </div>
 
@@ -1221,8 +1221,8 @@
       lbl_avg_fcf: "Moyenne FCF / mois :",
       lbl_best_fcf: "Meilleur mois :",
       chart_hourly_title: "⏱️ Rendement Horaire (FCF / h)",
-      lbl_avg_hourly: "Moyenne FCF / h :",
-      lbl_best_hourly: "Meilleur taux horaire :",
+      lbl_avg_hourly: "Moyenne :",
+      lbl_best_hourly: "Meilleur taux :",
 
       diag_fcf_margin: "Marge Nette FCF",
       diag_burn_rate: "Charges de Base",
@@ -1444,8 +1444,8 @@
       lbl_avg_fcf: "Average FCF / mo:",
       lbl_best_fcf: "Best month:",
       chart_hourly_title: "⏱️ Hourly Yield (FCF / h)",
-      lbl_avg_hourly: "Average FCF / h:",
-      lbl_best_hourly: "Best hourly rate:",
+      lbl_avg_hourly: "Average :",
+      lbl_best_hourly: "Best rate:",
 
       diag_fcf_margin: "FCF Net Margin",
       diag_burn_rate: "Base Expenses",
