@@ -1323,7 +1323,7 @@
       chart_cumul_title: "🏦 Trésorerie Cumulée",
       lbl_avg_fcf: "Moyenne FCF / mois :",
       lbl_best_fcf: "Meilleur mois :",
-      chart_hourly_title: "⏱️ Rendement horaire",
+      chart_hourly_title: "⏱️ Taux FCF/h",
       lbl_avg_hourly: "Moyenne :",
       lbl_best_hourly: "Meilleur taux :",
 
@@ -1351,11 +1351,11 @@
       lbl_period_analysed: "Période analysée",
       lbl_period_ref: "Référence",
       lbl_month_analysed: "Mois analysé",
-      lbl_month_ref: "Référence (N-1)",
+      lbl_month_ref: "Référence",
       lbl_quarter_analysed: "Trimestre analysé",
-      lbl_quarter_ref: "Référence (N-1)",
+      lbl_quarter_ref: "Référence",
       lbl_year_analysed: "Année analysée",
-      lbl_year_ref: "Référence (N-1)",
+      lbl_year_ref: "Référence",
 
       no_q_complete: "Aucun trimestre complet (3 mois requis)",
       no_y_complete: "Aucune année complète (12 mois requis)",
@@ -1377,10 +1377,10 @@
       row_charges_sub: "Logement, énergie, nourriture",
       row_fcf: "★ FREE CASH-FLOW DISPONIBLE",
       row_fcf_sub: "Trésorerie nette dégagée",
-      row_annuity: "⛽ Rente Passive Créée",
+      row_annuity: "⛽ Rente Passive",
       row_annuity_sub: "Flux définitif mensuel (soit +{val}/an)",
       row_hourly_fcf: "⏱️ Rendement Horaire (FCF/h)",
-      row_hourly_fcf_sub: "Cliquer pour ouvrir l'analyse du temps",
+      row_hourly_fcf_sub: "Analyse du temps",
 
       modal_hours_title: "Analyse du Temps & Rendement",
       diag_hourly_net: "Taux Horaire Net",
@@ -1574,11 +1574,11 @@
       lbl_period_analysed: "Analyzed period",
       lbl_period_ref: "Reference",
       lbl_month_analysed: "Analyzed month",
-      lbl_month_ref: "Reference (N-1)",
+      lbl_month_ref: "Reference",
       lbl_quarter_analysed: "Analyzed quarter",
-      lbl_quarter_ref: "Reference (N-1)",
+      lbl_quarter_ref: "Reference",
       lbl_year_analysed: "Analyzed year",
-      lbl_year_ref: "Reference (N-1)",
+      lbl_year_ref: "Reference",
 
       no_q_complete: "No complete quarter (3 months required)",
       no_y_complete: "No complete year (12 months required)",
@@ -1600,10 +1600,10 @@
       row_charges_sub: "Housing, energy, food",
       row_fcf: "★ AVAILABLE FREE CASH-FLOW",
       row_fcf_sub: "Net cash flow generated",
-      row_annuity: "⛽ Passive Income Created",
+      row_annuity: "⛽ Passive Income",
       row_annuity_sub: "Permanent monthly cash flow (i.e. +{val}/year)",
-      row_hourly_fcf: "⏱️ Hourly Yield (FCF/h)",
-      row_hourly_fcf_sub: "Click to open time analysis",
+      row_hourly_fcf: "⏱️ Rate FCF/h",
+      row_hourly_fcf_sub: "Time analysis",
 
       modal_hours_title: "Time & Yield Analysis",
       diag_hourly_net: "Net Hourly Rate",
@@ -2656,12 +2656,12 @@
         </td>
         <td class="val-cell">${renderVarBadge(annuityVar)}</td>
       </tr>
-      <tr onclick="openHoursModal()" style="cursor: pointer; background: rgba(88, 166, 255, 0.08); border-top: 1px dashed var(--accent-blue);">
+      <tr onclick="openHoursModal()" style="cursor: pointer; background: rgba(126, 231, 135, 0.05); border-top: 1px dashed var(--accent-green-bright);">
         <td>
-          <strong style="color:var(--accent-blue);">${t('row_hourly_fcf')}</strong><br>
+          <strong style="color:var(--accent-green-bright);">${t('row_hourly_fcf')}</strong><br>
           <span style="font-size:0.7rem; opacity:0.7;">${t('row_hourly_fcf_sub')}</span>
         </td>
-        <td class="val-cell" style="color:var(--accent-blue); font-weight:800;">${(currHourlyFcf).toFixed(2).replace('.', ',')} ${db.currency}/h</td>
+        <td class="val-cell" style="color:var(--accent-green-bright); font-weight:800;">${(currHourlyFcf).toFixed(2).replace('.', ',')} ${db.currency}/h</td>
         <td class="val-cell">${renderVarBadge(hourlyFcfVar)}</td>
       </tr>
     `;
