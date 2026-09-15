@@ -588,6 +588,82 @@
       font-weight: 700;
       color: var(--text-bright) !important;
     }
+	
+	/* Boutons déclencheurs du sélecteur de période */
+.period-picker-btn {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-bright);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+.period-picker-btn:hover {
+  border-color: var(--accent-purple);
+}
+
+/* Grilles dans la modale */
+.picker-years-grid {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+.picker-year-chip {
+  padding: 6px 14px;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.picker-year-chip.active {
+  background: var(--accent-purple);
+  color: #fff;
+  border-color: var(--accent-purple);
+}
+
+.picker-months-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.picker-month-card {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 6px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-bright);
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.picker-month-card:hover {
+  border-color: var(--accent-purple);
+}
+.picker-month-card.active {
+  background: rgba(163, 113, 247, 0.2);
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+}
+.picker-month-card.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: transparent;
+}
   </style>
 </head>
 <body>
@@ -859,12 +935,18 @@
     <div class="compare-bar" id="compare-container">
       <div class="field-group" style="flex:1;">
         <label id="label-curr-sel" data-i18n="lbl_period_analysed">Période analysée</label>
-        <select id="select-curr-period" onchange="onCurrPeriodChange()"></select>
+        <button id="btn-curr-period" class="period-picker-btn" onclick="openPeriodModal('curr')">
+          <span id="txt-curr-period">--</span>
+          <span style="font-size: 0.75rem; opacity: 0.7;">📅</span>
+        </button>
       </div>
       <div style="font-size: 1.1rem; font-weight: 800; opacity: 0.5; padding-top: 14px;">vs</div>
       <div class="field-group" style="flex:1;">
         <label id="label-prev-sel" data-i18n="lbl_period_ref">Référence</label>
-        <select id="select-prev-period" onchange="renderStockReport()"></select>
+        <button id="btn-prev-period" class="period-picker-btn" onclick="openPeriodModal('prev')">
+          <span id="txt-prev-period">--</span>
+          <span style="font-size: 0.75rem; opacity: 0.7;">📅</span>
+        </button>
       </div>
     </div>
 
@@ -1154,6 +1236,24 @@
     <div style="display: flex; gap: 8px; justify-content: center; margin-top: 6px;" id="dialog-buttons">
       <button class="btn-primary" id="dialog-btn-ok" onclick="closeCustomDialog()" style="width: 100%; padding: 10px;">OK</button>
     </div>
+  </div>
+</div>
+
+<!-- MODALE SÉLECTEUR DE PÉRIODE (CALENDRIER SOMBRE) -->
+<div id="period-picker-modal" class="modal-overlay">
+  <div class="modal-card" style="max-width: 380px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+      <div class="card-title" style="margin: 0;" id="picker-modal-title">📅 Choisir une période</div>
+      <button onclick="closePeriodModal()" style="background:none; border:none; color:var(--text-main); font-size:1.2rem; cursor:pointer;">✕</button>
+    </div>
+
+    <!-- Années -->
+    <div class="picker-years-grid" id="picker-years-list"></div>
+
+    <!-- Grille des 12 mois -->
+    <div class="picker-months-grid" id="picker-months-list"></div>
+
+    <button class="btn-secondary" onclick="closePeriodModal()" style="margin-top: 10px; width: 100%; padding: 8px;">Annuler</button>
   </div>
 </div>
 
@@ -1981,13 +2081,291 @@
     return true;
   }
 
+  let activePickerTarget = 'curr'; // 'curr' ou 'prev'
+  let pickerSelectedYear = activeYear;
+
+  function openPeriodModal(target) {
+    if (db.records.length === 0) return;
+    activePickerTarget = target;
+    
+    // Déterminer l'année sélectionnée actuellement
+    const currentVal = (target === 'curr') 
+      ? document.getElementById('txt-curr-period').getAttribute('data-value')
+      : document.getElementById('txt-prev-period').getAttribute('data-value');
+
+    if (currentVal) {
+      pickerSelectedYear = parseInt(currentVal.slice(0, 4), 10);
+    } else {
+      pickerSelectedYear = activeYear;
+    }
+
+    renderPickerModalContent();
+    document.getElementById('period-picker-modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePeriodModal() {
+    document.getElementById('period-picker-modal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function renderPickerModalContent() {
+    const yearsBox = document.getElementById('picker-years-list');
+    const monthsBox = document.getElementById('picker-months-list');
+    const monthList = (db.lang === 'EN') ? monthNamesEN : monthNamesFR;
+
+    // Récupération de la valeur de l'autre bouton pour interdire les dates >= ou <=
+    const currVal = document.getElementById('txt-curr-period').getAttribute('data-value');
+    const prevVal = document.getElementById('txt-prev-period').getAttribute('data-value');
+
+    // 1. Liste des années enregistrées
+    const availableYears = [...new Set(db.records.map(r => parseInt(r.month.slice(0, 4), 10)))].sort((a,b) => a - b);
+    if (!availableYears.includes(pickerSelectedYear) && availableYears.length > 0) {
+      pickerSelectedYear = availableYears[availableYears.length - 1];
+    }
+
+    yearsBox.innerHTML = availableYears.map(y => `
+      <div class="picker-year-chip ${y === pickerSelectedYear ? 'active' : ''}" onclick="selectPickerYear(${y})">${y}</div>
+    `).join('');
+
+    // 2. Grille des mois/trimestres/années
+    monthsBox.innerHTML = '';
+    for (let m = 1; m <= 12; m++) {
+      const mm = m < 10 ? '0' + m : '' + m;
+      const periodKey = `${pickerSelectedYear}-${mm}`;
+      const hasData = db.records.some(r => r.month === periodKey);
+      const shortName = monthList[m - 1].slice(0, 4) + '.';
+
+      if (currentHorizon === 'monthly') {
+        const isSelected = (activePickerTarget === 'curr') 
+          ? (currVal === periodKey)
+          : (prevVal === periodKey);
+
+        // Si on choisit la référence N-1, interdire les mois >= au mois analysé (currVal)
+        let isForbidden = false;
+        if (activePickerTarget === 'prev' && currVal) {
+          isForbidden = periodKey >= currVal;
+        }
+
+        const canClick = hasData && !isForbidden;
+
+        monthsBox.innerHTML += `
+          <div class="picker-month-card ${isSelected ? 'active' : ''} ${!canClick ? 'disabled' : ''}" 
+               ${canClick ? `onclick="applyPeriodSelection('${periodKey}')"` : ''}>
+            ${shortName}
+          </div>
+        `;
+      } else if (currentHorizon === 'quarterly') {
+        if (m % 3 === 0) {
+          const qNum = m / 3;
+          const qKey = `${pickerSelectedYear}-Q${qNum}`;
+          const qLabel = (db.lang === 'EN') ? `Q${qNum}` : `T${qNum}`;
+          const isQComplete = isQuarterComplete(qKey);
+          const isSelected = (activePickerTarget === 'curr')
+            ? (currVal === qKey)
+            : (prevVal === qKey);
+
+          // Si on choisit la référence N-1, interdire les trimestres >= au trimestre analysé
+          let isForbidden = false;
+          if (activePickerTarget === 'prev' && currVal) {
+            isForbidden = qKey >= currVal;
+          }
+
+          const canClick = isQComplete && !isForbidden;
+
+          monthsBox.innerHTML += `
+            <div class="picker-month-card ${isSelected ? 'active' : ''} ${!canClick ? 'disabled' : ''}" style="grid-column: span 3; padding: 14px;"
+                 ${canClick ? `onclick="applyPeriodSelection('${qKey}')"` : ''}>
+              ${qLabel} ${pickerSelectedYear} ${!isQComplete ? '(Incomplet)' : ''}
+            </div>
+          `;
+        }
+      } else {
+        if (m === 1) {
+          const yKey = `${pickerSelectedYear}`;
+          const isYComplete = isYearComplete(yKey);
+          const isSelected = (activePickerTarget === 'curr')
+            ? (currVal === yKey)
+            : (prevVal === yKey);
+
+          // Si on choisit la référence N-1, interdire les années >= à l'année analysée
+          let isForbidden = false;
+          if (activePickerTarget === 'prev' && currVal) {
+            isForbidden = yKey >= currVal;
+          }
+
+          const canClick = isYComplete && !isForbidden;
+
+          monthsBox.innerHTML += `
+            <div class="picker-month-card ${isSelected ? 'active' : ''} ${!canClick ? 'disabled' : ''}" style="grid-column: span 3; padding: 16px;"
+                 ${canClick ? `onclick="applyPeriodSelection('${yKey}')"` : ''}>
+              🚀 ${pickerSelectedYear} ${!isYComplete ? '(Incomplète)' : ''}
+            </div>
+          `;
+        }
+      }
+    }
+  }
+
+  function applyPeriodSelection(val) {
+    const btnCurr = document.getElementById('txt-curr-period');
+    const btnPrev = document.getElementById('txt-prev-period');
+
+    if (activePickerTarget === 'curr') {
+      contextMonth = currentHorizon === 'monthly' ? val : (currentHorizon === 'quarterly' ? `${val.slice(0,4)}-01` : `${val}-01`);
+      btnCurr.setAttribute('data-value', val);
+      btnCurr.innerText = (db.lang !== 'EN' && val.includes('-Q')) ? val.replace('-Q', '-T') : val;
+
+      // Auto-sélection intelligente d'une référence inférieure si la référence courante devient invalide (>= val)
+      const currentPrev = btnPrev.getAttribute('data-value');
+      if (!currentPrev || currentPrev >= val) {
+        if (currentHorizon === 'monthly') {
+          let [y, m] = val.split('-').map(Number);
+          m--; if (m < 1) { m = 12; y--; }
+          const prevVal = `${y}-${String(m).padStart(2, '0')}`;
+          if (db.records.some(r => r.month === prevVal)) {
+            btnPrev.setAttribute('data-value', prevVal);
+            btnPrev.innerText = prevVal;
+          }
+        } else if (currentHorizon === 'quarterly') {
+          const [yStr, qStr] = val.split('-Q');
+          let y = parseInt(yStr, 10);
+          let q = parseInt(qStr, 10) - 1;
+          if (q < 1) { q = 4; y--; }
+          const prevQ = `${y}-Q${q}`;
+          if (isQuarterComplete(prevQ)) {
+            btnPrev.setAttribute('data-value', prevQ);
+            btnPrev.innerText = (db.lang === 'EN') ? prevQ : prevQ.replace('-Q', '-T');
+          }
+        } else {
+          const prevY = String(parseInt(val, 10) - 1);
+          if (isYearComplete(prevY)) {
+            btnPrev.setAttribute('data-value', prevY);
+            btnPrev.innerText = prevY;
+          }
+        }
+      }
+    } else {
+      btnPrev.setAttribute('data-value', val);
+      btnPrev.innerText = (db.lang !== 'EN' && val.includes('-Q')) ? val.replace('-Q', '-T') : val;
+    }
+
+    closePeriodModal();
+    renderStockReport();
+  }
+
+  function selectPickerYear(y) {
+    pickerSelectedYear = y;
+    renderPickerModalContent();
+  }
+
+  function renderPickerModalContent() {
+    const yearsBox = document.getElementById('picker-years-list');
+    const monthsBox = document.getElementById('picker-months-list');
+    const monthList = (db.lang === 'EN') ? monthNamesEN : monthNamesFR;
+
+    const currVal = document.getElementById('txt-curr-period').getAttribute('data-value');
+    const prevVal = document.getElementById('txt-prev-period').getAttribute('data-value');
+
+    // 1. Liste des années enregistrées
+    const availableYears = [...new Set(db.records.map(r => parseInt(r.month.slice(0, 4), 10)))].sort((a,b) => a - b);
+    if (!availableYears.includes(pickerSelectedYear) && availableYears.length > 0) {
+      pickerSelectedYear = availableYears[availableYears.length - 1];
+    }
+
+    // --- MODE ANNUEL : Sélection directe par année (pas de grille de mois) ---
+    if (currentHorizon === 'annual') {
+      yearsBox.style.display = 'none'; // On masque les puces d'années du haut
+      monthsBox.innerHTML = '';
+      monthsBox.style.gridTemplateColumns = '1fr'; // Pleine largeur
+
+      availableYears.forEach(y => {
+        const yKey = `${y}`;
+        const isYComplete = isYearComplete(yKey);
+        const isSelected = (activePickerTarget === 'curr') ? (currVal === yKey) : (prevVal === yKey);
+
+        let isForbidden = false;
+        if (activePickerTarget === 'prev' && currVal) {
+          isForbidden = yKey >= currVal;
+        }
+
+        const canClick = isYComplete && !isForbidden;
+
+        monthsBox.innerHTML += `
+          <div class="picker-month-card ${isSelected ? 'active' : ''} ${!canClick ? 'disabled' : ''}" 
+               style="padding: 14px; font-size: 1rem; font-weight: 800;"
+               ${canClick ? `onclick="applyPeriodSelection('${yKey}')"` : ''}>
+            🚀 Année ${y} ${!isYComplete ? '<span style="font-weight:normal; font-size:0.75rem; opacity:0.7;"><br>(Incomplète - 12 mois requis)</span>' : ''}
+          </div>
+        `;
+      });
+      return;
+    }
+
+    // --- MODES MENSUEL & TRIMESTRIEL ---
+    yearsBox.style.display = 'flex'; // On réaffiche le bandeau d'années
+    monthsBox.style.gridTemplateColumns = 'repeat(3, 1fr)'; // Grille 3 colonnes
+
+    yearsBox.innerHTML = availableYears.map(y => `
+      <div class="picker-year-chip ${y === pickerSelectedYear ? 'active' : ''}" onclick="selectPickerYear(${y})">${y}</div>
+    `).join('');
+
+    monthsBox.innerHTML = '';
+    for (let m = 1; m <= 12; m++) {
+      const mm = m < 10 ? '0' + m : '' + m;
+      const periodKey = `${pickerSelectedYear}-${mm}`;
+      const hasData = db.records.some(r => r.month === periodKey);
+      const shortName = monthList[m - 1].slice(0, 4) + '.';
+
+      if (currentHorizon === 'monthly') {
+        const isSelected = (activePickerTarget === 'curr') ? (currVal === periodKey) : (prevVal === periodKey);
+
+        let isForbidden = false;
+        if (activePickerTarget === 'prev' && currVal) {
+          isForbidden = periodKey >= currVal;
+        }
+
+        const canClick = hasData && !isForbidden;
+
+        monthsBox.innerHTML += `
+          <div class="picker-month-card ${isSelected ? 'active' : ''} ${!canClick ? 'disabled' : ''}" 
+               ${canClick ? `onclick="applyPeriodSelection('${periodKey}')"` : ''}>
+            ${shortName}
+          </div>
+        `;
+      } else if (currentHorizon === 'quarterly') {
+        if (m % 3 === 0) {
+          const qNum = m / 3;
+          const qKey = `${pickerSelectedYear}-Q${qNum}`;
+          const qLabel = (db.lang === 'EN') ? `Q${qNum}` : `T${qNum}`;
+          const isQComplete = isQuarterComplete(qKey);
+          const isSelected = (activePickerTarget === 'curr') ? (currVal === qKey) : (prevVal === qKey);
+
+          let isForbidden = false;
+          if (activePickerTarget === 'prev' && currVal) {
+            isForbidden = qKey >= currVal;
+          }
+
+          const canClick = isQComplete && !isForbidden;
+
+          monthsBox.innerHTML += `
+            <div class="picker-month-card ${isSelected ? 'active' : ''} ${!canClick ? 'disabled' : ''}" style="grid-column: span 3; padding: 14px;"
+                 ${canClick ? `onclick="applyPeriodSelection('${qKey}')"` : ''}>
+              ${qLabel} ${pickerSelectedYear} ${!isQComplete ? '(Incomplet)' : ''}
+            </div>
+          `;
+        }
+      }
+    }
+  }
+
   function populateCompareSelectors() {
-    const currSel = document.getElementById('select-curr-period');
-    const prevSel = document.getElementById('select-prev-period');
+    const btnCurr = document.getElementById('txt-curr-period');
+    const btnPrev = document.getElementById('txt-prev-period');
 
     if (db.records.length === 0) {
-      currSel.innerHTML = '<option value="">--</option>';
-      prevSel.innerHTML = '<option value="">--</option>';
+      btnCurr.innerText = '--';
+      btnPrev.innerText = '--';
       return;
     }
 
@@ -2005,13 +2383,11 @@
       const prevMonthTarget = `${y}-${String(m).padStart(2, '0')}`;
       const fallbackPrev = months.includes(prevMonthTarget) ? prevMonthTarget : (months[months.indexOf(targetMonth) - 1] || targetMonth);
 
-      currSel.innerHTML = months.map(mStr => 
-        `<option value="${mStr}" ${mStr === targetMonth ? 'selected' : ''}>${mStr}</option>`
-      ).join('');
+      btnCurr.setAttribute('data-value', targetMonth);
+      btnCurr.innerText = targetMonth;
 
-      prevSel.innerHTML = months.map(mStr => 
-        `<option value="${mStr}" ${mStr === fallbackPrev ? 'selected' : ''}>${mStr}</option>`
-      ).join('');
+      btnPrev.setAttribute('data-value', fallbackPrev);
+      btnPrev.innerText = fallbackPrev;
 
     } else if (currentHorizon === 'quarterly') {
       document.getElementById('label-curr-sel').innerText = t('lbl_quarter_analysed');
@@ -2028,8 +2404,8 @@
       const completeQuarters = [...quartersSet].filter(isQuarterComplete).sort();
 
       if (completeQuarters.length === 0) {
-        currSel.innerHTML = `<option value="">${t('no_q_complete')}</option>`;
-        prevSel.innerHTML = '<option value="">--</option>';
+        btnCurr.innerText = t('no_q_complete');
+        btnPrev.innerText = '--';
         return;
       }
 
@@ -2044,15 +2420,11 @@
       const idx = completeQuarters.indexOf(effectiveCurrQ);
       const effectivePrevQ = idx > 0 ? completeQuarters[idx - 1] : effectiveCurrQ;
 
-      currSel.innerHTML = completeQuarters.map(qKey => {
-        const displayLabel = (db.lang === 'EN') ? qKey : qKey.replace('-Q', '-T');
-        return `<option value="${qKey}" ${qKey === effectiveCurrQ ? 'selected' : ''}>${displayLabel}</option>`;
-      }).join('');
+      btnCurr.setAttribute('data-value', effectiveCurrQ);
+      btnCurr.innerText = (db.lang === 'EN') ? effectiveCurrQ : effectiveCurrQ.replace('-Q', '-T');
 
-      prevSel.innerHTML = completeQuarters.map(qKey => {
-        const displayLabel = (db.lang === 'EN') ? qKey : qKey.replace('-Q', '-T');
-        return `<option value="${qKey}" ${qKey === effectivePrevQ ? 'selected' : ''}>${displayLabel}</option>`;
-      }).join('');
+      btnPrev.setAttribute('data-value', effectivePrevQ);
+      btnPrev.innerText = (db.lang === 'EN') ? effectivePrevQ : effectivePrevQ.replace('-Q', '-T');
 
     } else {
       document.getElementById('label-curr-sel').innerText = t('lbl_year_analysed');
@@ -2062,8 +2434,8 @@
       const completeYears = years.filter(isYearComplete).sort();
 
       if (completeYears.length === 0) {
-        currSel.innerHTML = `<option value="">${t('no_y_complete')}</option>`;
-        prevSel.innerHTML = '<option value="">--</option>';
+        btnCurr.innerText = t('no_y_complete');
+        btnPrev.innerText = '--';
         return;
       }
 
@@ -2075,37 +2447,12 @@
       const idx = completeYears.indexOf(effectiveCurrY);
       const effectivePrevY = idx > 0 ? completeYears[idx - 1] : effectiveCurrY;
 
-      currSel.innerHTML = completeYears.map(y => `<option value="${y}" ${y === effectiveCurrY ? 'selected' : ''}>${y}</option>`).join('');
-      prevSel.innerHTML = completeYears.map(y => `<option value="${y}" ${y === effectivePrevY ? 'selected' : ''}>${y}</option>`).join('');
+      btnCurr.setAttribute('data-value', effectiveCurrY);
+      btnCurr.innerText = effectiveCurrY;
+
+      btnPrev.setAttribute('data-value', effectivePrevY);
+      btnPrev.innerText = effectivePrevY;
     }
-  }
-
-  function onCurrPeriodChange() {
-    const currSel = document.getElementById('select-curr-period');
-    const prevSel = document.getElementById('select-prev-period');
-    const val = currSel.value;
-    if (!val) return;
-
-    if (currentHorizon === 'monthly') {
-      contextMonth = val;
-      let [y, m] = val.split('-').map(Number);
-      m--; if (m < 1) { m = 12; y--; }
-      const prev = `${y}-${String(m).padStart(2, '0')}`;
-      if (Array.from(prevSel.options).some(o => o.value === prev)) prevSel.value = prev;
-    } else if (currentHorizon === 'quarterly') {
-      const [y, q] = val.split('-Q').map(Number);
-      contextMonth = `${y}-${String((q - 1) * 3 + 1).padStart(2, '0')}`;
-      let pQ = q - 1, pY = y;
-      if (pQ < 1) { pQ = 4; pY--; }
-      const prev = `${pY}-Q${pQ}`;
-      if (Array.from(prevSel.options).some(o => o.value === prev)) prevSel.value = prev;
-    } else {
-      contextMonth = `${val}-01`;
-      const prev = String(parseInt(val, 10) - 1);
-      if (Array.from(prevSel.options).some(o => o.value === prev)) prevSel.value = prev;
-    }
-
-    renderStockReport();
   }
 
   function getAggregateDataForKey(key, mode) {
@@ -2192,8 +2539,8 @@
     document.getElementById('total-cumul-cash').innerText = fmt(totalCashCumul);
     document.getElementById('total-cumul-annuity').innerText = `+${fmt(totalAnnuityCumul)} ${periodUnitLabel}`;
 
-    const currKey = document.getElementById('select-curr-period').value;
-    const prevKey = document.getElementById('select-prev-period').value;
+    const currKey = document.getElementById('txt-curr-period').getAttribute('data-value') || '';
+    const prevKey = document.getElementById('txt-prev-period').getAttribute('data-value') || '';
 
     const currData = getAggregateDataForKey(currKey, currentHorizon);
     const prevData = getAggregateDataForKey(prevKey, currentHorizon);
