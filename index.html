@@ -616,7 +616,7 @@
     <div class="card" style="padding: 12px 14px;">
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
         <div style="flex: 1;">
-          <input type="text" id="company-name-input" class="inline-firstname-input" style="padding: 8px 12px; font-size: 0.95rem; font-weight: bold; color: var(--text-bright);" placeholder="Ex: KLON Corp." maxlength="25" oninput="saveCompanyName()">
+          <input type="text" id="company-name-input" class="inline-firstname-input" style="padding: 12px; font-size: 1rem; font-weight: 700; color: var(--text-bright);" placeholder="KLON Corp." maxlength="25" oninput="saveCompanyName()">
         </div>
         
         <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
@@ -707,7 +707,7 @@
           <input type="number" id="in-charges" value="0" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
         </div>
 
-        <div class="field-group">
+         <div class="field-group">
           <div class="field-label-row">
             <label data-i18n="lbl_hours">Heures Travaillées</label>
             <button class="tooltip-btn" onclick="toggleFieldHelp('help-hours')" data-i18n-title="help_title">?</button>
@@ -715,11 +715,21 @@
           <div id="help-hours" class="help-box" data-i18n="help_hours_txt">
             <strong>Volume d'heures consacrées ce mois :</strong> heures au contrat, heures sup, temps de trajet pro ou heures d'exploitation.
           </div>
-          <input type="number" id="in-hours" value="152" step="1" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
+          <input type="number" id="in-hours" placeholder="0" step="1" oninput="onHoursInputChanged()" onkeydown="if(event.key==='Enter') addMonthlyRecord()">
         </div>
-      </div>
 
-      <button id="btn-save" class="btn-primary" style="margin-top: 10px;" onclick="addMonthlyRecord()" data-i18n="btn_save">Clôturer le Mois</button>
+        <!-- 6. CASE À COCHER DÉCOCHE/RECOCHE AUTO -->
+        <div class="field-group" style="justify-content: flex-end; padding-bottom: 10px;">
+          <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: var(--text-bright); user-select: none;">
+            <input type="checkbox" id="chk-memo-hours" onchange="onToggleMemoHours(this.checked)" style="width: 17px; height: 17px; cursor: pointer; accent-color: var(--accent-purple);">
+            <span data-i18n="chk_memo_hours">Mémoriser les heures</span>
+          </label>
+        </div>
+
+      </div>
+	
+	  <button id="btn-save" class="btn-primary" style="margin-top: 10px; width: 100%;" onclick="addMonthlyRecord()" data-i18n="btn_save">Clôturer le Mois</button>
+
     </div>
 
     <!-- HISTORIQUE D'EXPLOITATION -->
@@ -781,7 +791,7 @@
     <div class="card" style="border-left: 4px solid var(--accent-purple);">
       <div class="card-title">
         <span data-i18n="card_fuel_title"></span>
-        <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openHistoryModal()" data-i18n="btn_chart"></button>
+        <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openHistoryModal()" data-i18n="btn_trajectory"></button>
       </div>
   
       <div class="fuel-card-content">
@@ -995,27 +1005,46 @@
   </div>
 </div>
 
-<!-- MODALE COURBE TRÉSORERIE EN VERT -->
+<!-- MODALE HISTORIQUE & COURBES BILINGUE -->
 <div id="history-modal" class="modal-overlay">
-  <div class="modal-card">
+  <div class="modal-card" style="max-height: 90vh; overflow-y: auto; gap: 10px;">
+    
     <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div class="card-title" style="margin-bottom: 0;" data-i18n="modal_chart_title"></div>
-      <span id="chart-hover-label" style="font-size:0.75rem; color:var(--accent-green-bright); font-weight:800;" data-i18n="chart_hover_default"></span>
+      <div class="card-title" style="margin-bottom: 0;" data-i18n="modal_traj_title">🧭 Trajectoire & Rendement</div>
+      <button class="tooltip-btn" onclick="closeHistoryModal()" style="border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-main);">✕</button>
     </div>
-    <p style="font-size: 0.8rem; opacity: 0.8; margin-top: -6px;" data-i18n="modal_chart_sub">
-      Trajectoire d'accumulation du cash disponible produit pour alimenter KLON.
-    </p>
-
-    <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 8px; height: 260px; display: flex; align-items: center; justify-content: center;">
-      <svg id="cumul-chart-svg" width="100%" height="100%" viewBox="0 0 500 260" preserveAspectRatio="xMidYMid meet" style="overflow: visible;"></svg>
+    
+    <!-- 1. GRAPHIQUE TRÉSORERIE CUMULÉE (ICÔNE BANQUE UNIQUE) -->
+    <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 4px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.78rem; font-weight: 800; color: var(--accent-green-bright);" data-i18n="chart_cumul_title">🏦 Trésorerie Cumulée</span>
+        <span id="cumul-hover-label" style="font-size: 0.7rem; color: var(--accent-green-bright); font-weight: 700;" data-i18n="chart_hover_default">Survolez les points</span>
+      </div>
+      <div style="height: 125px; width: 100%;">
+        <svg id="cumul-chart-svg" width="100%" height="100%" viewBox="0 0 500 125" style="overflow: visible;"></svg>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px dashed var(--border-color); padding-top: 4px; margin-top: 2px;">
+        <span><span data-i18n="lbl_avg_fcf">Moyenne FCF / mois :</span> <strong id="modal-avg-fcf" style="color:var(--accent-green-bright);">0 €</strong></span>
+        <span><span data-i18n="lbl_best_fcf">Meilleur mois :</span> <strong id="modal-best-fcf" style="color: #e3b341; cursor: pointer; display: inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onclick="showRecordDetail('fcf')" title="Cliquer pour voir la date">0 €</strong></span>
+      </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; padding: 4px 0;">
-      <span><span data-i18n="modal_avg_fcf_lbl">Moyenne FCF / mois :</span> <strong id="modal-avg-fcf" style="color:var(--accent-green-bright);">0 €</strong></span>
-      <span><span data-i18n="modal_best_fcf_lbl">Meilleur mois :</span> <strong id="modal-best-fcf" style="color: #e3b341; text-shadow: 0 0 6px rgba(227, 179, 65, 0.4);">0 €</strong></span>
+    <!-- 2. GRAPHIQUE RENDEMENT HORAIRE (ICÔNE CHRONO UNIQUE) -->
+    <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 4px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.78rem; font-weight: 800; color: var(--accent-blue);" data-i18n="chart_hourly_title">⏱️ Rendement Horaire (FCF / h)</span>
+        <span id="hourly-hover-label" style="font-size: 0.7rem; color: var(--accent-blue); font-weight: 700;" data-i18n="chart_hover_default">Survolez les points</span>
+      </div>
+      <div style="height: 125px; width: 100%;">
+        <svg id="hourly-chart-svg" width="100%" height="100%" viewBox="0 0 500 125" style="overflow: visible;"></svg>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px dashed var(--border-color); padding-top: 4px; margin-top: 2px;">
+        <span><span data-i18n="lbl_avg_hourly">Moyenne FCF / h :</span> <strong id="modal-avg-hourly" style="color:var(--accent-blue);">0,00 €/h</strong></span>
+        <span><span data-i18n="lbl_best_hourly">Meilleur taux horaire :</span> <strong id="modal-best-hourly" style="color: #e3b341; cursor: pointer; display: inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onclick="showRecordDetail('hourly')" title="Cliquer pour voir la date">0,00 €/h</strong></span>
+      </div>
     </div>
 
-    <button class="btn-secondary" onclick="closeHistoryModal()" style="margin-top: 6px;" data-i18n="btn_close">Fermer</button>
+    <button class="btn-secondary" onclick="closeHistoryModal()" style="margin-top: 2px; width: 100%; padding: 8px;" data-i18n="btn_close">Fermer</button>
   </div>
 </div>
 
@@ -1029,7 +1058,7 @@
     </p>
 
     <div style="margin: 8px 0;">
-      <input type="text" id="modal-ticker-input" placeholder="Ex: KLON.PA" maxlength="10" style="text-align: center; text-transform: uppercase; font-size: 1.1rem; font-weight: 800; letter-spacing: 1px;" onkeydown="if(event.key==='Enter') saveModalTicker()">
+      <input type="text" id="modal-ticker-input" placeholder="KLON.PA" maxlength="10" style="text-align: center; text-transform: uppercase; font-size: 1.1rem; font-weight: 800; letter-spacing: 1px;" onkeydown="if(event.key==='Enter') saveModalTicker()">
     </div>
 
     <div style="display: flex; gap: 8px; justify-content: center; margin-top: 6px;">
@@ -1184,6 +1213,16 @@
       btn_chart: "📈 Trésorerie",
       lbl_total_cash: "Trésorerie Cumulée :",
       lbl_total_annuity: "Rente Passive Totale :",
+	  
+	  chk_memo_hours: "Mémoriser les heures",
+      btn_trajectory: "🧭 Trajectoire",
+      modal_traj_title: "🧭 Trajectoire & Rendement",
+      chart_cumul_title: "🏦 Trésorerie Cumulée",
+      lbl_avg_fcf: "Moyenne FCF / mois :",
+      lbl_best_fcf: "Meilleur mois :",
+      chart_hourly_title: "⏱️ Rendement Horaire (FCF / h)",
+      lbl_avg_hourly: "Moyenne FCF / h :",
+      lbl_best_hourly: "Meilleur taux horaire :",
 
       diag_fcf_margin: "Marge Nette FCF",
       diag_burn_rate: "Charges de Base",
@@ -1397,6 +1436,16 @@
       btn_chart: "📈 Treasury",
       lbl_total_cash: "Cumulative Treasury:",
       lbl_total_annuity: "Total Passive Income:",
+	  
+	  chk_memo_hours: "Remember hours",
+      btn_trajectory: "🧭 Trajectory",
+      modal_traj_title: "🧭 Trajectory & Yield",
+      chart_cumul_title: "🏦 Cumulative Treasury",
+      lbl_avg_fcf: "Average FCF / mo:",
+      lbl_best_fcf: "Best month:",
+      chart_hourly_title: "⏱️ Hourly Yield (FCF / h)",
+      lbl_avg_hourly: "Average FCF / h:",
+      lbl_best_hourly: "Best hourly rate:",
 
       diag_fcf_margin: "FCF Net Margin",
       diag_burn_rate: "Base Expenses",
@@ -1712,6 +1761,7 @@
     const periodStr = `${activeYear}-${activeMonthNum}`;
     const badge = document.getElementById('period-status-badge');
     const found = db.records.find(r => r.month === periodStr);
+    const chk = document.getElementById('chk-memo-hours');
 
     if (found) {
       badge.innerText = t('status_saved');
@@ -1720,10 +1770,26 @@
       document.getElementById('in-taxes').value = found.taxes;
       document.getElementById('in-frais').value = found.frais;
       document.getElementById('in-charges').value = found.charges;
-      document.getElementById('in-hours').value = found.hours !== undefined ? found.hours : 152;
+      
+      const h = found.hours !== undefined ? found.hours : 152;
+      document.getElementById('in-hours').value = h;
+      if (chk) chk.checked = (db.rememberHours && h === db.defaultHours);
     } else {
       badge.innerText = t('status_new');
       badge.className = "period-status-pill new";
+      document.getElementById('in-brut').value = '';
+      document.getElementById('in-taxes').value = '';
+      document.getElementById('in-frais').value = '';
+      document.getElementById('in-charges').value = '';
+
+      // Si l'option est active, on remet les heures mémorisées et la coche
+      if (db.rememberHours && db.defaultHours) {
+        document.getElementById('in-hours').value = db.defaultHours;
+        if (chk) chk.checked = true;
+      } else {
+        document.getElementById('in-hours').value = '';
+        if (chk) chk.checked = false;
+      }
     }
   }
 
@@ -1770,6 +1836,37 @@
   function toggleFieldHelp(helpId) {
     const el = document.getElementById(helpId);
     if (el) el.classList.toggle('active');
+  }
+  
+  // Si l'utilisateur tape un autre chiffre, ça décoche automatiquement !
+  function onHoursInputChanged() {
+    const val = parseFloat(document.getElementById('in-hours').value);
+    const chk = document.getElementById('chk-memo-hours');
+
+    if (val !== db.defaultHours) {
+      if (chk) chk.checked = false;
+      db.rememberHours = false;
+      saveData();
+    } else {
+      if (chk) chk.checked = true;
+      db.rememberHours = true;
+      saveData();
+    }
+  }
+
+  // Si on recoche, ça mémorise immédiatement le nouveau chiffre tapé
+  function onToggleMemoHours(isChecked) {
+    db.rememberHours = isChecked;
+    if (isChecked) {
+      const hVal = parseFloat(document.getElementById('in-hours').value);
+      if (!isNaN(hVal) && hVal > 0) {
+        db.defaultHours = hVal; // Enregistre le nouveau standard !
+      } else {
+        db.defaultHours = db.defaultHours || 152;
+        document.getElementById('in-hours').value = db.defaultHours;
+      }
+    }
+    saveData();
   }
 
   function addMonthlyRecord() {
@@ -2214,7 +2311,7 @@
           <strong style="color:var(--accent-blue);">${t('row_hourly_fcf')}</strong><br>
           <span style="font-size:0.7rem; opacity:0.7;">${t('row_hourly_fcf_sub')}</span>
         </td>
-        <td class="val-cell" style="color:var(--accent-blue); font-weight:800;">${fmt(currHourlyFcf)} / h</td>
+        <td class="val-cell" style="color:var(--accent-blue); font-weight:800;">${(currHourlyFcf).toFixed(2).replace('.', ',')} ${db.currency}/h</td>
         <td class="val-cell">${renderVarBadge(hourlyFcfVar)}</td>
       </tr>
     `;
@@ -2569,36 +2666,40 @@
     triggerCelebration(currentRewardAnimType);
   }
 
-  /* RENDU COURBE EN VERT ET SURVOL DU CHARTE */
   function renderCumulChart() {
-    const svg = document.getElementById('cumul-chart-svg');
-    svg.innerHTML = '';
-    
-    const hoverLbl = document.getElementById('chart-hover-label');
-    if (hoverLbl) {
-      hoverLbl.innerText = t('chart_hover_default');
-      hoverLbl.style.color = "var(--accent-green-bright)";
-    }
+    const svgCumul = document.getElementById('cumul-chart-svg');
+    const svgHourly = document.getElementById('hourly-chart-svg');
+    if (!svgCumul || !svgHourly) return;
+
+    svgCumul.innerHTML = '';
+    svgHourly.innerHTML = '';
+
+    const hoverCumul = document.getElementById('cumul-hover-label');
+    const hoverHourly = document.getElementById('hourly-hover-label');
+    if (hoverCumul) hoverCumul.innerText = (db.lang === 'EN') ? 'Hover points' : 'Survolez les points';
+    if (hoverHourly) hoverHourly.innerText = (db.lang === 'EN') ? 'Hover points' : 'Survolez les points';
 
     if (db.records.length < 2) {
-      svg.innerHTML = `<text x="250" y="130" fill="var(--text-main)" font-size="12" text-anchor="middle" opacity="0.6">${t('chart_need_records')}</text>`;
+      const emptyMsg = `<text x="250" y="65" fill="var(--text-main)" font-size="11" text-anchor="middle" opacity="0.6">${t('chart_need_records')}</text>`;
+      svgCumul.innerHTML = emptyMsg;
+      svgHourly.innerHTML = emptyMsg;
       return;
     }
 
+    // 1. Découpage temporel
     const totalMonths = db.records.length;
     let aggregationMode = 'monthly';
-    if (totalMonths > 36) {
-      aggregationMode = 'annual';
-    } else if (totalMonths > 12) {
-      aggregationMode = 'quarterly';
-    }
+    if (totalMonths > 36) aggregationMode = 'annual';
+    else if (totalMonths > 12) aggregationMode = 'quarterly';
 
+    // 2. Agrégation des données
     let cumul = 0;
     let rawSeries = [];
     let fcfList = [];
 
     db.records.forEach(r => {
       const fcf = r.brut - r.taxes - r.frais - r.charges;
+      const hours = (r.hours !== undefined && r.hours > 0) ? r.hours : 152;
       cumul += fcf;
       fcfList.push(fcf);
 
@@ -2612,82 +2713,146 @@
         key = r.month.slice(0, 4);
       }
 
-      rawSeries.push({ key, month: r.month, cumul, fcf });
+      rawSeries.push({ key, month: r.month, cumul, fcf, hours });
     });
 
     let series = [];
     if (aggregationMode === 'monthly') {
-      series = rawSeries;
+      series = rawSeries.map(s => ({ ...s, hourlyFcf: s.fcf / s.hours }));
     } else {
-      const mapLast = new Map();
-      rawSeries.forEach(item => mapLast.set(item.key, item));
-      series = Array.from(mapLast.values());
+      const mapAgg = new Map();
+      rawSeries.forEach(item => {
+        if (!mapAgg.has(item.key)) {
+          mapAgg.set(item.key, { key: item.key, cumul: item.cumul, fcf: 0, hours: 0 });
+        }
+        const cur = mapAgg.get(item.key);
+        cur.cumul = item.cumul;
+        cur.fcf += item.fcf;
+        cur.hours += item.hours;
+      });
+      series = Array.from(mapAgg.values()).map(s => ({
+        ...s,
+        hourlyFcf: s.hours > 0 ? (s.fcf / s.hours) : 0
+      }));
     }
 
+    // Statistiques Trésorerie
     const avgFcf = fcfList.reduce((a, b) => a + b, 0) / fcfList.length;
     const bestFcf = Math.max(...fcfList);
-
     document.getElementById('modal-avg-fcf').innerText = fmt(avgFcf);
     document.getElementById('modal-best-fcf').innerText = fmt(bestFcf);
 
-    const padLeft = 60, padRight = 20, padTop = 20, padBottom = 30;
+    // Statistiques Rendement Horaire
+    const allHourly = rawSeries.map(s => s.hours > 0 ? (s.fcf / s.hours) : 0);
+    const avgHourly = rawSeries.reduce((acc, s) => acc + s.fcf, 0) / Math.max(1, rawSeries.reduce((acc, s) => acc + s.hours, 0));
+    const bestHourly = Math.max(...allHourly);
+    const fmtH = (v) => new Intl.NumberFormat(db.lang === 'EN' ? 'en-US' : 'fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v || 0) + ' ' + db.currency + '/h';
+
+    document.getElementById('modal-avg-hourly').innerText = fmtH(avgHourly);
+    document.getElementById('modal-best-hourly').innerText = fmtH(bestHourly);
+
+    // Dimensions graphiques
+    const padLeft = 60, padRight = 20, padTop = 15, padBottom = 20;
     const width = 500 - padLeft - padRight;
-    const height = 260 - padTop - padBottom;
-
-    const minCumul = Math.min(0, ...series.map(s => s.cumul));
-    const maxCumul = Math.max(1000, ...series.map(s => s.cumul));
-
-    const getY = val => padTop + height - ((val - minCumul) / (maxCumul - minCumul || 1)) * height;
+    const height = 125 - padTop - padBottom;
     const numLocale = (db.lang === 'EN') ? 'en-US' : 'fr-FR';
 
-    const gridVals = [minCumul, (minCumul + maxCumul) / 2, maxCumul];
-    gridVals.forEach(gv => {
-      const gy = getY(gv);
-      svg.innerHTML += `
+    // ==========================================
+    // 🟢 TRACÉ 1 : TRÉSORERIE CUMULÉE (EN VERT)
+    // ==========================================
+    const minCumul = Math.min(0, ...series.map(s => s.cumul));
+    const maxCumul = Math.max(1000, ...series.map(s => s.cumul));
+    const getYCumul = val => padTop + height - ((val - minCumul) / (maxCumul - minCumul || 1)) * height;
+
+    [minCumul, (minCumul + maxCumul) / 2, maxCumul].forEach(gv => {
+      const gy = getYCumul(gv);
+      svgCumul.innerHTML += `
         <line x1="${padLeft}" y1="${gy}" x2="${500 - padRight}" y2="${gy}" stroke="var(--border-color)" stroke-dasharray="3,3" stroke-width="1" />
-        <text x="${padLeft - 10}" y="${gy + 4}" fill="var(--text-main)" font-size="10" font-weight="700" text-anchor="end" opacity="0.8">${new Intl.NumberFormat(numLocale, { notation: 'compact' }).format(gv)} ${db.currency}</text>
+        <text x="${padLeft - 8}" y="${gy + 3}" fill="var(--text-main)" font-size="9" font-weight="700" text-anchor="end" opacity="0.75">${new Intl.NumberFormat(numLocale, { notation: 'compact' }).format(gv)} ${db.currency}</text>
       `;
     });
 
-    let points = [];
-    series.forEach((s, idx) => {
-      const x = padLeft + (idx / (series.length - 1 || 1)) * width;
-      const y = getY(s.cumul);
-      points.push({ x, y, label: s.key, cumul: s.cumul, fcf: s.fcf });
-    });
+    let pointsCumul = series.map((s, idx) => ({
+      x: padLeft + (idx / (series.length - 1 || 1)) * width,
+      y: getYCumul(s.cumul),
+      label: s.key,
+      cumul: s.cumul,
+      fcf: s.fcf
+    }));
 
-    let pathD = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 1; i < points.length; i++) pathD += ` L ${points[i].x} ${points[i].y}`;
+    let pathDCumul = `M ${pointsCumul[0].x} ${pointsCumul[0].y}`;
+    for (let i = 1; i < pointsCumul.length; i++) pathDCumul += ` L ${pointsCumul[i].x} ${pointsCumul[i].y}`;
 
-    /* TRACÉ DE LA COURBE EN VERT */
-    svg.innerHTML += `<path d="${pathD}" fill="none" stroke="var(--accent-green-bright)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+    svgCumul.innerHTML += `<path d="${pathDCumul}" fill="none" stroke="var(--accent-green-bright)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />`;
+    svgCumul.innerHTML += `<path d="${pathDCumul} L ${pointsCumul[pointsCumul.length - 1].x} ${padTop + height} L ${pointsCumul[0].x} ${padTop + height} Z" fill="var(--accent-green-bright)" opacity="0.12" />`;
 
-    const areaD = `${pathD} L ${points[points.length - 1].x} ${padTop + height} L ${points[0].x} ${padTop + height} Z`;
-    svg.innerHTML += `<path d="${areaD}" fill="var(--accent-green-bright)" opacity="0.12" />`;
-
-    points.forEach(p => {
+    pointsCumul.forEach(p => {
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       circle.setAttribute("cx", p.x);
       circle.setAttribute("cy", p.y);
-      circle.setAttribute("r", "5.5");
+      circle.setAttribute("r", "4.5");
       circle.setAttribute("fill", "var(--bg-color)");
       circle.setAttribute("stroke", "var(--accent-green-bright)");
-      circle.setAttribute("stroke-width", "2.5");
+      circle.setAttribute("stroke-width", "2");
       circle.style.cursor = "pointer";
 
       const displayKey = (db.lang !== 'EN' && p.label.includes('-Q')) ? p.label.replace('-Q', '-T') : p.label;
-
       const showInfo = () => {
-        const hLabel = document.getElementById('chart-hover-label');
-        if (hLabel) {
-          hLabel.innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
-          hLabel.style.color = "var(--accent-green-bright)";
-        }
+        const hLabel = document.getElementById('cumul-hover-label');
+        if (hLabel) hLabel.innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
       };
-
       circle.addEventListener("mouseenter", showInfo);
       circle.addEventListener("click", showInfo);
-      svg.appendChild(circle);
+      svgCumul.appendChild(circle);
+    });
+
+    // ==========================================
+    // 🔵 TRACÉ 2 : RENDEMENT HORAIRE (EN BLEU)
+    // ==========================================
+    const minHourly = Math.min(0, ...series.map(s => s.hourlyFcf));
+    const maxHourly = Math.max(10, Math.ceil(Math.max(...series.map(s => s.hourlyFcf)) * 1.1));
+    const getYHourly = val => padTop + height - ((val - minHourly) / (maxHourly - minHourly || 1)) * height;
+
+    [minHourly, (minHourly + maxHourly) / 2, maxHourly].forEach(gv => {
+      const gy = getYHourly(gv);
+      svgHourly.innerHTML += `
+        <line x1="${padLeft}" y1="${gy}" x2="${500 - padRight}" y2="${gy}" stroke="var(--border-color)" stroke-dasharray="3,3" stroke-width="1" />
+        <text x="${padLeft - 8}" y="${gy + 3}" fill="var(--text-main)" font-size="9" font-weight="700" text-anchor="end" opacity="0.75">${gv.toFixed(0)} ${db.currency}/h</text>
+      `;
+    });
+
+    let pointsHourly = series.map((s, idx) => ({
+      x: padLeft + (idx / (series.length - 1 || 1)) * width,
+      y: getYHourly(s.hourlyFcf),
+      label: s.key,
+      hourlyFcf: s.hourlyFcf,
+      hours: s.hours
+    }));
+
+    let pathDHourly = `M ${pointsHourly[0].x} ${pointsHourly[0].y}`;
+    for (let i = 1; i < pointsHourly.length; i++) pathDHourly += ` L ${pointsHourly[i].x} ${pointsHourly[i].y}`;
+
+    svgHourly.innerHTML += `<path d="${pathDHourly}" fill="none" stroke="var(--accent-blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />`;
+    svgHourly.innerHTML += `<path d="${pathDHourly} L ${pointsHourly[pointsHourly.length - 1].x} ${padTop + height} L ${pointsHourly[0].x} ${padTop + height} Z" fill="var(--accent-blue)" opacity="0.12" />`;
+
+    pointsHourly.forEach(p => {
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", p.x);
+      circle.setAttribute("cy", p.y);
+      circle.setAttribute("r", "4.5");
+      circle.setAttribute("fill", "var(--bg-color)");
+      circle.setAttribute("stroke", "var(--accent-blue)");
+      circle.setAttribute("stroke-width", "2");
+      circle.style.cursor = "pointer";
+
+      const displayKey = (db.lang !== 'EN' && p.label.includes('-Q')) ? p.label.replace('-Q', '-T') : p.label;
+      const showInfo = () => {
+        const hLabel = document.getElementById('hourly-hover-label');
+        if (hLabel) hLabel.innerText = `${displayKey} : ${fmtH(p.hourlyFcf)} (${p.hours}h)`;
+      };
+      circle.addEventListener("mouseenter", showInfo);
+      circle.addEventListener("click", showInfo);
+      svgHourly.appendChild(circle);
     });
   }
 
@@ -2928,6 +3093,92 @@
     setTimeout(() => {
       if (btn) btn.innerText = "Fortuneo (Code Parrain : 12874482)";
     }, 1800);
+  }
+  
+  /* FENÊTRE DE DÉTAIL / FÉLICITATIONS CONDITIONNELLES (+50% DU RECORD) */
+  function showRecordDetail(type) {
+    if (!db.records || db.records.length === 0) return;
+
+    const monthList = (db.lang === 'EN') ? monthNamesEN : monthNamesFR;
+
+    if (type === 'fcf') {
+      let best = null;
+      let totalFcf = 0;
+
+      db.records.forEach(r => {
+        const fcf = r.brut - r.taxes - r.frais - r.charges;
+        totalFcf += fcf;
+        if (!best || fcf > best.fcf) best = { month: r.month, fcf };
+      });
+      if (!best) return;
+
+      const avgFcf = totalFcf / db.records.length;
+      // Vérifie si le record surclasse la moyenne d'au moins +50%
+      const isOutperformance = avgFcf > 0 && best.fcf >= (avgFcf * 1.5);
+
+      const [y, m] = best.month.split('-');
+      const dateStr = `${monthList[parseInt(m, 10) - 1] || m} ${y}`;
+
+      if (isOutperformance && typeof triggerCelebration === 'function') {
+        triggerCelebration('gold');
+      }
+
+      const title = isOutperformance 
+        ? ((db.lang === 'EN') ? '🎉 Record Exceptionnel (+50%) !' : '🎉 Record Exceptionnel (+50%) !')
+        : ((db.lang === 'EN') ? 'Détail du Meilleur Mois' : 'Détail du Meilleur Mois');
+
+      const msg = isOutperformance
+        ? ((db.lang === 'EN')
+            ? `Performance historique réalisée en <strong>${dateStr}</strong> avec <strong>${fmt(best.fcf)}</strong> de FCF extrait !<br><br>Félicitations : ce mois surclasse ta moyenne mensuelle (${fmt(avgFcf)}) de plus de <strong>+50 %</strong> ! Une véritable démonstration d'efficacité financière.`
+            : `Performance historique réalisée en <strong>${dateStr}</strong> avec <strong>${fmt(best.fcf)}</strong> de FCF extrait !<br><br>Félicitations : ce mois surclasse ta moyenne mensuelle (${fmt(avgFcf)}) de plus de <strong>+50 %</strong> ! Une véritable démonstration d'efficacité financière.`)
+        : ((db.lang === 'EN')
+            ? `Ce record de <strong>${fmt(best.fcf)}</strong> de FCF a été enregistré en <strong>${dateStr}</strong>.<br><br>Moyenne d'exploitation habituelle : ${fmt(avgFcf)} / mois.`
+            : `Ce record de <strong>${fmt(best.fcf)}</strong> de FCF a été enregistré en <strong>${dateStr}</strong>.<br><br>Moyenne d'exploitation habituelle : ${fmt(avgFcf)} / mois.`);
+
+      showCustomDialog(isOutperformance ? '🏆' : '📅', title, msg);
+
+    } else if (type === 'hourly') {
+      let best = null;
+      let totalFcf = 0;
+      let totalHours = 0;
+
+      db.records.forEach(r => {
+        const fcf = r.brut - r.taxes - r.frais - r.charges;
+        const hrs = (r.hours && r.hours > 0) ? r.hours : 152;
+        totalFcf += fcf;
+        totalHours += hrs;
+        const rate = fcf / hrs;
+        if (!best || rate > best.rate) best = { month: r.month, rate, hrs };
+      });
+      if (!best) return;
+
+      const avgHourly = totalHours > 0 ? (totalFcf / totalHours) : 0;
+      // Vérifie si le taux horaire surclasse la moyenne d'au moins +50%
+      const isOutperformance = avgHourly > 0 && best.rate >= (avgHourly * 1.5);
+
+      const [y, m] = best.month.split('-');
+      const dateStr = `${monthList[parseInt(m, 10) - 1] || m} ${y}`;
+      const bestRateStr = (best.rate).toFixed(2).replace('.', ',') + ' ' + db.currency + '/h';
+      const avgRateStr = (avgHourly).toFixed(2).replace('.', ',') + ' ' + db.currency + '/h';
+
+      if (isOutperformance && typeof triggerCelebration === 'function') {
+        triggerCelebration('gold');
+      }
+
+      const title = isOutperformance 
+        ? ((db.lang === 'EN') ? '⚡ Rendement Horaire Exceptionnel !' : '⚡ Rendement Horaire Exceptionnel !')
+        : ((db.lang === 'EN') ? 'Détail du Taux Horaire' : 'Détail du Taux Horaire');
+
+      const msg = isOutperformance
+        ? ((db.lang === 'EN')
+            ? `Rendement record atteint en <strong>${dateStr}</strong> avec <strong>${bestRateStr}</strong> de FCF net extrait pour ${best.hrs}h travaillées.<br><br>Félicitations : ce rendement horaire dépasse ta moyenne (${avgRateStr}) de plus de <strong>+50 %</strong> ! La valeur de chaque heure de ton temps a été démultipliée.`
+            : `Rendement record atteint en <strong>${dateStr}</strong> avec <strong>${bestRateStr}</strong> de FCF net extrait pour ${best.hrs}h travaillées.<br><br>Félicitations : ce rendement horaire dépasse ta moyenne (${avgRateStr}) de plus de <strong>+50 %</strong> ! La valeur de chaque heure de ton temps a été démultipliée.`)
+        : ((db.lang === 'EN')
+            ? `Ce meilleur rendement horaire de <strong>${bestRateStr}</strong> a été atteint en <strong>${dateStr}</strong> (${best.hrs}h travaillées).<br><br>Rendement horaire moyen habituel : ${avgRateStr}.`
+            : `Ce meilleur rendement horaire de <strong>${bestRateStr}</strong> a été atteint en <strong>${dateStr}</strong> (${best.hrs}h travaillées).<br><br>Rendement horaire moyen habituel : ${avgRateStr}.`);
+
+      showCustomDialog(isOutperformance ? '⚡' : '⏱️', title, msg);
+    }
   }
 
   window.addEventListener('DOMContentLoaded', () => {
