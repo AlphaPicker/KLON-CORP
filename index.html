@@ -2686,6 +2686,18 @@
       return;
     }
 
+    // Helper pour un formatage compact avec 1 décimale (ex: 57,7 k €)
+    const fmtCompact = (val) => {
+      const absVal = Math.abs(val);
+      const sign = val < 0 ? '-' : '';
+      if (absVal >= 1000000) {
+        return sign + (absVal / 1000000).toFixed(1).replace('.', ',') + ' M ' + db.currency;
+      } else if (absVal >= 1000) {
+        return sign + (absVal / 1000).toFixed(1).replace('.', ',') + ' k ' + db.currency;
+      }
+      return fmt(val);
+    };
+
     // 1. Découpage temporel
     const totalMonths = db.records.length;
     let aggregationMode = 'monthly';
@@ -2799,7 +2811,7 @@
       const displayKey = (db.lang !== 'EN' && p.label.includes('-Q')) ? p.label.replace('-Q', '-T') : p.label;
       const showInfo = () => {
         const hLabel = document.getElementById('cumul-hover-label');
-        if (hLabel) hLabel.innerText = `${displayKey} : ${fmt(p.cumul)} (+${fmt(p.fcf)})`;
+        if (hLabel) hLabel.innerText = `${displayKey} : ${fmtCompact(p.cumul)} (+${fmtCompact(p.fcf)})`;
       };
       circle.addEventListener("mouseenter", showInfo);
       circle.addEventListener("click", showInfo);
@@ -2855,7 +2867,6 @@
       svgHourly.appendChild(circle);
     });
   }
-
   function triggerCelebration(type = 'confetti') {
     const canvas = document.getElementById('confetti-canvas');
     if (!canvas) return;
